@@ -119,4 +119,26 @@
       btns.forEach((x) => (x.disabled = false));
     }));
   }
+  // ---------- phone menu ----------
+  const nav = $('.nav'), menuBtn = $('.menu-btn');
+  if (nav && menuBtn) {
+    const setOpen = (open) => { nav.classList.toggle('open', open); menuBtn.setAttribute('aria-expanded', String(open)); };
+    menuBtn.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
+    nav.querySelectorAll('.nav-links a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  }
+
+  // ---------- stops of the request fold on phones ----------
+  document.querySelectorAll('.hop-more').forEach((b) => b.addEventListener('click', () => {
+    const hop = b.closest('.hop');
+    const open = !hop.classList.contains('open');
+    hop.classList.toggle('open', open);
+    b.setAttribute('aria-expanded', String(open));
+    b.textContent = open ? 'hide details ▴' : 'details ▾';
+  }));
+  // a link or button that points into a folded stop opens it first
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#hop-"]');
+    const hop = a && document.querySelector(a.getAttribute('href'));
+    if (hop && !hop.classList.contains('open')) hop.querySelector('.hop-more')?.click();
+  });
 })();

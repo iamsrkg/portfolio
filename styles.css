@@ -445,6 +445,33 @@ main, .footer { position: relative; z-index: 1; }
   background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 4px 9px;
   max-width: min(560px, calc(100vw - 28px)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* phone menu, collapsible stops, projects grid */
+.menu-btn { display: none; }
+.hop-more { display: none; }
+@media (min-width: 1001px) {
+  #github .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #proj-task-api { grid-column: span 2; }
+}
+@media (max-width: 720px) {
+  .nav nav { display: none; position: absolute; top: 60px; left: 0; right: 0; flex: none; overflow: visible;
+    background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px 16px 14px; }
+  .nav.open nav { display: block; }
+  .nav-links { flex-direction: column; gap: 0; }
+  .nav-links a { display: block; padding: 11px 2px; font-size: 16px; color: var(--text); border-bottom: 1px solid var(--border); }
+  .nav-links li:last-child a { border-bottom: 0; }
+  .brand { display: inline; }
+  .menu-btn { display: grid; gap: 4px; place-content: center; width: 40px; height: 36px; margin-left: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+  .menu-btn span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; transition: transform .2s, opacity .2s; }
+  .nav.open .menu-btn span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav.open .menu-btn span:nth-child(2) { opacity: 0; }
+  .nav.open .menu-btn span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  .hop-more { display: inline-block; margin: -12px 0 6px; font-size: 13px; color: var(--accent); background: none; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .hop:not(.open):not(.hop-final) .hop-grid,
+  .hop:not(.open):not(.hop-final) .ask { display: none; }
+  .hop { padding-bottom: 40px; }
+  .mesh-hud { display: none; }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .hop-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }

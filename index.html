@@ -7,13 +7,18 @@
   <meta name="description" content="Sudheer Kumar Gupta, backend engineer. Follow one request through edge, rate limiter, auth, services, database and queue, and see what I've built at every hop, then try the live API and the live projects.">
   <meta name="author" content="Sudheer Kumar Gupta">
   <meta name="theme-color" content="#0b0f14">
-  <link rel="canonical" href="https://iamsrkg.github.io/">
+  <link rel="canonical" href="https://iamsrkg.github.io/portfolio/">
 
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="Sudheer Kumar Gupta · Backend Engineer">
-  <meta property="og:description" content="GET /hire/sudheer: follow one request through a backend, and see what I've built at every hop.">
-  <meta property="og:url" content="https://iamsrkg.github.io/">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:title" content="Sudheer Kumar Gupta · Backend Engineer · Java / Spring Boot">
+  <meta property="og:description" content="Follow one request through a backend and see where I built each part: Java, Spring Boot, Kafka, Docker, Kubernetes. Then try the live API.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sudheer Kumar Gupta, Backend Engineer, Java / Spring Boot: GET /hire/sudheer">
+  <meta property="og:url" content="https://iamsrkg.github.io/portfolio/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://iamsrkg.github.io/portfolio/og.png">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +32,7 @@
     "@type": "Person",
     "name": "Sudheer Kumar Gupta",
     "jobTitle": "Backend Engineer",
-    "url": "https://iamsrkg.github.io/",
+    "url": "https://iamsrkg.github.io/portfolio/",
     "email": "mailto:sudheerkgupta@outlook.com",
     "sameAs": [
       "https://www.linkedin.com/in/iamsrkg",
@@ -45,7 +50,10 @@
   <header class="nav">
     <div class="wrap nav-inner">
       <a class="brand" href="#top" aria-label="Home"><span class="prompt">~/</span>iamsrkg</a>
-      <nav aria-label="Primary">
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav aria-label="Primary" id="nav-menu">
         <ul class="nav-links">
           <li><a href="#journey">The request</a></li>
           <li><a href="#lab">Live API</a></li>
@@ -118,6 +126,7 @@
             <h2>Edge</h2>
             <p class="hop-what">First stop is the edge. Nginx handles TLS, gives the request an ID and passes it on to the app container.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -144,9 +153,6 @@
             </div>
           </div>
           <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">Why multi-stage builds?</span>
-            <span class="ask-q">Tracing one request across services</span>
             <button type="button" class="try mono" data-run="health">See X-Request-Id live →</button>
           </div>
         </article>
@@ -159,6 +165,7 @@
             <h2>Rate limiter</h2>
             <p class="hop-what">Next, the rate limiter. Every request spends a token. When a client runs out, it gets a 429 and a note saying when to try again.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -184,9 +191,6 @@
             </div>
           </div>
           <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">Token bucket vs sliding window</span>
-            <span class="ask-q">Rate limiting across many instances</span>
             <button type="button" class="try mono" data-run="burst">Trigger a real 429 →</button>
           </div>
         </article>
@@ -199,6 +203,7 @@
             <h2>Auth</h2>
             <p class="hop-what">Then auth. The token gets checked, signature first, then expiry, then role. One service hands out tokens and the rest only verify them.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -222,10 +227,6 @@
             </div>
           </div>
           <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">JWT vs server sessions</span>
-            <span class="ask-q">Revoking a JWT early</span>
-            <span class="ask-q">404, not 403, across tenants</span>
             <button type="button" class="try mono" data-run="tamper">Forge a token for real →</button>
           </div>
         </article>
@@ -238,6 +239,7 @@
             <h2>Service</h2>
             <p class="hop-what">Now the business logic. The services don't keep state between requests, so any replica can answer, and handling more traffic means running more replicas.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -263,10 +265,6 @@
             </div>
           </div>
           <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">What makes a service stateless</span>
-            <span class="ask-q">How the autoscaler decides</span>
-            <span class="ask-q">One error format everywhere</span>
             <button type="button" class="try mono" data-run="invalid">See a validation error →</button>
           </div>
         </article>
@@ -279,6 +277,7 @@
             <h2>Cache &amp; database</h2>
             <p class="hop-what">Data that's read all the time comes from Redis. Everything else should hit an index, not scan the whole table.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -305,10 +304,6 @@
             </div>
           </div>
           <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">Composite index column order</span>
-            <span class="ask-q">Cache invalidation</span>
-            <span class="ask-q">Optimistic vs pessimistic locking</span>
             <button type="button" class="try mono" data-run="conflict">Cause a 409 conflict →</button>
           </div>
         </article>
@@ -321,6 +316,7 @@
             <h2>Queue</h2>
             <p class="hop-what">Heavy work doesn't happen while the user waits. The API stores the file, publishes an event and replies. A worker picks it up from Kafka.</p>
           </header>
+          <button type="button" class="hop-more mono" aria-expanded="false">details ▾</button>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
@@ -359,12 +355,6 @@
                 <figcaption>The client gets its reply once the event is published. The slow part happens afterwards, so a spike shows up as a longer queue instead of timeouts.</figcaption>
               </figure>
             </div>
-          </div>
-          <div class="ask">
-            <span class="ask-cap mono">ask me about</span>
-            <span class="ask-q">At-least-once delivery &amp; idempotency</span>
-            <span class="ask-q">Kafka vs RabbitMQ</span>
-            <span class="ask-q">Handling a poison message</span>
           </div>
         </article>
 
