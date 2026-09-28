@@ -48,9 +48,9 @@
       <nav aria-label="Primary">
         <ul class="nav-links">
           <li><a href="#journey">The request</a></li>
-          <li><a href="#work">Work</a></li>
           <li><a href="#lab">Live API</a></li>
           <li><a href="#github">Projects</a></li>
+          <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#hop-response">Contact</a></li>
         </ul>
@@ -70,7 +70,7 @@
         <p class="req-hero mono" aria-label="GET /hire/sudheer HTTP/1.1">
           <span class="verb">GET</span> <span class="path">/hire/sudheer</span> <span class="proto">HTTP/1.1</span><span class="cursor" aria-hidden="true">▍</span>
         </p>
-        <p class="opening-lede">This request is about to pass through every layer of a backend: the edge, a rate limiter, auth, a service, a cache and database, and a queue. At each hop I'll show you what I've actually built there over almost 5 years in <strong>Java / Spring Boot</strong> and <strong>Node.js / NestJS</strong>.</p>
+        <p class="opening-lede">Hi, I'm Sudheer. I've spent almost five years on backends, mostly <strong>Java and Spring Boot</strong> with Kafka, Docker and Kubernetes around them, and more recently <strong>Node.js and NestJS</strong>. Instead of a list of skills, here's a request going through a backend. At each stop I'll show you where I've built that part myself.</p>
         <div class="cta">
           <a class="btn btn-primary" href="#journey">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
@@ -116,18 +116,18 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 01</span><span>t+2ms</span></p>
             <h2>Edge</h2>
-            <p class="hop-what">Nginx terminates TLS, stamps a request ID and proxies to a container that took three minutes to ship.</p>
+            <p class="hop-what">First stop is the edge. Nginx handles TLS, gives the request an ID and passes it on to the app container.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Tag it at the door.</b> A request ID added at the edge lets one log search follow a request through every service.</li>
-                <li><b>Small images ship faster.</b> Multi-stage Docker builds keep the toolchain out of production, and fast deploys get shipped more often.</li>
+                <li><b>An ID on every request.</b> When something breaks in production, the first thing I want is one ID I can search for in every service's logs.</li>
+                <li><b>Small images, quick deploys.</b> Multi-stage Docker builds keep compilers and build tools out of the final image. When a deploy takes three minutes instead of twenty, people ship smaller changes, and smaller changes break less.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Freelance · 2025–26:</b> Docker multi-stage builds behind Nginx took deploys <b class="hl">from 20 minutes to 3</b>.</p>
-                <p><b>Accenture · 2021–24:</b> Azure DevOps pipelines that build, test and ship Docker images to Kubernetes.</p>
+                <p><b>Freelance · 2025–26:</b> I set up multi-stage Docker builds behind Nginx, and deploys went <b class="hl">from about 20 minutes to 3</b>.</p>
+                <p><b>Accenture · 2021–24:</b> our Azure DevOps pipelines built, tested and shipped Docker images to Kubernetes.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -157,18 +157,18 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 02</span><span>t+2ms</span></p>
             <h2>Rate limiter</h2>
-            <p class="hop-what">Before anything expensive happens, the request spends a token. No token, no entry, and a clear note on when to come back.</p>
+            <p class="hop-what">Next, the rate limiter. Every request spends a token. When a client runs out, it gets a 429 and a note saying when to try again.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Reject cheaply first.</b> A request that's going to be refused should never reach the password hasher or the database.</li>
-                <li><b>Say when to retry.</b> <code>429</code> with <code>Retry-After</code> turns a flood into an orderly queue, and I honour it when I'm the client too.</li>
+                <li><b>Say no early.</b> If a request is going to be refused anyway, I'd rather refuse it before it reaches the password hasher or the database.</li>
+                <li><b>Tell clients when to retry.</b> A <code>429</code> with <code>Retry-After</code> lets well-behaved clients back off by themselves. When I'm the one calling someone else's API, I respect it too.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Freelance · 2025–26:</b> rate limiting and IP throttling in front of auth and the client APIs.</p>
-                <p><b>Public · <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>:</b> a token-bucket filter that answers <code>429</code> with <code>Retry-After</code>, tested in CI.</p>
+                <p><b>Freelance · 2025–26:</b> rate limiting and IP throttling in front of the login and the client APIs.</p>
+                <p><b>Public · <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>:</b> a token-bucket filter that answers <code>429</code> with <code>Retry-After</code>. It has its own tests.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -197,17 +197,17 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 03</span><span>t+5ms</span></p>
             <h2>Auth</h2>
-            <p class="hop-what">The token is checked, not trusted: signature first, then expiry, then role. One service issues tokens and everyone else only verifies them.</p>
+            <p class="hop-what">Then auth. The token gets checked, signature first, then expiry, then role. One service hands out tokens and the rest only verify them.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Security code in one place.</b> Splitting auth from business logic means one small surface to review, and changes stop rippling across the codebase.</li>
-                <li><b>Two questions, two layers.</b> RBAC decides whether you may call the route, and ownership decides whether you may touch the row.</li>
+                <li><b>Keep security code together.</b> On the freelance platform I moved auth into its own service. It's a small piece of code to review, and changing it doesn't ripple through everything else.</li>
+                <li><b>Role and ownership are two different checks.</b> The role decides whether you can call an endpoint at all. Ownership decides whether you can touch that particular record.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Freelance · 2025–26:</b> auth as its own service with JWT, RBAC, granular permissions, encryption and audit logs, which meant <b class="hl">60% less coupling</b>.</p>
+                <p><b>Freelance · 2025–26:</b> auth runs as its own service with JWT, RBAC, fine-grained permissions, encryption and audit logs. Splitting it out cut coupling by <b class="hl">about 60%</b>.</p>
                 <p><b>Accenture · 2021–24:</b> Spring Security with JWT and role-based access on every endpoint.</p>
               </div>
             </div>
@@ -236,19 +236,19 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 04</span><span>t+9ms</span></p>
             <h2>Service</h2>
-            <p class="hop-what">The business logic runs in stateless services, so any replica can take the request, and more replicas are one command away.</p>
+            <p class="hop-what">Now the business logic. The services don't keep state between requests, so any replica can answer, and handling more traffic means running more replicas.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Stateless scales.</b> When no request depends on which pod it lands on, capacity is a replica count, not a rewrite.</li>
-                <li><b>One contract at the boundary.</b> Validate input at the edge of the service, and return one error shape from every endpoint.</li>
+                <li><b>Stateless services are easy to scale.</b> If it doesn't matter which pod a request lands on, more capacity is just a higher replica count in Kubernetes.</li>
+                <li><b>Check input at the door, answer in one format.</b> Bad input gets rejected where it enters the service, and every endpoint returns errors in the same shape, so clients only handle one format.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Accenture · 2024–now:</b> PowerShell 7 and Microsoft Graph API workflows for bulk provisioning, governance and reporting, which removed <b class="hl">75%</b> of manual operations work.</p>
-                <p><b>Freelance · 2025–26:</b> a B2B client management platform in NestJS and TypeScript, built and deployed end to end on my own.</p>
-                <p><b>Accenture · 2021–24:</b> Spring Boot microservices on Kubernetes serving <b class="hl">10,000+ concurrent users</b>.</p>
+                <p><b>Accenture · 2021–24:</b> Spring Boot microservices on Kubernetes, handling <b class="hl">10,000+ concurrent users</b>.</p>
+                <p><b>Freelance · 2025–26:</b> a B2B client platform in NestJS and TypeScript that I built and deployed on my own.</p>
+                <p><b>Accenture · 2024–now:</b> PowerShell 7 and Microsoft Graph API workflows for bulk provisioning, governance and reporting. They took away <b class="hl">about 75%</b> of the manual work.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -277,19 +277,19 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 05</span><span>t+14ms</span></p>
             <h2>Cache &amp; database</h2>
-            <p class="hop-what">Hot reads come from the cache. Everything else hits an index, never a full table scan.</p>
+            <p class="hop-what">Data that's read all the time comes from Redis. Everything else should hit an index, not scan the whole table.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Fix the plan before buying hardware.</b> Most slow APIs are one missing composite index away from fast.</li>
-                <li><b>Cache on purpose.</b> Cache what's read often and changes rarely, and know exactly what invalidates it.</li>
-                <li><b>History is data.</b> Type-2 versioning keeps every change as a row, so audit trails come free.</li>
+                <li><b>Look at the query plan before adding hardware.</b> Most of the slow APIs I've fixed were one missing composite index away from fast.</li>
+                <li><b>Cache on purpose.</b> I cache data that's read a lot and changes rarely, and I decide up front what clears it.</li>
+                <li><b>Keep history as data.</b> With Type-2 versioning every change is a new row, so you get an audit trail for free.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Freelance · 2025–26:</b> PostgreSQL query optimization, TypeORM indexing and caching to <b class="hl">sub-100ms</b> responses, plus a headless CMS with Type-2 audit versioning that made content operations <b class="hl">90% faster</b>.</p>
-                <p><b>Accenture · 2021–24:</b> indexing, query rewrites and Redis caching on PostgreSQL made APIs <b class="hl">75–80% faster</b>.</p>
+                <p><b>Accenture · 2021–24:</b> indexes, rewritten queries and Redis caching on PostgreSQL made our APIs <b class="hl">75–80% faster</b>.</p>
+                <p><b>Freelance · 2025–26:</b> MySQL query tuning, TypeORM indexes and caching got API responses <b class="hl">under 100 ms</b>. I also built a headless CMS with Type-2 versioning, which made content work <b class="hl">about 90% faster</b>.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -300,7 +300,7 @@
                   <button type="button" role="tab" aria-selected="false" data-plan="cache">Cache hit</button>
                 </div>
                 <pre class="w-out mono plan" aria-live="polite"></pre>
-                <p class="w-note">Illustrative plan on 2M rows, showing the kind of change behind the numbers.</p>
+                <p class="w-note">An example plan on 2M rows. This is the kind of change behind those numbers.</p>
               </div>
             </div>
           </div>
@@ -319,18 +319,18 @@
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 06</span><span>t+16ms</span></p>
             <h2>Queue</h2>
-            <p class="hop-what">Slow work doesn't happen on this request. It stores the file, publishes an event and moves on. Workers take it from there.</p>
+            <p class="hop-what">Heavy work doesn't happen while the user waits. The API stores the file, publishes an event and replies. A worker picks it up from Kafka.</p>
           </header>
           <div class="hop-grid">
             <div class="hop-copy">
               <ul class="principles">
-                <li><b>Two latency budgets.</b> Acknowledge in milliseconds, process in seconds.</li>
-                <li><b>Let the queue absorb the spike</b> instead of the web tier.</li>
-                <li><b>Pay the price knowingly.</b> Async means eventual consistency, so consumers must be idempotent.</li>
+                <li><b>Reply fast, process later.</b> The user gets an answer in milliseconds, and the processing can take its time.</li>
+                <li><b>Let the queue take the spike.</b> A burst of traffic makes the queue longer instead of timing out the web servers.</li>
+                <li><b>Know the trade-off.</b> Async means eventually consistent, and a consumer has to handle the same message twice without breaking anything.</li>
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
-                <p><b>Accenture · 2021–24:</b> document uploads go to Amazon S3, and processing moved to Kafka/RabbitMQ consumers off the request path, on the platform serving <b class="hl">10,000+ concurrent users</b>.</p>
+                <p><b>Accenture · 2021–24:</b> document uploads went to Amazon S3, and processing moved to Kafka and RabbitMQ consumers, on the platform with <b class="hl">10,000+ concurrent users</b>.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -356,7 +356,7 @@
                     <text class="s2" x="525" y="240">worker</text>
                   </svg>
                 </div>
-                <figcaption>The client gets its answer at "event published". The slow part happens after the response, where a spike becomes queue depth instead of timeouts.</figcaption>
+                <figcaption>The client gets its reply once the event is published. The slow part happens afterwards, so a spike shows up as a longer queue instead of timeouts.</figcaption>
               </figure>
             </div>
           </div>
@@ -371,191 +371,7 @@
         <!-- The response returns at the very end of the page -->
         <div class="inflight mono">
           <span class="dot" aria-hidden="true"></span> response in flight…
-          <a href="#work">next: where I built all this ↓</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ THE WORK, JOB BY JOB ============ -->
-    <section id="work" class="section">
-      <div class="wrap">
-        <h2 class="sec-title">What I built at work, and how</h2>
-        <p class="section-lede">The hops above, told job by job from the backend side: the problem, what I built, and what it changed. Client code stays with the client, so each job gets a small working simulation you can click, plus a short sketch of the pattern. Both are written for this page.</p>
-        <div class="cases">
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Mar 2024 – now · Accenture</p>
-              <h3>Enterprise Microsoft 365, automated over APIs</h3>
-              <p class="org">Infra Managed Service Analyst, Backend &amp; Automation · Accenture, Bengaluru</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>Bulk provisioning, tenant-wide governance and reporting across enterprise Microsoft 365 were done by hand, one admin portal at a time.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li>API-driven admin workflows in <b>PowerShell 7</b> on the <b>Microsoft Graph API</b> for provisioning, governance and reporting.</li>
-                  <li><b>PnP PowerShell</b> automation for server management and tenant-wide governance across SharePoint, Teams, OneDrive and Power Platform.</li>
-                  <li><b>L2/L3 production support:</b> root-cause analysis on complex, cross-platform incidents while keeping the service reliable.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>75% less manual effort</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="graph">
-                <p class="w-cap mono">try it · a tenant-wide governance run over a paged API (simulation)</p>
-                <div class="w-row">
-                  <button type="button" class="w-btn" data-act="run">Find ownerless Teams</button>
-                  <button type="button" class="w-btn ghost" data-act="csv" hidden>Download the report (CSV)</button>
-                </div>
-                <pre class="w-out mono" aria-live="polite">230 Teams in this pretend tenant. The API returns 100 per page.</pre>
-              </div>
-              <details class="peek"><summary>See the pattern in code</summary>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · a governance report over Graph</em></div>
-<pre class="mono"><code><span class="c-m"># Find every Team with no owner. Graph pages its results, so follow nextLink.</span>
-$uri = <span class="c-s">'https://graph.microsoft.com/v1.0/groups?$select=id,displayName' +
-       '&amp;$filter=resourceProvisioningOptions/Any(x:x eq ''Team'')'</span>
-$report = <span class="c-k">do</span> {
-  $page = <span class="c-p">Invoke-MgGraphRequest</span> -Uri $uri
-  <span class="c-k">foreach</span> ($g <span class="c-k">in</span> $page.value) {
-    $owners = <span class="c-p">Invoke-MgGraphRequest</span> -Uri <span class="c-s">"https://graph.microsoft.com/v1.0/groups/$($g.id)/owners"</span>
-    <span class="c-k">if</span> (-not $owners.value) { [pscustomobject]@{ Team = $g.displayName; Id = $g.id } }
-  }
-  $uri = $page.<span class="c-s">'@odata.nextLink'</span>
-} <span class="c-k">while</span> ($uri)
-
-$report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInformation</code></pre>
-              </div>
-              </details>
-              <p class="note">It's the same backend skill set: an API contract, paging, auth scopes and failure handling. The only difference is that the API belongs to Microsoft.</p>
-            </div>
-          </article>
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Nov 2025 – Mar 2026 · freelance, solo</p>
-              <h3>A B2B client management platform</h3>
-              <p class="org">Backend Engineer · CA Sanjeev Gupta &amp; Co., a chartered accountancy firm</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>The firm's internal workflows and its dealings with enterprise clients ran by hand. They needed one secure platform for both, and I was the only engineer.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li><b>Architecture:</b> Node.js, NestJS and TypeScript in a hybrid service-oriented design, with <b>authentication split out from the core business services</b>.</li>
-                  <li><b>Security:</b> JWT, RBAC, rate limiting, IP throttling, encryption and audit logging.</li>
-                  <li><b>Content:</b> a headless CMS with <b>Type-2 audit versioning</b> (every edit is a new row, nothing is overwritten) and automatic SEO metadata.</li>
-                  <li><b>Data:</b> PostgreSQL with query tuning, TypeORM indexes and caching.</li>
-                  <li><b>Delivery:</b> Docker multi-stage builds behind Nginx.</li>
-                  <li><b>AI:</b> Claude Code to move faster, with every change checked by tests and review.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>60% less coupling</b><b>&lt;100 ms APIs</b><b>90% faster content ops</b><b>deploys 20 → 3 min</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="type2">
-                <p class="w-cap mono">try it · a CMS page with Type-2 versioning (simulation)</p>
-                <label class="sr-only" for="t2-body">Page text</label>
-                <textarea id="t2-body" class="w-input mono" rows="2" spellcheck="false"></textarea>
-                <div class="w-row">
-                  <label class="w-toggle">edit as <select class="w-select mono"><option>partner</option><option>staff</option><option>client</option></select></label>
-                  <button type="button" class="w-btn" data-act="save">Save a new version</button>
-                </div>
-                <div class="t2-wrap"><table class="t2 mono"><thead><tr><th>ver</th><th>body</th><th>by</th><th>valid_from</th><th>valid_to</th></tr></thead><tbody></tbody></table></div>
-                <label class="w-toggle">time travel <input type="range" min="0" max="1" value="1"></label>
-                <pre class="w-out mono asof-out"></pre>
-              </div>
-              <details class="peek"><summary>See the pattern in code</summary>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · Type-2 versioning in SQL</em></div>
-<pre class="mono"><code><span class="c-m">-- An edit never overwrites: it closes the current row and adds a new one.</span>
-<span class="c-k">UPDATE</span> page_versions
-   <span class="c-k">SET</span> valid_to = now(), is_current = <span class="c-v">false</span>
- <span class="c-k">WHERE</span> page_id = $1 <span class="c-k">AND</span> is_current;
-
-<span class="c-k">INSERT INTO</span> page_versions (page_id, body, edited_by, valid_from, is_current)
-<span class="c-k">VALUES</span> ($1, $2, $3, now(), <span class="c-v">true</span>);
-
-<span class="c-m">-- "What did this page say on 1 Feb, and who changed it?"
--- is now a query, not a backup restore.</span>
-<span class="c-k">SELECT</span> body, edited_by <span class="c-k">FROM</span> page_versions
- <span class="c-k">WHERE</span> page_id = $1
-   <span class="c-k">AND</span> valid_from &lt;= <span class="c-s">'2026-02-01'</span>
-   <span class="c-k">AND</span> (valid_to <span class="c-k">IS NULL OR</span> valid_to &gt; <span class="c-s">'2026-02-01'</span>);</code></pre>
-              </div>
-              </details>
-              <details class="peek"><summary>See the pattern in code</summary>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · auth as its own module (NestJS)</em></div>
-<pre class="mono"><code><span class="c-m">// Business modules never parse tokens. They declare who may call them.</span>
-<span class="c-p">@Controller</span>(<span class="c-s">'clients'</span>)
-<span class="c-p">@UseGuards</span>(JwtAuthGuard, RolesGuard)       <span class="c-m">// from AuthModule</span>
-<span class="c-k">export class</span> ClientsController {
-  <span class="c-p">@Get</span>(<span class="c-s">':id'</span>)
-  <span class="c-p">@Roles</span>(<span class="c-s">'partner'</span>, <span class="c-s">'staff'</span>)
-  findOne(<span class="c-p">@Param</span>(<span class="c-s">'id'</span>) id: <span class="c-v">string</span>, <span class="c-p">@User</span>() user: AuthUser) {
-    <span class="c-k">return</span> <span class="c-k">this</span>.clients.findForUser(id, user); <span class="c-m">// ownership check</span>
-  }
-}</code></pre>
-              </div>
-              </details>
-              <p class="note">The firm's system is internal, so there's no public link or code. The same ideas are running in public in <a href="#lab">the lab above</a>.</p>
-            </div>
-          </article>
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Dec 2021 – Feb 2024 · Accenture</p>
-              <h3>A feedback and document platform for 10,000+ users</h3>
-              <p class="org">Application Development Associate · Accenture, Bengaluru</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>Clients sent feedback and uploaded documents on one platform. It had to stay up with 10,000+ concurrent users, and slow endpoints and heavy uploads were holding requests open.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li><b>Spring Boot microservices</b> on Kubernetes, scaled out under load.</li>
-                  <li><b>REST APIs on PostgreSQL</b> made faster with query optimization, indexing and <b>Redis</b> caching.</li>
-                  <li><b>Uploads to Amazon S3</b>, with processing moved off the request path onto <b>Kafka/RabbitMQ</b> consumers.</li>
-                  <li><b>Spring Security with JWT</b> and role-based access on the endpoints.</li>
-                  <li><b>Azure DevOps CI/CD</b> that builds, tests and ships Docker images to Kubernetes.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>10,000+ concurrent users</b><b>APIs 75–80% faster</b><b>uploads off the request path</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="queue">
-                <p class="w-cap mono">try it · 40 users upload at once (simulation)</p>
-                <div class="w-row">
-                  <button type="button" class="w-btn ghost" data-mode="sync">Process inside the request</button>
-                  <button type="button" class="w-btn" data-mode="queue">S3 + Kafka, answer 202</button>
-                </div>
-                <div class="qbar"><span></span></div>
-                <p class="qdepth mono">idle</p>
-                <pre class="w-out mono" aria-live="polite">Each document takes ~900 ms to process. Watch who waits for it.</pre>
-              </div>
-              <details class="peek"><summary>See the pattern in code</summary>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · answer fast, process later (Spring Boot)</em></div>
-<pre class="mono"><code><span class="c-p">@PostMapping</span>(<span class="c-s">"/documents"</span>)
-<span class="c-p">@PreAuthorize</span>(<span class="c-s">"hasRole('CLIENT')"</span>)
-<span class="c-k">public</span> ResponseEntity&lt;Accepted&gt; upload(<span class="c-p">@RequestParam</span> MultipartFile file,
-                                       <span class="c-p">@AuthenticationPrincipal</span> Jwt jwt) {
-  String key = storage.put(file);                         <span class="c-m">// Amazon S3</span>
-  kafka.send(<span class="c-s">"document-uploaded"</span>, <span class="c-k">new</span> Uploaded(key, jwt.getSubject()));
-  <span class="c-k">return</span> ResponseEntity.accepted().body(<span class="c-k">new</span> Accepted(key)); <span class="c-m">// 202 in ms</span>
-}
-
-<span class="c-m">// Hot, rarely-changing reads come from Redis, not Postgres.</span>
-<span class="c-p">@Cacheable</span>(value = <span class="c-s">"feedback-summary"</span>, key = <span class="c-s">"#clientId"</span>)
-<span class="c-k">public</span> FeedbackSummary summary(<span class="c-k">long</span> clientId) { ... }</code></pre>
-              </div>
-              </details>
-              <p class="note">Client code stays with Accenture's client. You can read the same patterns in public in <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>.</p>
-            </div>
-          </article>
-
+          <a href="#lab">next: send a request of your own ↓</a>
         </div>
       </div>
     </section>
@@ -565,9 +381,9 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
       <div class="wrap">
         <div class="sec-head">
           <h2 class="sec-title">Your turn: send your own request</h2>
-          <a class="more mono" href="#java">Read the Java ↓</a>
+          <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot source →</a>
         </div>
-        <p class="section-lede">The hops above, working for real. This is a port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a> contract that runs in your browser. JWTs are really HMAC-signed and passwords really go through PBKDF2 via Web Crypto. It has a token-bucket limiter, tenant-scoped queries, optimistic locking and one error envelope. Pick an attack or write your own request.</p>
+        <p class="section-lede">This is the API from the hops above, and it really runs. It's a browser port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>: the JWTs are actually HMAC-signed and passwords go through PBKDF2 with Web Crypto. Try one of the attacks, or write your own request.</p>
 
         <div class="pg" id="playground">
           <div class="pg-scenarios" role="group" aria-label="Scenarios">
@@ -640,178 +456,6 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
           </div>
         </div>
 
-        <div class="java" id="java">
-          <div class="sec-head">
-            <h3 class="java-title">The Java behind it</h3>
-            <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot 4 · Java 21 · 20 tests →</a>
-          </div>
-          <p class="section-lede java-lede">The playground above runs a port in your browser. This is the real Spring Boot code it mirrors, copied from the public repo. Pick a status code, or run a scenario above and the matching code opens here.</p>
-          <div class="java-tabs" role="tablist" aria-label="Java source by status code">
-            <button type="button" role="tab" aria-selected="true" data-java="auth">401 · Spring Security</button>
-<button type="button" role="tab" aria-selected="false" data-java="tenant">404 · tenant isolation</button>
-<button type="button" role="tab" aria-selected="false" data-java="lock">409 · optimistic locking</button>
-<button type="button" role="tab" aria-selected="false" data-java="limit">429 · rate limiting</button>
-          </div>
-          <div class="java-panel" data-java-panel="auth">
-              <p class="java-desc">The filter chain: stateless JWT auth, JSON 401/403 instead of Spring&#x27;s default 403, and the cheapest checks first.</p>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">SecurityConfig.java · lines 51–77</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/config/SecurityConfig.java#L51-L77" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Bean</span>
-<span class="c-k">public</span> SecurityFilterChain securityFilterChain(HttpSecurity http) <span class="c-k">throws</span> Exception {
-    http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
-            .authorizeHttpRequests(req -&gt; req
-                    .requestMatchers(<span class="c-s">"/api/auth/**"</span>, <span class="c-s">"/actuator/health"</span>, <span class="c-s">"/actuator/health/**"</span>).permitAll()
-                    .anyRequest().authenticated()
-            )
-            .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            <span class="c-m">// Without these, Spring answers a missing/invalid token with 403; the correct status is 401.</span>
-            .exceptionHandling(ex -&gt; ex
-                    .authenticationEntryPoint((request, response, e) -&gt;
-                            JsonErrorWriter.write(response, 401, <span class="c-s">"Authentication required: missing, invalid or expired token."</span>))
-                    .accessDeniedHandler((request, response, e) -&gt;
-                            JsonErrorWriter.write(response, 403, <span class="c-s">"Access denied: You do not have the required role."</span>))
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.<span class="c-k">class</span>);
-
-    <span class="c-m">// Cheapest checks first: tag the request, then rate limit, then authenticate.</span>
-    <span class="c-k">if</span> (rateLimitEnabled) {
-        http.addFilterBefore(<span class="c-k">new</span> RateLimitFilter(rateLimitCapacity, rateLimitRefillPerSecond), JwtAuthenticationFilter.<span class="c-k">class</span>);
-        http.addFilterBefore(<span class="c-k">new</span> RequestIdFilter(), RateLimitFilter.<span class="c-k">class</span>);
-    } <span class="c-k">else</span> {
-        http.addFilterBefore(<span class="c-k">new</span> RequestIdFilter(), JwtAuthenticationFilter.<span class="c-k">class</span>);
-    }</code></pre>
-              </div>
-            </div>
-<div class="java-panel" data-java-panel="tenant" hidden>
-              <p class="java-desc">Tenant scoping lives in the JPA query, so another tenant&#x27;s task is indistinguishable from one that doesn&#x27;t exist. The test proves it for GET, PUT and DELETE.</p>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskRepository.java · lines 16–27</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/repository/TaskRepository.java#L16-L27" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Repository</span>
-<span class="c-k">public</span> <span class="c-k">interface</span> TaskRepository <span class="c-k">extends</span> JpaRepository&lt;Task, UUID&gt; {
-
-    List&lt;Task&gt; findByProjectId(UUID projectId);
-
-    <span class="c-m">// Tenant scoping lives in the query itself: a task outside the caller's tenant</span>
-    <span class="c-m">// is indistinguishable from one that does not exist (404, not 403).</span>
-    <span class="c-p">@Query</span>(<span class="c-s">""</span>"
-            <span class="c-k">select</span> t <span class="c-k">from</span> Task t <span class="c-k">left</span> <span class="c-k">join</span> t.assignee a
-            <span class="c-k">where</span> t.id = :id <span class="c-k">and</span> (t.project.owner.id = :userId <span class="c-k">or</span> a.id = :userId)
-            <span class="c-s">""</span>")
-    Optional&lt;Task&gt; findVisibleById(<span class="c-p">@Param</span>(<span class="c-s">"id"</span>) UUID id, <span class="c-p">@Param</span>(<span class="c-s">"userId"</span>) UUID userId);</code></pre>
-              </div>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java · lines 88–106</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L88-L106" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Test</span>
-<span class="c-k">void</span> anotherTenantsTaskIsNotFoundNotForbidden() <span class="c-k">throws</span> Exception {
-    String alice = register();
-    String bob = register();
-    String taskId = createTask(alice, createProject(alice));
-
-    mvc.perform(get(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
-            .andExpect(status().isNotFound());
-    mvc.perform(put(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(taskJson(<span class="c-s">"Hijack"</span>, null, 0L)))
-            .andExpect(status().isNotFound());
-    mvc.perform(delete(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
-            .andExpect(status().isNotFound());
-
-    <span class="c-m">// Same answer as for a task that doesn't exist at all.</span>
-    mvc.perform(get(<span class="c-s">"/api/tasks/"</span> + UUID.randomUUID()).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
-            .andExpect(status().isNotFound());
-}</code></pre>
-              </div>
-            </div>
-<div class="java-panel" data-java-panel="lock" hidden>
-              <p class="java-desc">A JPA @Version column, a version check in the service, and one handler that turns the conflict into 409. The test replays the lost-update race.</p>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">Task.java · lines 17–18</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/entity/Task.java#L17-L18" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Version</span>
-<span class="c-k">private</span> Long version;</code></pre>
-              </div>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskService.java · lines 65–76</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/service/TaskService.java#L65-L76" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Transactional</span>
-<span class="c-k">public</span> TaskResponseDTO updateTask(UUID taskId, TaskRequestDTO request, User authenticatedUser) {
-    <span class="c-k">if</span> (request.getVersion() == null) {
-        <span class="c-k">throw</span> <span class="c-k">new</span> IllegalArgumentException(<span class="c-s">"version is required when updating a task (optimistic locking)"</span>);
-    }
-
-    Task task = findVisible(taskId, authenticatedUser);
-    requireOwner(task, authenticatedUser, <span class="c-s">"Only the project owner can edit this task"</span>);
-
-    <span class="c-k">if</span> (!request.getVersion().equals(task.getVersion())) {
-        <span class="c-k">throw</span> <span class="c-k">new</span> ObjectOptimisticLockingFailureException(Task.<span class="c-k">class</span>, task.getId());
-    }</code></pre>
-              </div>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">GlobalExceptionHandler.java · lines 94–98</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/exception/GlobalExceptionHandler.java#L94-L98" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@ExceptionHandler</span>(ObjectOptimisticLockingFailureException.<span class="c-k">class</span>)
-<span class="c-k">public</span> ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt; handleOptimisticLocking(ObjectOptimisticLockingFailureException ex) {
-    <span class="c-k">return</span> error(HttpStatus.CONFLICT,
-            <span class="c-s">"Conflict: This record was updated by another user or process. Please refresh and try again."</span>);
-}</code></pre>
-              </div>
-<div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java · lines 134–142</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L134-L142" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-p">@Test</span>
-<span class="c-k">void</span> staleVersionGets409() <span class="c-k">throws</span> Exception {
-    String alice = register();
-    String taskId = createTask(alice, createProject(alice));
-
-    update(alice, taskId, 0L).andExpect(status().isOk()).andExpect(jsonPath(<span class="c-s">"$.data.version"</span>).value(1));
-    <span class="c-m">// A second client still holding version 0 must not overwrite the first client's change.</span>
-    update(alice, taskId, 0L).andExpect(status().isConflict());
-}</code></pre>
-              </div>
-            </div>
-<div class="java-panel" data-java-panel="limit" hidden>
-              <p class="java-desc">A token bucket per client in a servlet filter: thread-safe per bucket, idle buckets evicted, and a Retry-After header on 429.</p>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">RateLimitFilter.java · lines 36–72</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/security/RateLimitFilter.java#L36-L72" target="_blank" rel="noopener">view on GitHub ↗</a></div>
-<pre class="mono"><code><span class="c-k">protected</span> <span class="c-k">void</span> doFilterInternal(
-        <span class="c-p">@NonNull</span> HttpServletRequest request,
-        <span class="c-p">@NonNull</span> HttpServletResponse response,
-        <span class="c-p">@NonNull</span> FilterChain filterChain
-) <span class="c-k">throws</span> ServletException, IOException {
-    <span class="c-k">if</span> (<span class="c-s">"OPTIONS"</span>.equalsIgnoreCase(request.getMethod())) {
-        filterChain.doFilter(request, response);
-        <span class="c-k">return</span>;
-    }
-    <span class="c-k">if</span> (buckets.size() &gt; MAX_TRACKED_CLIENTS) {
-        <span class="c-k">long</span> now = System.nanoTime();
-        buckets.values().removeIf(b -&gt; now - b.lastRefill &gt; IDLE_EVICTION_NANOS);
-    }
-
-    Bucket bucket = buckets.computeIfAbsent(request.getRemoteAddr(), k -&gt; <span class="c-k">new</span> Bucket(capacity));
-    <span class="c-k">long</span> remaining;
-    <span class="c-k">long</span> retryAfterSeconds = 0;
-    <span class="c-k">boolean</span> allowed;
-    <span class="c-k">synchronized</span> (bucket) {
-        bucket.refill(capacity, refillPerSecond);
-        allowed = bucket.tokens &gt;= 1;
-        <span class="c-k">if</span> (allowed) {
-            bucket.tokens -= 1;
-        } <span class="c-k">else</span> {
-            retryAfterSeconds = (<span class="c-k">long</span>) Math.ceil((1 - bucket.tokens) / refillPerSecond);
-        }
-        remaining = (<span class="c-k">long</span>) Math.floor(bucket.tokens);
-    }
-
-    response.setHeader(<span class="c-s">"X-RateLimit-Limit"</span>, String.valueOf(capacity));
-    response.setHeader(<span class="c-s">"X-RateLimit-Remaining"</span>, String.valueOf(remaining));
-    <span class="c-k">if</span> (!allowed) {
-        response.setHeader(<span class="c-s">"Retry-After"</span>, String.valueOf(Math.max(1, retryAfterSeconds)));
-        JsonErrorWriter.write(response, 429, <span class="c-s">"Too many requests. Retry after "</span> + Math.max(1, retryAfterSeconds) + <span class="c-s">"s."</span>);
-        <span class="c-k">return</span>;
-    }
-    filterChain.doFilter(request, response);</code></pre>
-              </div>
-            </div>
-        </div>
       </div>
     </section>
 
@@ -822,44 +466,228 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
           <h2 class="sec-title">Projects: live and running</h2>
           <a class="more mono" href="https://github.com/iamsrkg" target="_blank" rel="noopener">github.com/iamsrkg →</a>
         </div>
-        <p class="section-lede">Backend is where I go deep, but I own features end to end. Every public repo here builds, passes its tests and runs. Open the live version first, then read the code.</p>
+        <p class="section-lede">Things I've built or rebuilt, all public. Each one builds, passes its tests and runs, so open the live version first, then read the code.</p>
         <div class="cards">
-          <article class="card">
+          <article class="card" id="proj-task-api">
             <p class="card-kicker mono">Backend · Java 21 · Spring Boot 4</p>
             <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
-            <p>The Spring Boot service behind the Live API on this page: JWT + RBAC, tenant-scoped queries (404 across tenants), optimistic locking (409), token-bucket rate limiting (429), request IDs and one error envelope. 20 integration tests run in CI with a Docker build on every push.</p>
+            <p>The Spring Boot service the Live API is based on. JWT auth with roles, per-tenant queries (someone else's task is a 404), optimistic locking (409), a token-bucket rate limiter (429), request IDs and one error format. CI runs 20 integration tests and a Docker build on every push.</p>
             <p class="tags"><span>Java 21</span><span>Spring Boot 4</span><span>Spring Security 7</span><span>Spring Data JPA</span><span>PostgreSQL</span><span>JUnit 5 + MockMvc</span><span>Maven</span><span>Docker</span></p>
-            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="#java">Read the Java ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
-          <article class="card">
+          <article class="card" id="proj-jobhunt">
             <p class="card-kicker mono">Full stack · PHP 8.3 · MariaDB · Docker</p>
             <h3><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">JOB-HUNT job portal</a></h3>
-            <p>A 2020 PHP job portal I brought up to modern security: prepared statements everywhere, bcrypt passwords, CSRF tokens, uploads checked by content type and kept out of the web root. It ships as a Docker image with its own database, and 44 end-to-end checks run against that image in CI.</p>
+            <p>A PHP job portal from 2020 that I brought up to date: prepared statements everywhere, bcrypt passwords, CSRF tokens, and uploads checked by content type and stored outside the web root. It runs as one Docker image with its own database, and CI runs 44 end-to-end checks against it.</p>
             <p class="tags"><span>PHP 8.3</span><span>MariaDB</span><span>Apache</span><span>Docker</span><span>bash e2e</span></p>
             <p class="card-links"><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">Code ↗</a></p>
             <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -e PORT=8080 -p 8080:8080 job-hunt</pre>
           </article>
-          <article class="card">
+          <article class="card" id="proj-video">
             <p class="card-kicker mono">Full stack · OpenCV · runs in the browser</p>
             <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
-            <p>A gate access logger: enroll a face, train, and it logs who walks past the camera and when. It uses Haar-cascade detection with an LBPH recognizer, chosen because it runs on a CPU and trains on a few dozen samples. The web version runs OpenCV in a Web Worker, and no frame leaves your device.</p>
+            <p>Enroll a face, train a model, and it logs who walks past the camera and when. It finds faces with a Haar cascade and recognises them with LBPH, which runs fine on a CPU and only needs a few dozen photos per person. The browser version runs OpenCV in a Web Worker, and no frame leaves your device.</p>
             <p class="tags"><span>Python</span><span>OpenCV</span><span>LBPH</span><span>JavaScript</span><span>Web Worker</span></p>
             <p class="card-links"><a class="live" href="https://iamsrkg.github.io/Video-Based-Dynamic-Human-Authentication-System/" target="_blank" rel="noopener">Try it live ↗</a> <a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
-          <article class="card">
+          <article class="card" id="proj-ttt">
             <p class="card-kicker mono">React Native · Expo SDK 57 · real time</p>
             <h3><a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Online Tic-Tac-Toe</a></h3>
-            <p>Two players, two devices, one room code, synced in real time over PubNub. I upgraded it from React Native 0.59 to Expo SDK 57 so the same code runs on Android, iOS and the web. The game rules are tested on their own.</p>
+            <p>Two players on two devices join the same room code and play in real time over PubNub. I moved it from React Native 0.59 to Expo SDK 57, so the same code now runs on Android, iOS and the web. The game rules have their own tests.</p>
             <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
             <p class="card-links"><a class="live" href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
           <article class="card">
             <p class="card-kicker mono">This site · no framework</p>
             <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
-            <p>A REST API emulated in the browser with real crypto (HMAC-signed JWTs, PBKDF2), a Postman-style client, request tracing and a live log. The request journey and the widgets are hand-built too. No build step, no dependencies.</p>
+            <p>The Live API runs inside your browser with real crypto (HMAC-signed JWTs, PBKDF2), along with the client, the request trace and the log. The rest, the request journey and the demos, is plain HTML, CSS and JavaScript I wrote by hand. No framework, no build step.</p>
             <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
             <p class="card-links"><a class="live" href="#top">You're on it ↑</a> <a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE WORK, JOB BY JOB ============ -->
+    <section id="work" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">What I built at work, and how</h2>
+        <p class="section-lede">The same story, job by job: what the problem was, what I built and what changed. I can't share client code, so each job has a small simulation you can click, and a short sketch of the pattern I used.</p>
+        <div class="cases">
+
+          <article class="case" id="case-m365">
+            <div>
+              <p class="case-meta mono">Mar 2024 – now · Accenture</p>
+              <h3>Enterprise Microsoft 365, automated over APIs</h3>
+              <p class="org">Infra Managed Service Analyst, Backend &amp; Automation · Accenture, Bengaluru</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>Provisioning, governance and reporting across big Microsoft 365 tenants were being done by hand, one admin portal at a time.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li>API-driven admin workflows in <b>PowerShell 7</b> on the <b>Microsoft Graph API</b> for provisioning, governance and reporting.</li>
+                  <li><b>PnP PowerShell</b> automation for server management and tenant-wide governance across SharePoint, Teams, OneDrive and Power Platform.</li>
+                  <li><b>L2/L3 production support:</b> root-cause analysis on complex, cross-platform incidents while keeping the service reliable.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>75% less manual effort</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="graph">
+                <p class="w-cap mono">try it · a tenant-wide governance run over a paged API (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn" data-act="run">Find ownerless Teams</button>
+                  <button type="button" class="w-btn ghost" data-act="csv" hidden>Download the report (CSV)</button>
+                </div>
+                <pre class="w-out mono" aria-live="polite">230 Teams in this pretend tenant. The API returns 100 per page.</pre>
+              </div>
+              <details class="peek"><summary>See the pattern in code</summary>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · a governance report over Graph</em></div>
+<pre class="mono"><code><span class="c-m"># Find every Team with no owner. Graph pages its results, so follow nextLink.</span>
+$uri = <span class="c-s">'https://graph.microsoft.com/v1.0/groups?$select=id,displayName' +
+       '&amp;$filter=resourceProvisioningOptions/Any(x:x eq ''Team'')'</span>
+$report = <span class="c-k">do</span> {
+  $page = <span class="c-p">Invoke-MgGraphRequest</span> -Uri $uri
+  <span class="c-k">foreach</span> ($g <span class="c-k">in</span> $page.value) {
+    $owners = <span class="c-p">Invoke-MgGraphRequest</span> -Uri <span class="c-s">"https://graph.microsoft.com/v1.0/groups/$($g.id)/owners"</span>
+    <span class="c-k">if</span> (-not $owners.value) { [pscustomobject]@{ Team = $g.displayName; Id = $g.id } }
+  }
+  $uri = $page.<span class="c-s">'@odata.nextLink'</span>
+} <span class="c-k">while</span> ($uri)
+
+$report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInformation</code></pre>
+              </div>
+              </details>
+              <p class="note">It's still backend work: an API contract, paging, auth scopes and handling failures. The API just happens to be Microsoft's.</p>
+            </div>
+          </article>
+
+          <article class="case" id="case-freelance">
+            <div>
+              <p class="case-meta mono">Nov 2025 – Mar 2026 · freelance, solo</p>
+              <h3>A B2B client management platform</h3>
+              <p class="org">Backend Engineer · CA Sanjeev Gupta &amp; Co., a chartered accountancy firm</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>The firm handled its internal work and its client requests by hand. They wanted one secure platform for both, and I was the only engineer on it.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li><b>Architecture:</b> Node.js, NestJS and TypeScript in a hybrid service-oriented design, with <b>authentication split out from the core business services</b>.</li>
+                  <li><b>Security:</b> JWT, RBAC, rate limiting, IP throttling, encryption and audit logging.</li>
+                  <li><b>Content:</b> a headless CMS with <b>Type-2 audit versioning</b> (every edit is a new row, nothing is overwritten) and automatic SEO metadata.</li>
+                  <li><b>Data:</b> MySQL 8 with query tuning, TypeORM indexes and caching.</li>
+                  <li><b>Delivery:</b> Docker Compose in production, with the backend, the auth service and the frontend in separate containers behind Nginx, built with multi-stage Dockerfiles.</li>
+                  <li><b>AI:</b> I used Claude Code to move faster, and every change went through tests and review.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>60% less coupling</b><b>&lt;100 ms APIs</b><b>90% faster content ops</b><b>deploys 20 → 3 min</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="type2">
+                <p class="w-cap mono">try it · a CMS page with Type-2 versioning (simulation)</p>
+                <label class="sr-only" for="t2-body">Page text</label>
+                <textarea id="t2-body" class="w-input mono" rows="2" spellcheck="false"></textarea>
+                <div class="w-row">
+                  <label class="w-toggle">edit as <select class="w-select mono"><option>partner</option><option>staff</option><option>client</option></select></label>
+                  <button type="button" class="w-btn" data-act="save">Save a new version</button>
+                </div>
+                <div class="t2-wrap"><table class="t2 mono"><thead><tr><th>ver</th><th>body</th><th>by</th><th>valid_from</th><th>valid_to</th></tr></thead><tbody></tbody></table></div>
+                <label class="w-toggle">time travel <input type="range" min="0" max="1" value="1"></label>
+                <pre class="w-out mono asof-out"></pre>
+              </div>
+              <details class="peek"><summary>See the pattern in code</summary>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · Type-2 versioning in SQL</em></div>
+<pre class="mono"><code><span class="c-m">-- An edit never overwrites: it closes the current row and adds a new one.</span>
+<span class="c-k">UPDATE</span> page_versions
+   <span class="c-k">SET</span> valid_to = now(), is_current = <span class="c-v">false</span>
+ <span class="c-k">WHERE</span> page_id = $1 <span class="c-k">AND</span> is_current;
+
+<span class="c-k">INSERT INTO</span> page_versions (page_id, body, edited_by, valid_from, is_current)
+<span class="c-k">VALUES</span> ($1, $2, $3, now(), <span class="c-v">true</span>);
+
+<span class="c-m">-- "What did this page say on 1 Feb, and who changed it?"
+-- is now a query, not a backup restore.</span>
+<span class="c-k">SELECT</span> body, edited_by <span class="c-k">FROM</span> page_versions
+ <span class="c-k">WHERE</span> page_id = $1
+   <span class="c-k">AND</span> valid_from &lt;= <span class="c-s">'2026-02-01'</span>
+   <span class="c-k">AND</span> (valid_to <span class="c-k">IS NULL OR</span> valid_to &gt; <span class="c-s">'2026-02-01'</span>);</code></pre>
+              </div>
+              </details>
+              <details class="peek"><summary>See the pattern in code</summary>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · auth as its own module (NestJS)</em></div>
+<pre class="mono"><code><span class="c-m">// Business modules never parse tokens. They declare who may call them.</span>
+<span class="c-p">@Controller</span>(<span class="c-s">'clients'</span>)
+<span class="c-p">@UseGuards</span>(JwtAuthGuard, RolesGuard)       <span class="c-m">// from AuthModule</span>
+<span class="c-k">export class</span> ClientsController {
+  <span class="c-p">@Get</span>(<span class="c-s">':id'</span>)
+  <span class="c-p">@Roles</span>(<span class="c-s">'partner'</span>, <span class="c-s">'staff'</span>)
+  findOne(<span class="c-p">@Param</span>(<span class="c-s">'id'</span>) id: <span class="c-v">string</span>, <span class="c-p">@User</span>() user: AuthUser) {
+    <span class="c-k">return</span> <span class="c-k">this</span>.clients.findForUser(id, user); <span class="c-m">// ownership check</span>
+  }
+}</code></pre>
+              </div>
+              </details>
+              <p class="note">The firm's system is internal, so I can't link it or show its code. The same ideas run in public in <a href="#lab">the Live API</a> above.</p>
+            </div>
+          </article>
+
+          <article class="case" id="case-spring">
+            <div>
+              <p class="case-meta mono">Dec 2021 – Feb 2024 · Accenture</p>
+              <h3>A feedback and document platform for 10,000+ users</h3>
+              <p class="org">Application Development Associate · Accenture, Bengaluru</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>Clients used one platform to send feedback and upload documents. It had to hold up with 10,000+ people online at once, and slow endpoints and big uploads were keeping requests open too long.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li><b>Spring Boot microservices</b> on Kubernetes, scaled out under load.</li>
+                  <li><b>REST APIs on PostgreSQL</b> made faster with query optimization, indexing and <b>Redis</b> caching.</li>
+                  <li><b>Uploads to Amazon S3</b>, with processing moved off the request path onto <b>Kafka/RabbitMQ</b> consumers.</li>
+                  <li><b>Spring Security with JWT</b> and role-based access on the endpoints.</li>
+                  <li><b>Azure DevOps CI/CD</b> that builds, tests and ships Docker images to Kubernetes.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>10,000+ concurrent users</b><b>APIs 75–80% faster</b><b>uploads off the request path</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="queue">
+                <p class="w-cap mono">try it · 40 users upload at once (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn ghost" data-mode="sync">Process inside the request</button>
+                  <button type="button" class="w-btn" data-mode="queue">S3 + Kafka, answer 202</button>
+                </div>
+                <div class="qbar"><span></span></div>
+                <p class="qdepth mono">idle</p>
+                <pre class="w-out mono" aria-live="polite">Each document takes ~900 ms to process. Watch who waits for it.</pre>
+              </div>
+              <details class="peek"><summary>See the pattern in code</summary>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · answer fast, process later (Spring Boot)</em></div>
+<pre class="mono"><code><span class="c-p">@PostMapping</span>(<span class="c-s">"/documents"</span>)
+<span class="c-p">@PreAuthorize</span>(<span class="c-s">"hasRole('CLIENT')"</span>)
+<span class="c-k">public</span> ResponseEntity&lt;Accepted&gt; upload(<span class="c-p">@RequestParam</span> MultipartFile file,
+                                       <span class="c-p">@AuthenticationPrincipal</span> Jwt jwt) {
+  String key = storage.put(file);                         <span class="c-m">// Amazon S3</span>
+  kafka.send(<span class="c-s">"document-uploaded"</span>, <span class="c-k">new</span> Uploaded(key, jwt.getSubject()));
+  <span class="c-k">return</span> ResponseEntity.accepted().body(<span class="c-k">new</span> Accepted(key)); <span class="c-m">// 202 in ms</span>
+}
+
+<span class="c-m">// Hot, rarely-changing reads come from Redis, not Postgres.</span>
+<span class="c-p">@Cacheable</span>(value = <span class="c-s">"feedback-summary"</span>, key = <span class="c-s">"#clientId"</span>)
+<span class="c-k">public</span> FeedbackSummary summary(<span class="c-k">long</span> clientId) { ... }</code></pre>
+              </div>
+              </details>
+              <p class="note">The client code stays with Accenture's client. The same patterns are in my public <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>.</p>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
@@ -870,38 +698,33 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
         <div>
           <h2 class="sec-title">About</h2>
           <div class="prose">
-            <p>I'm Sudheer. I started out writing Spring Boot services at Accenture and scaled one to 10,000+ concurrent users. Since 2024 I've automated enterprise Microsoft 365 over the Graph API, and along the way I designed and shipped a B2B platform on my own as a freelancer. That platform is a client's internal system, so its code isn't public. My <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a> uses the same patterns in the open.</p>
-            <p>I'm authorized to work in India and Thailand with no visa sponsorship needed, and I'm open to on-site, hybrid or remote roles.</p>
-            <p>I learn new stacks quickly: I took a React Native 0.59 game to Expo SDK 57 and onto the web, and ported a Python face-recognition app to run in the browser. I use AI tools like Claude Code the way I use any tool: I review every change and test it before it ships.</p>
+            <p>I'm Sudheer. I started at Accenture in 2021 writing Spring Boot services for a platform that grew to 10,000+ people online at once. That's where I learned most of what's on this page: Kafka for the slow work, Redis and indexes for the slow queries, Docker and Kubernetes for shipping it.</p>
+            <p>Since 2024 I've been automating Microsoft 365 for enterprise clients through the Graph API. On the side, from late 2025, I built a B2B platform for a CA firm on my own, in NestJS and TypeScript. Being the only engineer taught me a lot: I owned everything from the database to the deploy.</p>
+            <p>The parts I enjoy most are the ones users never see: why a query is slow, who's allowed to see which row, what happens when two people save the same thing at once. I pick up new stacks quickly, and I use Claude Code every day, but I read and test everything before it ships.</p>
+            <p>I'm looking for a Java backend role, or a backend or full-stack one. I can work in India or Thailand without visa sponsorship, on-site, hybrid or remote.</p>
           </div>
         </div>
 
         <div class="about-side">
           <div class="side-block">
-            <p class="pg-cap mono">track record</p>
-            <ol class="track">
-              <li><span class="mono when">Mar 2024 – now</span><div><b>Infra Managed Service Analyst, Backend &amp; Automation</b><span>Accenture · Graph API automation, M365 governance</span></div></li>
-              <li><span class="mono when">Nov 2025 – Mar 2026</span><div><b>Backend Engineer, freelance</b><span>CA Sanjeev Gupta &amp; Co. · NestJS B2B platform · alongside Accenture</span></div></li>
-              <li><span class="mono when">Dec 2021 – Feb 2024</span><div><b>Application Development Associate</b><span>Accenture · Spring Boot microservices</span></div></li>
-            </ol>
-          </div>
-
-          <div class="side-block">
-            <p class="pg-cap mono">toolbox</p>
-            <dl class="toolbox">
-              <div><dt>java</dt><dd>Java 21, Spring Boot, Spring Security, Spring Data JPA, JUnit 5 + MockMvc, Maven</dd></div>
-              <div><dt>node</dt><dd>Node.js, NestJS, Express.js, TypeScript, TypeORM</dd></div>
-              <div><dt>data</dt><dd>PostgreSQL, MySQL, MongoDB, Redis, Kafka, RabbitMQ</dd></div>
-              <div><dt>design</dt><dd>REST APIs, microservices, event-driven systems, JWT + RBAC, rate limiting, audit logging</dd></div>
-              <div><dt>cloud</dt><dd>AWS (Certified SA – Associate), S3, Docker, Kubernetes, Nginx, Azure DevOps, GitHub Actions, Linux</dd></div>
-              <div><dt>front</dt><dd>JavaScript, React Native (Expo), HTML/CSS, Web Workers</dd></div>
-              <div><dt>tools</dt><dd>Git, Swagger/OpenAPI, Postman, PowerShell, Claude Code</dd></div>
-            </dl>
+            <p class="pg-cap mono">what I work with · click to see it on this page</p>
+            <p class="sk-cap mono">java backend</p>
+            <div class="sk-list">
+              <a class="sk" href="#proj-task-api">Java 21 · Spring Boot</a> <a class="sk" href="#lab">REST APIs</a> <a class="sk" href="#hop-auth">Spring Security · JWT</a> <a class="sk" href="#proj-task-api">Spring Data JPA</a> <a class="sk" href="#proj-task-api">JUnit 5 · MockMvc</a> <a class="sk" href="#case-spring">Microservices</a>
+            </div>
+            <p class="sk-cap mono">backend</p>
+            <div class="sk-list">
+              <a class="sk" href="#hop-queue">Kafka · RabbitMQ</a> <a class="sk" href="#hop-data">PostgreSQL · MySQL</a> <a class="sk" href="#hop-data">Redis</a> <a class="sk" href="#hop-edge">Docker</a> <a class="sk" href="#hop-service">Kubernetes</a> <a class="sk" href="#hop-queue">AWS · S3</a> <a class="sk" href="#hop-edge">CI/CD</a> <a class="sk" href="#case-freelance">Node.js · NestJS</a>
+            </div>
+            <p class="sk-cap mono">full stack</p>
+            <div class="sk-list">
+              <a class="sk" href="#case-freelance">TypeScript</a> <a class="sk" href="#proj-ttt">React Native · Expo</a> <a class="sk" href="#proj-video">JavaScript</a> <a class="sk" href="#proj-jobhunt">PHP</a>
+            </div>
           </div>
           <div class="side-block">
             <p class="pg-cap mono">credentials</p>
             <ul class="creds-list">
-              <li><b>AWS Certified Solutions Architect – Associate</b> <span class="muted">· Feb 2025–Feb 2028 ·</span> <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">verify on Credly</a></li>
+              <li><b>AWS Certified Solutions Architect – Associate</b> <span class="muted">· valid to Feb 2028 ·</span> <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">verify on Credly</a></li>
               <li><b>B.Tech, Computer Science</b> <span class="muted">· Vel Tech R&amp;D Institute, Chennai · CGPA 8.23</span></li>
               <li><b>Co-founder</b> <span class="muted">· WUS Bhoomika Eco Logistics, B2B waste logistics (pre-launch)</span></li>
             </ul>
@@ -917,7 +740,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
           <header class="hop-head">
             <p class="hop-meta mono"><span>hop 07</span><span>t+18ms · 200 OK</span></p>
             <h2>Response</h2>
-            <p class="hop-what">The request is back, after everything you've seen. Here's what it was fetching, and the next step is yours.</p>
+            <p class="hop-what">And the response is back. This is what the request was fetching. The next step is yours.</p>
           </header>
           <div class="terminal response">
             <div class="term-bar"><span></span><span></span><span></span><em class="mono">GET /hire/sudheer</em></div>
@@ -973,6 +796,7 @@ X-Response-Time: 18ms
   <script src="journey.js" defer></script>
   <script src="playground.js" defer></script>
   <script src="work.js" defer></script>
+  <script src="cursor.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;

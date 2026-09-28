@@ -432,18 +432,18 @@ code { font-family: var(--mono); font-size: .86em; padding: 1px 6px; border-radi
   .ask { margin-top: 18px; padding-top: 12px; }
 }
 
-/* The Java behind the Live API */
-.java { margin-top: 56px; }
-.java-title { font-size: clamp(22px, 2.6vw, 28px); letter-spacing: -0.02em; }
-.java-lede { margin: 8px 0 18px; }
-.java-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.java-tabs button { font: 600 13px var(--mono); padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); cursor: pointer; }
-.java-tabs button[aria-selected="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
-.java-panel { display: grid; gap: 12px; }
-.java-desc { margin: 0; color: var(--text-2); max-width: 80ch; }
-.java .term-bar .src { margin-left: auto; font-size: 12px; color: #3ddc97; text-decoration: none; }
-.java .terminal pre { font-size: 12.5px; max-height: 460px; }
-.toolbox div { grid-template-columns: 64px 1fr; }
+/* About: skills that link to where they're shown */
+.sk-cap { margin: 10px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.sk-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.sk { font-size: 13px; text-decoration: none; padding: 4px 10px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); }
+.sk:hover { border-color: var(--accent); color: var(--text); }
+
+/* cursor-driven service mesh behind the page */
+.mesh { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+main, .footer { position: relative; z-index: 1; }
+.mesh-hud { position: fixed; right: 14px; bottom: 12px; z-index: 40; pointer-events: none; font-size: 11px; color: var(--text-2);
+  background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 4px 9px;
+  max-width: min(560px, calc(100vw - 28px)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {

@@ -119,18 +119,4 @@
       btns.forEach((x) => (x.disabled = false));
     }));
   }
-  // ---------- The Java behind the Live API: tabs, and the playground opens the matching code ----------
-  const java = $('#java');
-  if (java) {
-    const show = (key) => {
-      java.querySelectorAll('[data-java]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.java === key)));
-      java.querySelectorAll('[data-java-panel]').forEach((p) => { p.hidden = p.dataset.javaPanel !== key; });
-    };
-    java.querySelectorAll('[data-java]').forEach((b) => b.addEventListener('click', () => show(b.dataset.java)));
-    const byScenario = { noauth: 'auth', tamper: 'auth', admin: 'auth', tenant: 'tenant', conflict: 'lock', burst: 'limit' };
-    document.querySelectorAll('[data-scenario]').forEach((b) => b.addEventListener('click', () => {
-      const key = byScenario[b.dataset.scenario];
-      if (key) show(key);
-    }));
-  }
 })();
