@@ -48,10 +48,10 @@
       <nav aria-label="Primary">
         <ul class="nav-links">
           <li><a href="#journey">The request</a></li>
-          <li><a href="#lab">Live API</a></li>
           <li><a href="#work">Work</a></li>
-          <li><a href="#frontend">Front end</a></li>
-          <li><a href="#github">GitHub</a></li>
+          <li><a href="#lab">Live API</a></li>
+          <li><a href="#github">Projects</a></li>
+          <li><a href="#private">Private</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#hop-response">Contact</a></li>
         </ul>
@@ -79,6 +79,12 @@
           </a>
           <a class="btn btn-ghost" href="#lab">Skip to the live API</a>
         </div>
+        <dl class="proof mono" aria-label="Results from production">
+          <div><dt>concurrent users served</dt><dd>10,000+</dd></div>
+          <div><dt>faster APIs after query + cache work</dt><dd>75–80%</dd></div>
+          <div><dt>API responses, platform built solo</dt><dd>&lt;100 ms</dd></div>
+          <div><dt>deploy time after the pipeline rework</dt><dd>20 → 3 min</dd></div>
+        </dl>
         <p class="opening-meta mono">
           <span><span class="dot" aria-hidden="true"></span> serving notice</span>
           <span>Authorized to work in India and Thailand · no visa sponsorship needed</span>
@@ -364,7 +370,183 @@
         <!-- The response returns at the very end of the page -->
         <div class="inflight mono">
           <span class="dot" aria-hidden="true"></span> response in flight…
-          <a href="#lab">meanwhile, send a request of your own ↓</a>
+          <a href="#work">next: where I built all this ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE WORK, JOB BY JOB ============ -->
+    <section id="work" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">What I built at work, and how</h2>
+        <p class="section-lede">The hops above, told job by job from the backend side: the problem, what I built, and what it changed. Client code stays with the client, so each job gets a small working simulation you can click, plus a short sketch of the pattern. Both are written for this page.</p>
+        <div class="cases">
+
+          <article class="case">
+            <div>
+              <p class="case-meta mono">Mar 2024 – now · Accenture</p>
+              <h3>Enterprise Microsoft 365, automated over APIs</h3>
+              <p class="org">Infra Managed Service Analyst, Backend &amp; Automation · Accenture, Bengaluru</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>Bulk provisioning, tenant-wide governance and reporting across enterprise Microsoft 365 were done by hand, one admin portal at a time.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li>API-driven admin workflows in <b>PowerShell 7</b> on the <b>Microsoft Graph API</b> for provisioning, governance and reporting.</li>
+                  <li><b>PnP PowerShell</b> automation for server management and tenant-wide governance across SharePoint, Teams, OneDrive and Power Platform.</li>
+                  <li><b>L2/L3 production support:</b> root-cause analysis on complex, cross-platform incidents while keeping the service reliable.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>75% less manual effort</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="graph">
+                <p class="w-cap mono">try it · a tenant-wide governance run over a paged API (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn" data-act="run">Find ownerless Teams</button>
+                  <button type="button" class="w-btn ghost" data-act="csv" hidden>Download the report (CSV)</button>
+                </div>
+                <pre class="w-out mono" aria-live="polite">230 Teams in this pretend tenant. The API returns 100 per page.</pre>
+              </div>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · a governance report over Graph</em></div>
+<pre class="mono"><code><span class="c-m"># Find every Team with no owner. Graph pages its results, so follow nextLink.</span>
+$uri = <span class="c-s">'https://graph.microsoft.com/v1.0/groups?$select=id,displayName' +
+       '&amp;$filter=resourceProvisioningOptions/Any(x:x eq ''Team'')'</span>
+$report = <span class="c-k">do</span> {
+  $page = <span class="c-p">Invoke-MgGraphRequest</span> -Uri $uri
+  <span class="c-k">foreach</span> ($g <span class="c-k">in</span> $page.value) {
+    $owners = <span class="c-p">Invoke-MgGraphRequest</span> -Uri <span class="c-s">"https://graph.microsoft.com/v1.0/groups/$($g.id)/owners"</span>
+    <span class="c-k">if</span> (-not $owners.value) { [pscustomobject]@{ Team = $g.displayName; Id = $g.id } }
+  }
+  $uri = $page.<span class="c-s">'@odata.nextLink'</span>
+} <span class="c-k">while</span> ($uri)
+
+$report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInformation</code></pre>
+              </div>
+              <p class="note">It's the same backend skill set: an API contract, paging, auth scopes and failure handling. The only difference is that the API belongs to Microsoft.</p>
+            </div>
+          </article>
+
+          <article class="case">
+            <div>
+              <p class="case-meta mono">Nov 2025 – Mar 2026 · freelance, solo</p>
+              <h3>A B2B client management platform</h3>
+              <p class="org">Backend Engineer · CA Sanjeev Gupta &amp; Co., a chartered accountancy firm</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>The firm's internal workflows and its dealings with enterprise clients ran by hand. They needed one secure platform for both, and I was the only engineer.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li><b>Architecture:</b> Node.js, NestJS and TypeScript in a hybrid service-oriented design, with <b>authentication split out from the core business services</b>.</li>
+                  <li><b>Security:</b> JWT, RBAC, rate limiting, IP throttling, encryption and audit logging.</li>
+                  <li><b>Content:</b> a headless CMS with <b>Type-2 audit versioning</b> (every edit is a new row, nothing is overwritten) and automatic SEO metadata.</li>
+                  <li><b>Data:</b> PostgreSQL with query tuning, TypeORM indexes and caching.</li>
+                  <li><b>Delivery:</b> Docker multi-stage builds behind Nginx.</li>
+                  <li><b>AI:</b> Claude Code to move faster, with every change checked by tests and review.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>60% less coupling</b><b>&lt;100 ms APIs</b><b>90% faster content ops</b><b>deploys 20 → 3 min</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="type2">
+                <p class="w-cap mono">try it · a CMS page with Type-2 versioning (simulation)</p>
+                <label class="sr-only" for="t2-body">Page text</label>
+                <textarea id="t2-body" class="w-input mono" rows="2" spellcheck="false"></textarea>
+                <div class="w-row">
+                  <label class="w-toggle">edit as <select class="w-select mono"><option>partner</option><option>staff</option><option>client</option></select></label>
+                  <button type="button" class="w-btn" data-act="save">Save a new version</button>
+                </div>
+                <div class="t2-wrap"><table class="t2 mono"><thead><tr><th>ver</th><th>body</th><th>by</th><th>valid_from</th><th>valid_to</th></tr></thead><tbody></tbody></table></div>
+                <label class="w-toggle">time travel <input type="range" min="0" max="1" value="1"></label>
+                <pre class="w-out mono asof-out"></pre>
+              </div>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · Type-2 versioning in SQL</em></div>
+<pre class="mono"><code><span class="c-m">-- An edit never overwrites: it closes the current row and adds a new one.</span>
+<span class="c-k">UPDATE</span> page_versions
+   <span class="c-k">SET</span> valid_to = now(), is_current = <span class="c-v">false</span>
+ <span class="c-k">WHERE</span> page_id = $1 <span class="c-k">AND</span> is_current;
+
+<span class="c-k">INSERT INTO</span> page_versions (page_id, body, edited_by, valid_from, is_current)
+<span class="c-k">VALUES</span> ($1, $2, $3, now(), <span class="c-v">true</span>);
+
+<span class="c-m">-- "What did this page say on 1 Feb, and who changed it?"
+-- is now a query, not a backup restore.</span>
+<span class="c-k">SELECT</span> body, edited_by <span class="c-k">FROM</span> page_versions
+ <span class="c-k">WHERE</span> page_id = $1
+   <span class="c-k">AND</span> valid_from &lt;= <span class="c-s">'2026-02-01'</span>
+   <span class="c-k">AND</span> (valid_to <span class="c-k">IS NULL OR</span> valid_to &gt; <span class="c-s">'2026-02-01'</span>);</code></pre>
+              </div>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · auth as its own module (NestJS)</em></div>
+<pre class="mono"><code><span class="c-m">// Business modules never parse tokens. They declare who may call them.</span>
+<span class="c-p">@Controller</span>(<span class="c-s">'clients'</span>)
+<span class="c-p">@UseGuards</span>(JwtAuthGuard, RolesGuard)       <span class="c-m">// from AuthModule</span>
+<span class="c-k">export class</span> ClientsController {
+  <span class="c-p">@Get</span>(<span class="c-s">':id'</span>)
+  <span class="c-p">@Roles</span>(<span class="c-s">'partner'</span>, <span class="c-s">'staff'</span>)
+  findOne(<span class="c-p">@Param</span>(<span class="c-s">'id'</span>) id: <span class="c-v">string</span>, <span class="c-p">@User</span>() user: AuthUser) {
+    <span class="c-k">return</span> <span class="c-k">this</span>.clients.findForUser(id, user); <span class="c-m">// ownership check</span>
+  }
+}</code></pre>
+              </div>
+              <p class="note">The firm's system is internal, so there's no public link or code. The same ideas are running in public in <a href="#lab">the lab above</a>.</p>
+            </div>
+          </article>
+
+          <article class="case">
+            <div>
+              <p class="case-meta mono">Dec 2021 – Feb 2024 · Accenture</p>
+              <h3>A feedback and document platform for 10,000+ users</h3>
+              <p class="org">Application Development Associate · Accenture, Bengaluru</p>
+              <dl>
+                <dt>The problem</dt>
+                <dd>Clients sent feedback and uploaded documents on one platform. It had to stay up with 10,000+ concurrent users, and slow endpoints and heavy uploads were holding requests open.</dd>
+                <dt>What I built</dt>
+                <dd><ul>
+                  <li><b>Spring Boot microservices</b> on Kubernetes, scaled out under load.</li>
+                  <li><b>REST APIs on PostgreSQL</b> made faster with query optimization, indexing and <b>Redis</b> caching.</li>
+                  <li><b>Uploads to Amazon S3</b>, with processing moved off the request path onto <b>Kafka/RabbitMQ</b> consumers.</li>
+                  <li><b>Spring Security with JWT</b> and role-based access on the endpoints.</li>
+                  <li><b>Azure DevOps CI/CD</b> that builds, tests and ships Docker images to Kubernetes.</li>
+                </ul></dd>
+                <dt>What changed</dt>
+                <dd class="result"><b>10,000+ concurrent users</b><b>APIs 75–80% faster</b><b>uploads off the request path</b></dd>
+              </dl>
+            </div>
+            <div class="example">
+              <div class="widget" data-widget="queue">
+                <p class="w-cap mono">try it · 40 users upload at once (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn ghost" data-mode="sync">Process inside the request</button>
+                  <button type="button" class="w-btn" data-mode="queue">S3 + Kafka, answer 202</button>
+                </div>
+                <div class="qbar"><span></span></div>
+                <p class="qdepth mono">idle</p>
+                <pre class="w-out mono" aria-live="polite">Each document takes ~900 ms to process. Watch who waits for it.</pre>
+              </div>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · answer fast, process later (Spring Boot)</em></div>
+<pre class="mono"><code><span class="c-p">@PostMapping</span>(<span class="c-s">"/documents"</span>)
+<span class="c-p">@PreAuthorize</span>(<span class="c-s">"hasRole('CLIENT')"</span>)
+<span class="c-k">public</span> ResponseEntity&lt;Accepted&gt; upload(<span class="c-p">@RequestParam</span> MultipartFile file,
+                                       <span class="c-p">@AuthenticationPrincipal</span> Jwt jwt) {
+  String key = storage.put(file);                         <span class="c-m">// Amazon S3</span>
+  kafka.send(<span class="c-s">"document-uploaded"</span>, <span class="c-k">new</span> Uploaded(key, jwt.getSubject()));
+  <span class="c-k">return</span> ResponseEntity.accepted().body(<span class="c-k">new</span> Accepted(key)); <span class="c-m">// 202 in ms</span>
+}
+
+<span class="c-m">// Hot, rarely-changing reads come from Redis, not Postgres.</span>
+<span class="c-p">@Cacheable</span>(value = <span class="c-s">"feedback-summary"</span>, key = <span class="c-s">"#clientId"</span>)
+<span class="c-k">public</span> FeedbackSummary summary(<span class="c-k">long</span> clientId) { ... }</code></pre>
+              </div>
+              <p class="note">Client code stays with Accenture's client. You can read the same patterns in public in <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>.</p>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
@@ -451,205 +633,6 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
       </div>
     </section>
 
-    <!-- ============ THE WORK, JOB BY JOB ============ -->
-    <section id="work" class="section">
-      <div class="wrap">
-        <h2 class="sec-title">What I built at work, and how</h2>
-        <p class="section-lede">The hops above, told job by job from the backend side: the problem, what I built, and what it changed. Client code stays with the client, so each job gets a small working simulation you can click, plus a short sketch of the pattern. Both are written for this page.</p>
-        <div class="cases">
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Nov 2025 – Mar 2026 · freelance, solo</p>
-              <h3>A B2B client management platform</h3>
-              <p class="org">Backend Engineer · CA Sanjeev Gupta &amp; Co., a chartered accountancy firm</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>The firm's internal workflows and its dealings with enterprise clients ran by hand. They needed one secure platform for both, and I was the only engineer.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li><b>Architecture:</b> Node.js, NestJS and TypeScript in a hybrid service-oriented design, with <b>authentication split out from the core business services</b>.</li>
-                  <li><b>Security:</b> JWT, RBAC, rate limiting, IP throttling, encryption and audit logging.</li>
-                  <li><b>Content:</b> a headless CMS with <b>Type-2 audit versioning</b> (every edit is a new row, nothing is overwritten) and automatic SEO metadata.</li>
-                  <li><b>Data:</b> PostgreSQL with query tuning, TypeORM indexes and caching.</li>
-                  <li><b>Delivery:</b> Docker multi-stage builds behind Nginx.</li>
-                  <li><b>AI:</b> Claude Code to move faster, with every change checked by tests and review.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>60% less coupling</b><b>&lt;100 ms APIs</b><b>90% faster content ops</b><b>deploys 20 → 3 min</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="type2">
-                <p class="w-cap mono">try it · a CMS page with Type-2 versioning (simulation)</p>
-                <label class="sr-only" for="t2-body">Page text</label>
-                <textarea id="t2-body" class="w-input mono" rows="2" spellcheck="false"></textarea>
-                <div class="w-row">
-                  <label class="w-toggle">edit as <select class="w-select mono"><option>partner</option><option>staff</option><option>client</option></select></label>
-                  <button type="button" class="w-btn" data-act="save">Save a new version</button>
-                </div>
-                <div class="t2-wrap"><table class="t2 mono"><thead><tr><th>ver</th><th>body</th><th>by</th><th>valid_from</th><th>valid_to</th></tr></thead><tbody></tbody></table></div>
-                <label class="w-toggle">time travel <input type="range" min="0" max="1" value="1"></label>
-                <pre class="w-out mono asof-out"></pre>
-              </div>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · Type-2 versioning in SQL</em></div>
-<pre class="mono"><code><span class="c-m">-- An edit never overwrites: it closes the current row and adds a new one.</span>
-<span class="c-k">UPDATE</span> page_versions
-   <span class="c-k">SET</span> valid_to = now(), is_current = <span class="c-v">false</span>
- <span class="c-k">WHERE</span> page_id = $1 <span class="c-k">AND</span> is_current;
-
-<span class="c-k">INSERT INTO</span> page_versions (page_id, body, edited_by, valid_from, is_current)
-<span class="c-k">VALUES</span> ($1, $2, $3, now(), <span class="c-v">true</span>);
-
-<span class="c-m">-- "What did this page say on 1 Feb, and who changed it?"
--- is now a query, not a backup restore.</span>
-<span class="c-k">SELECT</span> body, edited_by <span class="c-k">FROM</span> page_versions
- <span class="c-k">WHERE</span> page_id = $1
-   <span class="c-k">AND</span> valid_from &lt;= <span class="c-s">'2026-02-01'</span>
-   <span class="c-k">AND</span> (valid_to <span class="c-k">IS NULL OR</span> valid_to &gt; <span class="c-s">'2026-02-01'</span>);</code></pre>
-              </div>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · auth as its own module (NestJS)</em></div>
-<pre class="mono"><code><span class="c-m">// Business modules never parse tokens. They declare who may call them.</span>
-<span class="c-p">@Controller</span>(<span class="c-s">'clients'</span>)
-<span class="c-p">@UseGuards</span>(JwtAuthGuard, RolesGuard)       <span class="c-m">// from AuthModule</span>
-<span class="c-k">export class</span> ClientsController {
-  <span class="c-p">@Get</span>(<span class="c-s">':id'</span>)
-  <span class="c-p">@Roles</span>(<span class="c-s">'partner'</span>, <span class="c-s">'staff'</span>)
-  findOne(<span class="c-p">@Param</span>(<span class="c-s">'id'</span>) id: <span class="c-v">string</span>, <span class="c-p">@User</span>() user: AuthUser) {
-    <span class="c-k">return</span> <span class="c-k">this</span>.clients.findForUser(id, user); <span class="c-m">// ownership check</span>
-  }
-}</code></pre>
-              </div>
-              <p class="note">The firm's system is internal, so there's no public link or code. The same ideas are running in public in <a href="#lab">the lab above</a>.</p>
-            </div>
-          </article>
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Mar 2024 – now · Accenture</p>
-              <h3>Enterprise Microsoft 365, automated over APIs</h3>
-              <p class="org">Infra Managed Service Analyst, Backend &amp; Automation · Accenture, Bengaluru</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>Bulk provisioning, tenant-wide governance and reporting across enterprise Microsoft 365 were done by hand, one admin portal at a time.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li>API-driven admin workflows in <b>PowerShell 7</b> on the <b>Microsoft Graph API</b> for provisioning, governance and reporting.</li>
-                  <li><b>PnP PowerShell</b> automation for server management and tenant-wide governance across SharePoint, Teams, OneDrive and Power Platform.</li>
-                  <li><b>L2/L3 production support:</b> root-cause analysis on complex, cross-platform incidents while keeping the service reliable.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>75% less manual effort</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="graph">
-                <p class="w-cap mono">try it · a tenant-wide governance run over a paged API (simulation)</p>
-                <div class="w-row">
-                  <button type="button" class="w-btn" data-act="run">Find ownerless Teams</button>
-                  <button type="button" class="w-btn ghost" data-act="csv" hidden>Download the report (CSV)</button>
-                </div>
-                <pre class="w-out mono" aria-live="polite">230 Teams in this pretend tenant. The API returns 100 per page.</pre>
-              </div>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · a governance report over Graph</em></div>
-<pre class="mono"><code><span class="c-m"># Find every Team with no owner. Graph pages its results, so follow nextLink.</span>
-$uri = <span class="c-s">'https://graph.microsoft.com/v1.0/groups?$select=id,displayName' +
-       '&amp;$filter=resourceProvisioningOptions/Any(x:x eq ''Team'')'</span>
-$report = <span class="c-k">do</span> {
-  $page = <span class="c-p">Invoke-MgGraphRequest</span> -Uri $uri
-  <span class="c-k">foreach</span> ($g <span class="c-k">in</span> $page.value) {
-    $owners = <span class="c-p">Invoke-MgGraphRequest</span> -Uri <span class="c-s">"https://graph.microsoft.com/v1.0/groups/$($g.id)/owners"</span>
-    <span class="c-k">if</span> (-not $owners.value) { [pscustomobject]@{ Team = $g.displayName; Id = $g.id } }
-  }
-  $uri = $page.<span class="c-s">'@odata.nextLink'</span>
-} <span class="c-k">while</span> ($uri)
-
-$report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInformation</code></pre>
-              </div>
-              <p class="note">It's the same backend skill set: an API contract, paging, auth scopes and failure handling. The only difference is that the API belongs to Microsoft.</p>
-            </div>
-          </article>
-
-          <article class="case">
-            <div>
-              <p class="case-meta mono">Dec 2021 – Feb 2024 · Accenture</p>
-              <h3>A feedback and document platform for 10,000+ users</h3>
-              <p class="org">Application Development Associate · Accenture, Bengaluru</p>
-              <dl>
-                <dt>The problem</dt>
-                <dd>Clients sent feedback and uploaded documents on one platform. It had to stay up with 10,000+ concurrent users, and slow endpoints and heavy uploads were holding requests open.</dd>
-                <dt>What I built</dt>
-                <dd><ul>
-                  <li><b>Spring Boot microservices</b> on Kubernetes, scaled out under load.</li>
-                  <li><b>REST APIs on PostgreSQL</b> made faster with query optimization, indexing and <b>Redis</b> caching.</li>
-                  <li><b>Uploads to Amazon S3</b>, with processing moved off the request path onto <b>Kafka/RabbitMQ</b> consumers.</li>
-                  <li><b>Spring Security with JWT</b> and role-based access on the endpoints.</li>
-                  <li><b>Azure DevOps CI/CD</b> that builds, tests and ships Docker images to Kubernetes.</li>
-                </ul></dd>
-                <dt>What changed</dt>
-                <dd class="result"><b>10,000+ concurrent users</b><b>APIs 75–80% faster</b><b>uploads off the request path</b></dd>
-              </dl>
-            </div>
-            <div class="example">
-              <div class="widget" data-widget="queue">
-                <p class="w-cap mono">try it · 40 users upload at once (simulation)</p>
-                <div class="w-row">
-                  <button type="button" class="w-btn ghost" data-mode="sync">Process inside the request</button>
-                  <button type="button" class="w-btn" data-mode="queue">S3 + Kafka, answer 202</button>
-                </div>
-                <div class="qbar"><span></span></div>
-                <p class="qdepth mono">idle</p>
-                <pre class="w-out mono" aria-live="polite">Each document takes ~900 ms to process. Watch who waits for it.</pre>
-              </div>
-              <div class="terminal slim">
-                <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · answer fast, process later (Spring Boot)</em></div>
-<pre class="mono"><code><span class="c-p">@PostMapping</span>(<span class="c-s">"/documents"</span>)
-<span class="c-p">@PreAuthorize</span>(<span class="c-s">"hasRole('CLIENT')"</span>)
-<span class="c-k">public</span> ResponseEntity&lt;Accepted&gt; upload(<span class="c-p">@RequestParam</span> MultipartFile file,
-                                       <span class="c-p">@AuthenticationPrincipal</span> Jwt jwt) {
-  String key = storage.put(file);                         <span class="c-m">// Amazon S3</span>
-  kafka.send(<span class="c-s">"document-uploaded"</span>, <span class="c-k">new</span> Uploaded(key, jwt.getSubject()));
-  <span class="c-k">return</span> ResponseEntity.accepted().body(<span class="c-k">new</span> Accepted(key)); <span class="c-m">// 202 in ms</span>
-}
-
-<span class="c-m">// Hot, rarely-changing reads come from Redis, not Postgres.</span>
-<span class="c-p">@Cacheable</span>(value = <span class="c-s">"feedback-summary"</span>, key = <span class="c-s">"#clientId"</span>)
-<span class="c-k">public</span> FeedbackSummary summary(<span class="c-k">long</span> clientId) { ... }</code></pre>
-              </div>
-              <p class="note">Client code stays with Accenture's client. You can read the same patterns in public in <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>.</p>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FRONT END ============ -->
-    <section id="frontend" class="section">
-      <div class="wrap">
-        <h2 class="sec-title">And yes, I ship the front end too</h2>
-        <p class="section-lede">Backend is where I go deep, but I own features end to end. Everything on this page is hand-built with no framework: the request journey, the widgets and the API client above.</p>
-        <div class="cards">
-          <article class="card">
-            <p class="card-kicker mono">This site · 2026</p>
-            <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
-            <p>A REST API emulated in the browser with real crypto, a Postman-style client, request tracing and a live log. No build step, no dependencies.</p>
-            <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
-          </article>
-          <article class="card">
-            <p class="card-kicker mono">React Native · Expo SDK 57 · live</p>
-            <h3><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Online Tic-Tac-Toe</a></h3>
-            <p>Two players, two devices, one room code, synced in real time over PubNub. I upgraded it from React Native 0.59 to Expo SDK 57 so the same code runs on Android, iOS and the web. The game rules are tested on their own.</p>
-            <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
-            <p class="card-links"><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ MORE ON GITHUB ============ -->
     <section id="github" class="section">
       <div class="wrap">
@@ -694,6 +677,100 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
       </div>
     </section>
 
+    <!-- ============ PRIVATE PROJECTS ============ -->
+    <section id="private" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">Private projects: what they do</h2>
+        <p class="section-lede">These repos are private because they belong to real organisations, so there's no code or link here. Each card says what the project does and how it works on the backend side, with a small simulation you can click.</p>
+        <div class="cards priv">
+          <article class="card">
+            <p class="card-kicker mono">Restaurant operating system · Firebase · real time</p>
+            <h3>Buddy Hub: QR table ordering</h3>
+            <p>Guests scan a per-table QR code (a token link, not a guessable <code>?table=1</code>) and order from their phone. The kitchen display, billing counter and admin panel all update live off the same Firestore data, with no polling.</p>
+            <ul class="priv-points">
+              <li><b>One session per table</b>, taken in a Firestore transaction, which expires so an abandoned scan never locks a table.</li>
+              <li><b>Orders move by themselves</b> from Preparing to Ready to Served on a timer. A manual staff correction takes an order off the timer for good.</li>
+              <li><b>Role-separated staff portals</b> (admin, manager, kitchen, billing), plus optional GST applied the same way everywhere.</li>
+            </ul>
+            <div class="widget" data-widget="ros">
+              <p class="w-cap mono">try it · scan a table's QR code (simulation)</p>
+              <div class="w-row"><button type="button" class="w-btn" data-scan="1">Scan T1</button><button type="button" class="w-btn" data-scan="2">Scan T2</button><button type="button" class="w-btn ghost" data-scan="1">Scan T1 again</button><span class="tables mono"></span></div>
+              <div class="ros-panes">
+                <div><p class="w-cap mono">kitchen display</p><ul class="kitchen mono"></ul></div>
+                <div><p class="w-cap mono">billing counter · <span class="ros-total"></span></p><ul class="billing mono"></ul></div>
+              </div>
+              <pre class="w-out mono ros-log" aria-live="polite"></pre>
+            </div>
+            <p class="tags"><span>JavaScript</span><span>Firebase Firestore</span><span>Firebase Hosting</span><span>real-time listeners</span></p>
+          </article>
+
+          <article class="card">
+            <p class="card-kicker mono">NGO web app · Go · SQLite · bilingual</p>
+            <h3>Goonj Foundation: civic sense &amp; donations</h3>
+            <p>A bilingual (English / हिन्दी) site for a rural-development foundation. It has a library of 137 civic-sense topics in 9 categories, campaign progress, impact stats, stories, and donations that come with a certificate.</p>
+            <ul class="priv-points">
+              <li><b>Go backend</b> on the standard library's <code>net/http</code>, with pure-Go SQLite (no CGO) seeded from JSON.</li>
+              <li><b>A PDF certificate</b> for every donation, generated on the server with gofpdf.</li>
+              <li><b>Language by default:</b> first-time visitors from India get Hindi, via an IP lookup with a 1-second timeout. After that, the saved choice wins.</li>
+            </ul>
+            <div class="widget" data-widget="goonj">
+              <p class="w-cap mono">try it · donate and get a certificate (simulation)</p>
+              <div class="w-row"><button type="button" class="w-btn ghost" data-lang="en">English</button><button type="button" class="w-btn ghost" data-lang="hi">हिन्दी</button></div>
+              <p class="topic"></p>
+              <div class="qbar gbar"><span></span></div><p class="qdepth mono graised"></p>
+              <form class="w-row" autocomplete="off">
+                <label class="sr-only" for="g-donor">Name</label><input id="g-donor" name="donor" class="w-input" placeholder="Your name" value="Asha">
+                <label class="sr-only" for="g-amount">Amount</label><input id="g-amount" name="amount" class="w-input" type="number" value="500" min="1">
+                <button type="submit" class="w-btn">Donate</button>
+              </form>
+              <pre class="w-out mono" aria-live="polite"><span class="dim">POST /api/donate · POST /api/certificate</span></pre>
+              <canvas width="460" height="210" hidden></canvas>
+            </div>
+            <p class="tags"><span>Go</span><span>net/http</span><span>SQLite</span><span>gofpdf</span><span>Vite</span><span>i18n</span></p>
+          </article>
+
+          <article class="card">
+            <p class="card-kicker mono">Mobile app foundation · Expo · early stage</p>
+            <h3>WUS/KUS mobile app</h3>
+            <p>The groundwork for the app of the waste-logistics venture I co-founded: project setup, navigation and a first screen. It's early stage, and the interesting part so far is the build setup.</p>
+            <ul class="priv-points">
+              <li><b>One codebase, three installable apps</b> (Dev, Pre-prod and Prod), selected by <code>APP_ENV</code> in <code>app.config.js</code>.</li>
+              <li><b>Only public config in the app.</b> Anything bundled into an app can be read by its users, so secrets stay on a backend.</li>
+            </ul>
+            <div class="widget" data-widget="appenv">
+              <p class="w-cap mono">try it · build for an environment (simulation)</p>
+              <div class="w-row"><button type="button" class="w-btn ghost" data-env="development">development</button><button type="button" class="w-btn ghost" data-env="preprod">preprod</button><button type="button" class="w-btn ghost" data-env="production">production</button></div>
+              <pre class="w-out mono" aria-live="polite"></pre>
+            </div>
+            <p class="tags"><span>Expo SDK 54</span><span>React Native 0.81</span><span>React 19</span><span>React Navigation 7</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FRONT END ============ -->
+    <section id="frontend" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">And yes, I ship the front end too</h2>
+        <p class="section-lede">Backend is where I go deep, but I own features end to end. Everything on this page is hand-built with no framework: the request journey, the widgets and the API client above.</p>
+        <div class="cards">
+          <article class="card">
+            <p class="card-kicker mono">This site · 2026</p>
+            <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
+            <p>A REST API emulated in the browser with real crypto, a Postman-style client, request tracing and a live log. No build step, no dependencies.</p>
+            <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
+          </article>
+          <article class="card">
+            <p class="card-kicker mono">React Native · Expo SDK 57 · live</p>
+            <h3><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Online Tic-Tac-Toe</a></h3>
+            <p>Two players, two devices, one room code, synced in real time over PubNub. I upgraded it from React Native 0.59 to Expo SDK 57 so the same code runs on Android, iOS and the web. The game rules are tested on their own.</p>
+            <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
+            <p class="card-links"><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ ABOUT ============ -->
     <section id="about" class="section">
       <div class="wrap about-grid">
@@ -727,6 +804,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
         </div>
       </div>
     </section>
+
     <!-- ============ RESPONSE (the request returns) ============ -->
     <section class="section response-section" aria-label="Response and contact">
       <div class="wrap">
@@ -765,6 +843,7 @@ X-Response-Time: 18ms
         </article>
       </div>
     </section>
+
   </main>
 
   <footer class="footer">
@@ -782,6 +861,7 @@ X-Response-Time: 18ms
   <script src="journey.js" defer></script>
   <script src="playground.js" defer></script>
   <script src="work.js" defer></script>
+  <script src="private.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;
