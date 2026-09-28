@@ -415,6 +415,23 @@ code { font-family: var(--mono); font-size: .86em; padding: 1px 6px; border-radi
 .proof dd { margin: 0; font-size: clamp(18px, 2.2vw, 24px); font-weight: 700; color: var(--accent); }
 @media (max-width: 720px) { .proof { grid-template-columns: 1fr 1fr; } }
 
+/* audit fixes */
+.peek { border: 1px solid var(--border); border-radius: 10px; background: var(--bg-2); }
+.peek > summary { cursor: pointer; padding: 9px 14px; font: 600 13px var(--mono); color: var(--accent); list-style: none; }
+.peek > summary::-webkit-details-marker { display: none; }
+.peek > summary::before { content: "▸ "; }
+.peek[open] > summary::before { content: "▾ "; }
+.peek .terminal { border-radius: 0 0 10px 10px; border-left: 0; border-right: 0; border-bottom: 0; }
+.terminal.response pre { white-space: pre-wrap; word-break: break-word; }
+.final-cta { margin-top: 22px; }
+@media (max-width: 720px) {
+  .hop { padding-bottom: 56px; }
+  .hop-what { margin-bottom: 20px; }
+  .final-cta .btn-primary { width: 100%; justify-content: center; }
+  .ask-cap, .ask-q { display: none; }       /* interview prompts: desktop only */
+  .ask { margin-top: 18px; padding-top: 12px; }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .hop-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }
