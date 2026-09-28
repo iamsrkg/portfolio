@@ -66,7 +66,7 @@
     <!-- ============ OPENING ============ -->
     <section class="opening" id="top">
       <div class="wrap">
-        <h1 class="who"><span>Sudheer Kumar Gupta</span> <span class="muted">· Backend Engineer</span></h1>
+        <h1 class="who"><span>Sudheer Kumar Gupta</span> <span class="muted">· Backend Engineer · Java / Spring Boot</span></h1>
         <p class="req-hero mono" aria-label="GET /hire/sudheer HTTP/1.1">
           <span class="verb">GET</span> <span class="path">/hire/sudheer</span> <span class="proto">HTTP/1.1</span><span class="cursor" aria-hidden="true">▍</span>
         </p>
@@ -87,6 +87,7 @@
         </dl>
         <p class="opening-meta mono">
           <span><span class="dot" aria-hidden="true"></span> serving notice</span>
+          <span>Open to Java backend, backend and full-stack roles</span>
           <span>Authorized to work in India and Thailand · no visa sponsorship needed</span>
           <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">AWS Certified ↗</a>
           <a href="https://github.com/iamsrkg" target="_blank" rel="noopener">GitHub ↗</a>
@@ -564,7 +565,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
       <div class="wrap">
         <div class="sec-head">
           <h2 class="sec-title">Your turn: send your own request</h2>
-          <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot source →</a>
+          <a class="more mono" href="#java">Read the Java ↓</a>
         </div>
         <p class="section-lede">The hops above, working for real. This is a port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a> contract that runs in your browser. JWTs are really HMAC-signed and passwords really go through PBKDF2 via Web Crypto. It has a token-bucket limiter, tenant-scoped queries, optimistic locking and one error envelope. Pick an attack or write your own request.</p>
 
@@ -638,6 +639,179 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <div class="mono" id="pg-log" tabindex="0" aria-label="Server log"></div>
           </div>
         </div>
+
+        <div class="java" id="java">
+          <div class="sec-head">
+            <h3 class="java-title">The Java behind it</h3>
+            <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot 4 · Java 21 · 20 tests →</a>
+          </div>
+          <p class="section-lede java-lede">The playground above runs a port in your browser. This is the real Spring Boot code it mirrors, copied from the public repo. Pick a status code, or run a scenario above and the matching code opens here.</p>
+          <div class="java-tabs" role="tablist" aria-label="Java source by status code">
+            <button type="button" role="tab" aria-selected="true" data-java="auth">401 · Spring Security</button>
+<button type="button" role="tab" aria-selected="false" data-java="tenant">404 · tenant isolation</button>
+<button type="button" role="tab" aria-selected="false" data-java="lock">409 · optimistic locking</button>
+<button type="button" role="tab" aria-selected="false" data-java="limit">429 · rate limiting</button>
+          </div>
+          <div class="java-panel" data-java-panel="auth">
+              <p class="java-desc">The filter chain: stateless JWT auth, JSON 401/403 instead of Spring&#x27;s default 403, and the cheapest checks first.</p>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">SecurityConfig.java · lines 51–77</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/config/SecurityConfig.java#L51-L77" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Bean</span>
+<span class="c-k">public</span> SecurityFilterChain securityFilterChain(HttpSecurity http) <span class="c-k">throws</span> Exception {
+    http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .authorizeHttpRequests(req -&gt; req
+                    .requestMatchers(<span class="c-s">"/api/auth/**"</span>, <span class="c-s">"/actuator/health"</span>, <span class="c-s">"/actuator/health/**"</span>).permitAll()
+                    .anyRequest().authenticated()
+            )
+            .sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            <span class="c-m">// Without these, Spring answers a missing/invalid token with 403; the correct status is 401.</span>
+            .exceptionHandling(ex -&gt; ex
+                    .authenticationEntryPoint((request, response, e) -&gt;
+                            JsonErrorWriter.write(response, 401, <span class="c-s">"Authentication required: missing, invalid or expired token."</span>))
+                    .accessDeniedHandler((request, response, e) -&gt;
+                            JsonErrorWriter.write(response, 403, <span class="c-s">"Access denied: You do not have the required role."</span>))
+            )
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.<span class="c-k">class</span>);
+
+    <span class="c-m">// Cheapest checks first: tag the request, then rate limit, then authenticate.</span>
+    <span class="c-k">if</span> (rateLimitEnabled) {
+        http.addFilterBefore(<span class="c-k">new</span> RateLimitFilter(rateLimitCapacity, rateLimitRefillPerSecond), JwtAuthenticationFilter.<span class="c-k">class</span>);
+        http.addFilterBefore(<span class="c-k">new</span> RequestIdFilter(), RateLimitFilter.<span class="c-k">class</span>);
+    } <span class="c-k">else</span> {
+        http.addFilterBefore(<span class="c-k">new</span> RequestIdFilter(), JwtAuthenticationFilter.<span class="c-k">class</span>);
+    }</code></pre>
+              </div>
+            </div>
+<div class="java-panel" data-java-panel="tenant" hidden>
+              <p class="java-desc">Tenant scoping lives in the JPA query, so another tenant&#x27;s task is indistinguishable from one that doesn&#x27;t exist. The test proves it for GET, PUT and DELETE.</p>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskRepository.java · lines 16–27</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/repository/TaskRepository.java#L16-L27" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Repository</span>
+<span class="c-k">public</span> <span class="c-k">interface</span> TaskRepository <span class="c-k">extends</span> JpaRepository&lt;Task, UUID&gt; {
+
+    List&lt;Task&gt; findByProjectId(UUID projectId);
+
+    <span class="c-m">// Tenant scoping lives in the query itself: a task outside the caller's tenant</span>
+    <span class="c-m">// is indistinguishable from one that does not exist (404, not 403).</span>
+    <span class="c-p">@Query</span>(<span class="c-s">""</span>"
+            <span class="c-k">select</span> t <span class="c-k">from</span> Task t <span class="c-k">left</span> <span class="c-k">join</span> t.assignee a
+            <span class="c-k">where</span> t.id = :id <span class="c-k">and</span> (t.project.owner.id = :userId <span class="c-k">or</span> a.id = :userId)
+            <span class="c-s">""</span>")
+    Optional&lt;Task&gt; findVisibleById(<span class="c-p">@Param</span>(<span class="c-s">"id"</span>) UUID id, <span class="c-p">@Param</span>(<span class="c-s">"userId"</span>) UUID userId);</code></pre>
+              </div>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java · lines 88–106</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L88-L106" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Test</span>
+<span class="c-k">void</span> anotherTenantsTaskIsNotFoundNotForbidden() <span class="c-k">throws</span> Exception {
+    String alice = register();
+    String bob = register();
+    String taskId = createTask(alice, createProject(alice));
+
+    mvc.perform(get(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
+            .andExpect(status().isNotFound());
+    mvc.perform(put(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(taskJson(<span class="c-s">"Hijack"</span>, null, 0L)))
+            .andExpect(status().isNotFound());
+    mvc.perform(delete(<span class="c-s">"/api/tasks/"</span> + taskId).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
+            .andExpect(status().isNotFound());
+
+    <span class="c-m">// Same answer as for a task that doesn't exist at all.</span>
+    mvc.perform(get(<span class="c-s">"/api/tasks/"</span> + UUID.randomUUID()).header(<span class="c-s">"Authorization"</span>, bearer(bob)))
+            .andExpect(status().isNotFound());
+}</code></pre>
+              </div>
+            </div>
+<div class="java-panel" data-java-panel="lock" hidden>
+              <p class="java-desc">A JPA @Version column, a version check in the service, and one handler that turns the conflict into 409. The test replays the lost-update race.</p>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">Task.java · lines 17–18</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/entity/Task.java#L17-L18" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Version</span>
+<span class="c-k">private</span> Long version;</code></pre>
+              </div>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskService.java · lines 65–76</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/service/TaskService.java#L65-L76" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Transactional</span>
+<span class="c-k">public</span> TaskResponseDTO updateTask(UUID taskId, TaskRequestDTO request, User authenticatedUser) {
+    <span class="c-k">if</span> (request.getVersion() == null) {
+        <span class="c-k">throw</span> <span class="c-k">new</span> IllegalArgumentException(<span class="c-s">"version is required when updating a task (optimistic locking)"</span>);
+    }
+
+    Task task = findVisible(taskId, authenticatedUser);
+    requireOwner(task, authenticatedUser, <span class="c-s">"Only the project owner can edit this task"</span>);
+
+    <span class="c-k">if</span> (!request.getVersion().equals(task.getVersion())) {
+        <span class="c-k">throw</span> <span class="c-k">new</span> ObjectOptimisticLockingFailureException(Task.<span class="c-k">class</span>, task.getId());
+    }</code></pre>
+              </div>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">GlobalExceptionHandler.java · lines 94–98</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/exception/GlobalExceptionHandler.java#L94-L98" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@ExceptionHandler</span>(ObjectOptimisticLockingFailureException.<span class="c-k">class</span>)
+<span class="c-k">public</span> ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt; handleOptimisticLocking(ObjectOptimisticLockingFailureException ex) {
+    <span class="c-k">return</span> error(HttpStatus.CONFLICT,
+            <span class="c-s">"Conflict: This record was updated by another user or process. Please refresh and try again."</span>);
+}</code></pre>
+              </div>
+<div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java · lines 134–142</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L134-L142" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-p">@Test</span>
+<span class="c-k">void</span> staleVersionGets409() <span class="c-k">throws</span> Exception {
+    String alice = register();
+    String taskId = createTask(alice, createProject(alice));
+
+    update(alice, taskId, 0L).andExpect(status().isOk()).andExpect(jsonPath(<span class="c-s">"$.data.version"</span>).value(1));
+    <span class="c-m">// A second client still holding version 0 must not overwrite the first client's change.</span>
+    update(alice, taskId, 0L).andExpect(status().isConflict());
+}</code></pre>
+              </div>
+            </div>
+<div class="java-panel" data-java-panel="limit" hidden>
+              <p class="java-desc">A token bucket per client in a servlet filter: thread-safe per bucket, idle buckets evicted, and a Retry-After header on 429.</p>
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">RateLimitFilter.java · lines 36–72</em><a class="src mono" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/security/RateLimitFilter.java#L36-L72" target="_blank" rel="noopener">view on GitHub ↗</a></div>
+<pre class="mono"><code><span class="c-k">protected</span> <span class="c-k">void</span> doFilterInternal(
+        <span class="c-p">@NonNull</span> HttpServletRequest request,
+        <span class="c-p">@NonNull</span> HttpServletResponse response,
+        <span class="c-p">@NonNull</span> FilterChain filterChain
+) <span class="c-k">throws</span> ServletException, IOException {
+    <span class="c-k">if</span> (<span class="c-s">"OPTIONS"</span>.equalsIgnoreCase(request.getMethod())) {
+        filterChain.doFilter(request, response);
+        <span class="c-k">return</span>;
+    }
+    <span class="c-k">if</span> (buckets.size() &gt; MAX_TRACKED_CLIENTS) {
+        <span class="c-k">long</span> now = System.nanoTime();
+        buckets.values().removeIf(b -&gt; now - b.lastRefill &gt; IDLE_EVICTION_NANOS);
+    }
+
+    Bucket bucket = buckets.computeIfAbsent(request.getRemoteAddr(), k -&gt; <span class="c-k">new</span> Bucket(capacity));
+    <span class="c-k">long</span> remaining;
+    <span class="c-k">long</span> retryAfterSeconds = 0;
+    <span class="c-k">boolean</span> allowed;
+    <span class="c-k">synchronized</span> (bucket) {
+        bucket.refill(capacity, refillPerSecond);
+        allowed = bucket.tokens &gt;= 1;
+        <span class="c-k">if</span> (allowed) {
+            bucket.tokens -= 1;
+        } <span class="c-k">else</span> {
+            retryAfterSeconds = (<span class="c-k">long</span>) Math.ceil((1 - bucket.tokens) / refillPerSecond);
+        }
+        remaining = (<span class="c-k">long</span>) Math.floor(bucket.tokens);
+    }
+
+    response.setHeader(<span class="c-s">"X-RateLimit-Limit"</span>, String.valueOf(capacity));
+    response.setHeader(<span class="c-s">"X-RateLimit-Remaining"</span>, String.valueOf(remaining));
+    <span class="c-k">if</span> (!allowed) {
+        response.setHeader(<span class="c-s">"Retry-After"</span>, String.valueOf(Math.max(1, retryAfterSeconds)));
+        JsonErrorWriter.write(response, 429, <span class="c-s">"Too many requests. Retry after "</span> + Math.max(1, retryAfterSeconds) + <span class="c-s">"s."</span>);
+        <span class="c-k">return</span>;
+    }
+    filterChain.doFilter(request, response);</code></pre>
+              </div>
+            </div>
+        </div>
       </div>
     </section>
 
@@ -654,11 +828,11 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p class="card-kicker mono">Backend · Java 21 · Spring Boot 4</p>
             <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
             <p>The Spring Boot service behind the Live API on this page: JWT + RBAC, tenant-scoped queries (404 across tenants), optimistic locking (409), token-bucket rate limiting (429), request IDs and one error envelope. 20 integration tests run in CI with a Docker build on every push.</p>
-            <p class="tags"><span>Spring Boot 4</span><span>Spring Security 7</span><span>PostgreSQL</span><span>JUnit + MockMvc</span><span>Docker</span></p>
-            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="tags"><span>Java 21</span><span>Spring Boot 4</span><span>Spring Security 7</span><span>Spring Data JPA</span><span>PostgreSQL</span><span>JUnit 5 + MockMvc</span><span>Maven</span><span>Docker</span></p>
+            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="#java">Read the Java ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
           <article class="card">
-            <p class="card-kicker mono">Full stack · PHP 8.3 · MariaDB</p>
+            <p class="card-kicker mono">Full stack · PHP 8.3 · MariaDB · Docker</p>
             <h3><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">JOB-HUNT job portal</a></h3>
             <p>A 2020 PHP job portal I brought up to modern security: prepared statements everywhere, bcrypt passwords, CSRF tokens, uploads checked by content type and kept out of the web root. It ships as a Docker image with its own database, and 44 end-to-end checks run against that image in CI.</p>
             <p class="tags"><span>PHP 8.3</span><span>MariaDB</span><span>Apache</span><span>Docker</span><span>bash e2e</span></p>
@@ -666,7 +840,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -e PORT=8080 -p 8080:8080 job-hunt</pre>
           </article>
           <article class="card">
-            <p class="card-kicker mono">Computer vision · OpenCV · runs in the browser</p>
+            <p class="card-kicker mono">Full stack · OpenCV · runs in the browser</p>
             <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
             <p>A gate access logger: enroll a face, train, and it logs who walks past the camera and when. It uses Haar-cascade detection with an LBPH recognizer, chosen because it runs on a CPU and trains on a few dozen samples. The web version runs OpenCV in a Web Worker, and no frame leaves your device.</p>
             <p class="tags"><span>Python</span><span>OpenCV</span><span>LBPH</span><span>JavaScript</span><span>Web Worker</span></p>
@@ -712,6 +886,18 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             </ol>
           </div>
 
+          <div class="side-block">
+            <p class="pg-cap mono">toolbox</p>
+            <dl class="toolbox">
+              <div><dt>java</dt><dd>Java 21, Spring Boot, Spring Security, Spring Data JPA, JUnit 5 + MockMvc, Maven</dd></div>
+              <div><dt>node</dt><dd>Node.js, NestJS, Express.js, TypeScript, TypeORM</dd></div>
+              <div><dt>data</dt><dd>PostgreSQL, MySQL, MongoDB, Redis, Kafka, RabbitMQ</dd></div>
+              <div><dt>design</dt><dd>REST APIs, microservices, event-driven systems, JWT + RBAC, rate limiting, audit logging</dd></div>
+              <div><dt>cloud</dt><dd>AWS (Certified SA – Associate), S3, Docker, Kubernetes, Nginx, Azure DevOps, GitHub Actions, Linux</dd></div>
+              <div><dt>front</dt><dd>JavaScript, React Native (Expo), HTML/CSS, Web Workers</dd></div>
+              <div><dt>tools</dt><dd>Git, Swagger/OpenAPI, Postman, PowerShell, Claude Code</dd></div>
+            </dl>
+          </div>
           <div class="side-block">
             <p class="pg-cap mono">credentials</p>
             <ul class="creds-list">
