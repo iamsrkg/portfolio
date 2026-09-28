@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sudheer Kumar Gupta · Backend &amp; Full-Stack Engineer</title>
-  <meta name="description" content="Sudheer Kumar Gupta: AWS Certified Backend Engineer with almost 5 years building microservices, APIs and full products in Java, Spring Boot, Node.js, NestJS, TypeScript, PostgreSQL, AWS, Docker and Kubernetes.">
+  <title>Sudheer Kumar Gupta · Backend Engineer</title>
+  <meta name="description" content="Sudheer Kumar Gupta, backend engineer. Follow one request through edge, rate limiter, auth, services, database and queue, and see what I've built at every hop. Then try the live API.">
   <meta name="author" content="Sudheer Kumar Gupta">
   <meta name="theme-color" content="#0b0f14">
   <link rel="canonical" href="https://iamsrkg.github.io/">
 
   <meta property="og:type" content="profile">
-  <meta property="og:title" content="Sudheer Kumar Gupta · Backend &amp; Full-Stack Engineer">
-  <meta property="og:description" content="AWS Certified Backend Engineer. Java, Spring Boot, Node.js, NestJS, PostgreSQL, AWS, Kubernetes. Built platforms serving 10,000+ concurrent users.">
+  <meta property="og:title" content="Sudheer Kumar Gupta · Backend Engineer">
+  <meta property="og:description" content="GET /hire/sudheer: follow one request through a backend, and see what I've built at every hop.">
   <meta property="og:url" content="https://iamsrkg.github.io/">
   <meta name="twitter:card" content="summary">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 
   <script type="application/ld+json">
@@ -26,7 +26,7 @@
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Sudheer Kumar Gupta",
-    "jobTitle": "Backend & Full-Stack Engineer",
+    "jobTitle": "Backend Engineer",
     "url": "https://iamsrkg.github.io/",
     "email": "mailto:sudheerkgupta@outlook.com",
     "sameAs": [
@@ -35,7 +35,7 @@
       "https://leetcode.com/u/iamsrkg"
     ],
     "alumniOf": "Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology",
-    "knowsAbout": ["Java", "Spring Boot", "Node.js", "NestJS", "TypeScript", "PostgreSQL", "Redis", "Kafka", "AWS", "Docker", "Kubernetes", "Microservices", "System Design"]
+    "knowsAbout": ["Java", "Spring Boot", "Node.js", "NestJS", "TypeScript", "PostgreSQL", "Redis", "Kafka", "AWS", "Docker", "Kubernetes", "Microservices", "System Design", "API Security"]
   }
   </script>
   <script>
@@ -44,6 +44,22 @@
         var t = localStorage.getItem('theme');
         if (t) document.documentElement.setAttribute('data-theme', t);
       } catch (e) {}
+    })();
+    // Resume edition, negotiated before first paint: ?r= link > saved choice > timezone > remote.
+    (function () {
+      var ok = { th: 1, 'in': 1, remote: 1 }, region, why;
+      var q = new URLSearchParams(location.search).get('r');
+      var saved = null;
+      try { saved = localStorage.getItem('region'); } catch (e) {}
+      var tz = '';
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+      if (ok[q]) { region = q; why = 'link ?r=' + q; }
+      else if (ok[saved]) { region = saved; why = 'your saved choice'; }
+      else if (tz === 'Asia/Bangkok') { region = 'th'; why = 'timezone ' + tz; }
+      else if (tz === 'Asia/Kolkata' || tz === 'Asia/Calcutta') { region = 'in'; why = 'timezone ' + tz; }
+      else { region = 'remote'; why = tz ? 'default, timezone ' + tz : 'default'; }
+      document.documentElement.setAttribute('data-region', region);
+      document.documentElement.setAttribute('data-region-why', why);
     })();
   </script>
 </head>
@@ -55,12 +71,11 @@
       <a class="brand" href="#top" aria-label="Home"><span class="prompt">~/</span>iamsrkg</a>
       <nav aria-label="Primary">
         <ul class="nav-links">
+          <li><a href="#journey">The request</a></li>
+          <li><a href="#lab">Live API</a></li>
+          <li><a href="#frontend">Front end</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#work">Work</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#hop-response">Contact</a></li>
         </ul>
       </nav>
       <button class="theme-toggle" type="button" aria-label="Toggle light and dark theme">
@@ -71,393 +86,523 @@
   </header>
 
   <main id="main">
-    <!-- Hero -->
-    <section class="hero" id="top">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow mono"><span class="dot" aria-hidden="true"></span> Serving notice period · Open to backend &amp; full-stack roles · Bangkok · Bengaluru · Remote</p>
-          <h1>Sudheer Kumar Gupta</h1>
-          <p class="role">Backend Engineer <span class="muted">·</span> Full-Stack Ready <span class="muted">·</span> <span class="accent">AWS Certified</span></p>
-          <p class="lede">I design and run backend systems that stay fast under load: microservices, APIs and data layers in
-            <strong>Java / Spring Boot</strong> and <strong>Node.js / NestJS</strong>, shipped on <strong>AWS, Docker and Kubernetes</strong>.
-            I also build across the stack with <strong>TypeScript and JavaScript</strong>, taking products from schema to screen.
-            Almost 5 years of experience, including a platform serving <strong>10,000+ concurrent users</strong>.</p>
-          <div class="cta">
-            <a class="btn btn-primary" href="assets/Sudheer_Kumar_Gupta_Resume.pdf" download>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
-              Download resume
-            </a>
-            <a class="btn btn-ghost" href="mailto:sudheerkgupta@outlook.com">Get in touch</a>
-          </div>
-          <ul class="socials" aria-label="Profiles">
-            <li><a href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11.5H3zM9.5 9.75h3.8v1.6h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.85h-4v-5.2c0-1.24-.02-2.84-1.73-2.84-1.73 0-2 1.35-2 2.75v5.29h-4z"/></svg>
-              LinkedIn</a></li>
-            <li><a href="https://github.com/iamsrkg" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
-              GitHub</a></li>
-            <li><a href="https://leetcode.com/u/iamsrkg" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4l-7.5 7.5a2 2 0 0 0 0 2.8l4.2 4.2a2 2 0 0 0 2.8 0L16 16M9 12h11"/></svg>
-              LeetCode</a></li>
-          </ul>
-        </div>
-
-        <div class="terminal" aria-label="Profile summary as a terminal session">
-          <div class="term-bar"><span></span><span></span><span></span><em class="mono">sudheer@backend: ~</em></div>
-          <pre class="mono"><code><span class="c-p">$</span> whoami
-<span class="c-v">backend-engineer</span> <span class="c-m">// full-stack ready · AWS SA-A</span>
-
-<span class="c-p">$</span> cat stack.json
-{
-  <span class="c-k">"lang"</span>:  [<span class="c-s">"Java"</span>, <span class="c-s">"TypeScript"</span>, <span class="c-s">"SQL"</span>],
-  <span class="c-k">"api"</span>:   [<span class="c-s">"Spring Boot"</span>, <span class="c-s">"NestJS"</span>],
-  <span class="c-k">"data"</span>:  [<span class="c-s">"PostgreSQL"</span>, <span class="c-s">"Redis"</span>, <span class="c-s">"Kafka"</span>],
-  <span class="c-k">"infra"</span>: [<span class="c-s">"AWS"</span>, <span class="c-s">"Docker"</span>, <span class="c-s">"K8s"</span>],
-  <span class="c-k">"ui"</span>:    [<span class="c-s">"JS/TS"</span>, <span class="c-s">"React Native"</span>]
-}
-
-<span class="c-p">$</span> ./status --work-auth
-<span class="c-ok">✔</span> Serving notice · available soon
-<span class="c-ok">✔</span> Thai citizen · no sponsorship in TH
-<span class="c-ok">✔</span> OCI holder · eligible to work in IN
-<span class="c-ok">✔</span> Remote · flexible timezone overlap<span class="cursor" aria-hidden="true">▍</span></code></pre>
-        </div>
-      </div>
-
+    <!-- ============ OPENING ============ -->
+    <section class="opening" id="top">
       <div class="wrap">
-        <dl class="stats">
-          <div><dt>Concurrent users served</dt><dd>10,000+</dd></div>
-          <div><dt>Faster API responses</dt><dd>75–80%</dd></div>
-          <div><dt>API latency achieved</dt><dd>&lt;100<small>ms</small></dd></div>
-          <div><dt>Deploy time</dt><dd>20→3<small>min</small></dd></div>
-        </dl>
+        <h1 class="who"><span>Sudheer Kumar Gupta</span> <span class="muted">· Backend Engineer</span></h1>
+        <p class="req-hero mono" aria-label="GET /hire/sudheer HTTP/1.1">
+          <span class="verb">GET</span> <span class="path">/hire/sudheer</span> <span class="proto">HTTP/1.1</span><span class="cursor" aria-hidden="true">▍</span>
+        </p>
+        <p class="opening-lede">This request is about to pass through every layer of a backend: the edge, a rate limiter, auth, a service, a cache and database, and a queue. At each hop I'll show you what I've actually built there over 5 years in <strong>Java / Spring Boot</strong> and <strong>Node.js / NestJS</strong>.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#journey">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
+            Send it
+          </a>
+          <a class="btn btn-ghost" href="#lab">Skip to the live API</a>
+        </div>
+        <p class="opening-meta mono">
+          <span><span class="dot" aria-hidden="true"></span> serving notice</span>
+          <span data-only="th">Relocating to Bangkok · Thai citizen, no sponsorship needed</span>
+          <span data-only="in">Bengaluru · OCI cardholder, eligible to work in India</span>
+          <span data-only="remote">Open to remote · GMT+7, flexible overlap</span>
+          <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">AWS Certified ↗</a>
+          <a href="https://github.com/iamsrkg" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </p>
+        <div class="region mono" role="group" aria-label="Resume edition">
+          <span class="region-cap">edition</span>
+          <button type="button" data-set-region="th">Thailand</button>
+          <button type="button" data-set-region="in">India</button>
+          <button type="button" data-set-region="remote">Remote</button>
+          <span class="region-why">negotiated from <span id="region-why"></span></span>
+        </div>
       </div>
     </section>
 
-    <!-- About -->
-    <section id="about" class="section">
-      <div class="wrap two-col">
-        <div>
-          <h2 class="sec-title"><span class="mono num">01</span>About</h2>
+    <!-- ============ THE JOURNEY ============ -->
+    <section class="journey-wrap" id="journey" aria-label="The request's journey through a backend">
+      <div class="hud" aria-hidden="true">
+        <div class="wrap hud-inner mono">
+          <span class="hud-req"><b>GET</b> /hire/sudheer</span>
+          <span class="hud-hop" id="hud-hop">hop 00 · client</span>
+          <span class="hud-t" id="hud-t">t+0ms</span>
+          <span class="hud-bar"><span id="hud-fill"></span></span>
         </div>
-        <div class="prose">
-          <p>I'm a backend engineer who likes the unglamorous parts: schema design, query plans, auth boundaries, deploy pipelines and the 2 a.m. incident. At <strong>Accenture</strong> I built and scaled a Spring Boot microservices platform on Kubernetes, and now I run API-driven automation across enterprise Microsoft 365 environments.</p>
-          <p>As a freelancer I designed and shipped a <strong>secure B2B client-management platform</strong> end to end in NestJS and PostgreSQL, covering architecture, security, CMS and deployment.</p>
-          <p>Backend is my core, but I'm comfortable owning a feature across the stack: data model, API, auth, the UI that uses it, and the pipeline that ships it. I also ramp up fast on new stacks. At Accenture I went from zero to shipping production automation on Microsoft Graph API within weeks. I use AI tools like <strong>Claude Code</strong> to move faster, and I check every change with tests and review before it ships.</p>
-          <div class="pillars">
-            <div class="pillar">
-              <h3><span class="mono accent">01</span> Backend depth</h3>
-              <p>Microservices, REST API design, PostgreSQL tuning, caching, event-driven processing with Kafka.</p>
+      </div>
+
+      <div class="wrap journey">
+        <div class="wire" aria-hidden="true"><span class="packet"></span></div>
+
+        <!-- 01 EDGE -->
+        <article class="hop" id="hop-edge" data-hop="01" data-name="edge" data-t="2">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 01</span><span>t+2ms</span></p>
+            <h2>Edge</h2>
+            <p class="hop-what">Nginx terminates TLS, stamps a request ID and proxies to a container that took three minutes to ship.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Tag it at the door.</b> A request ID added at the edge lets one log search follow a request through every service.</li>
+                <li><b>Small images ship faster.</b> Multi-stage Docker builds keep the toolchain out of production, and fast deploys get shipped more often.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Freelance · 2025–26:</b> Docker multi-stage builds behind Nginx took deploys <b class="hl">from 20 minutes to 3</b>.</p>
+                <p><b>Accenture · 2021–24:</b> Azure DevOps pipelines that build, test and ship Docker images to Kubernetes.</p>
+              </div>
             </div>
-            <div class="pillar">
-              <h3><span class="mono accent">02</span> Full-stack delivery</h3>
-              <p>TypeScript and JavaScript end to end. Shipped web portals and a React Native app, from schema to screen.</p>
-            </div>
-            <div class="pillar">
-              <h3><span class="mono accent">03</span> Production ownership</h3>
-              <p>Docker, Kubernetes, CI/CD, security hardening and L2/L3 incident response.</p>
+            <div class="hop-vis">
+              <div class="terminal slim">
+                <div class="term-bar"><span></span><span></span><span></span><em class="mono">nginx · access</em></div>
+                <pre class="mono"><code><span class="c-m">→</span> GET /hire/sudheer HTTP/1.1
+  Host: iamsrkg.github.io
+  X-Forwarded-Proto: <span class="c-s">https</span>
+<span class="c-ok">+ X-Request-Id: 7f3a91c2</span>   <span class="c-m"># added here</span>
+<span class="c-m">↳</span> upstream api:8080
+  image: api:<span class="c-v">1.8.2</span>  <span class="c-m">(multi-stage, 148 MB)</span>
+  deploy: <span class="c-ok">3m 04s</span>   <span class="c-m"># was ~20m</span></code></pre>
+              </div>
             </div>
           </div>
-          <ul class="facts">
-            <li><span class="mono">location</span> Bengaluru, India → relocating to Bangkok, Thailand</li>
-            <li><span class="mono">open_to</span> Backend, Full-Stack, Software, Platform Engineer or Solutions Architect roles · on-site, hybrid or remote</li>
-            <li><span class="mono">notice</span> Currently serving notice period</li>
-            <li><span class="mono">languages</span> English (professional) · Hindi (native) · Thai (conversational)</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Experience -->
-    <section id="experience" class="section">
-      <div class="wrap">
-        <h2 class="sec-title"><span class="mono num">02</span>Experience</h2>
-        <ol class="timeline">
-          <li class="job">
-            <div class="job-head">
-              <div>
-                <h3>Infra Managed Service Analyst <span class="muted">· Backend &amp; Automation</span></h3>
-                <p class="org">Accenture · Bengaluru, India</p>
-              </div>
-              <p class="when mono">Mar 2024 – Present</p>
-            </div>
-            <ul>
-              <li>Built API-driven automation on <strong>Microsoft Graph REST APIs</strong> in PowerShell 7, using OAuth2 client credentials, pagination, throttling-aware retries and batch requests for bulk provisioning and reporting across enterprise Microsoft 365 tenants.</li>
-              <li>Engineered reusable automation for server management and tenant-wide operations with PnP PowerShell, <strong>cutting manual operational effort by 75%</strong>.</li>
-              <li>Drove governance and compliance work covering retention policies, sensitivity labels, DLP, access reviews and external-sharing controls, to meet security and audit requirements.</li>
-              <li>Led multi-terabyte Microsoft 365 migrations with structured validation and change management, with <strong>zero data loss</strong>.</li>
-              <li>Delivered L2/L3 production support and root-cause analysis with <strong>100% SLA compliance</strong> across incident, change and problem management in ServiceNow.</li>
-            </ul>
-            <p class="tags"><span>PowerShell 7</span><span>Microsoft Graph</span><span>SharePoint</span><span>Teams</span><span>Power Platform</span><span>ServiceNow</span></p>
-          </li>
-
-          <li class="job">
-            <div class="job-head">
-              <div>
-                <h3>Backend Engineer <span class="muted">· Freelance</span></h3>
-                <p class="org">CA Sanjeev Gupta &amp; Co. · Bengaluru, India</p>
-              </div>
-              <p class="when mono">Nov 2025 – Mar 2026</p>
-            </div>
-            <ul>
-              <li>Architected and deployed a secure, scalable <strong>B2B client-management platform</strong> in Node.js, NestJS and TypeScript, taking internal workflows and client interactions fully digital.</li>
-              <li>Split authentication from core business services in a hybrid service-oriented design, <strong>reducing system coupling by 60%</strong>.</li>
-              <li>Built a <strong>B2B developer API platform</strong> for third-party integrations, with API-key management, role-based throttling and Swagger/OpenAPI docs.</li>
-              <li>Built a headless CMS with Type-2 audit versioning and automated SEO metadata, <strong>improving content operations efficiency by 90%</strong>.</li>
-              <li>Tuned PostgreSQL queries, TypeORM indexes and caching to reach <strong>sub-100ms API responses</strong>.</li>
-              <li>Moved deploys to Docker multi-stage builds behind Nginx, <strong>cutting deploy time from 20 to 3 minutes</strong>.</li>
-            </ul>
-            <p class="tags"><span>NestJS</span><span>TypeScript</span><span>PostgreSQL</span><span>TypeORM</span><span>Docker</span><span>Nginx</span><span>JWT / RBAC</span></p>
-          </li>
-
-          <li class="job">
-            <div class="job-head">
-              <div>
-                <h3>Application Development Associate</h3>
-                <p class="org">Accenture · Bengaluru, India</p>
-              </div>
-              <p class="when mono">Dec 2021 – Feb 2024</p>
-            </div>
-            <ul>
-              <li>Built and deployed a highly available <strong>Java / Spring Boot microservices platform</strong> for client feedback and document uploads, scaling to <strong>10,000+ concurrent users</strong> on Kubernetes.</li>
-              <li>Optimised REST APIs on PostgreSQL with indexing, query tuning and Redis caching, <strong>improving response times by 75–80%</strong>.</li>
-              <li>Moved document processing off the request path with <strong>Kafka / RabbitMQ</strong> events and used Amazon S3 for resilient file storage under load.</li>
-              <li>Built Azure DevOps CI/CD pipelines with Docker to Kubernetes. Secured endpoints with Spring Security, JWT and role-based access.</li>
-              <li>Took part in code reviews and mentored junior developers.</li>
-            </ul>
-            <p class="tags"><span>Java</span><span>Spring Boot</span><span>PostgreSQL</span><span>Redis</span><span>Kafka</span><span>Amazon S3</span><span>Kubernetes</span><span>Azure DevOps</span></p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- Featured work -->
-    <section id="work" class="section">
-      <div class="wrap">
-        <h2 class="sec-title"><span class="mono num">03</span>Featured work</h2>
-        <div class="cards">
-          <article class="card">
-            <p class="card-kicker mono">Freelance · 2025–26</p>
-            <h3>Secure B2B client-management platform</h3>
-            <p>A greenfield platform for a chartered-accountancy firm, taken from design through production.</p>
-            <dl class="case">
-              <div><dt>Architecture</dt><dd>Auth service separate from business services. NestJS modules on PostgreSQL.</dd></div>
-              <div><dt>Security</dt><dd>JWT, RBAC, rate limiting, IP throttling, encryption, audit logs.</dd></div>
-              <div><dt>Integrations</dt><dd>Developer API platform with API keys, role-based throttling, OpenAPI docs.</dd></div>
-              <div><dt>Outcome</dt><dd><strong>&lt;100ms</strong> APIs · <strong>60%</strong> less coupling · <strong>3-min</strong> deploys</dd></div>
-            </dl>
-            <p class="tags"><span>NestJS</span><span>PostgreSQL</span><span>Docker</span><span>Nginx</span></p>
-          </article>
-
-          <article class="card">
-            <p class="card-kicker mono">Accenture · 2021–24</p>
-            <h3>High-concurrency feedback &amp; document platform</h3>
-            <p>Microservices that take client feedback and document uploads at enterprise scale.</p>
-            <dl class="case">
-              <div><dt>Architecture</dt><dd>Spring Boot services on Kubernetes. Async processing over Kafka/RabbitMQ. S3 storage.</dd></div>
-              <div><dt>Performance</dt><dd>Indexing, query tuning and Redis caching on PostgreSQL.</dd></div>
-              <div><dt>Outcome</dt><dd><strong>10,000+</strong> concurrent users · <strong>75–80%</strong> faster APIs</dd></div>
-            </dl>
-            <p class="tags"><span>Spring Boot</span><span>Kafka</span><span>Redis</span><span>Kubernetes</span></p>
-          </article>
-
-          <article class="card">
-            <p class="card-kicker mono">Accenture · 2024–now</p>
-            <h3>Microsoft 365 governance automation</h3>
-            <p>API-driven tooling that replaced manual admin work across large enterprise tenants.</p>
-            <dl class="case">
-              <div><dt>Approach</dt><dd>Scripted workflows over Microsoft Graph API and PnP PowerShell.</dd></div>
-              <div><dt>Scope</dt><dd>Provisioning, governance, reporting and multi-TB migrations.</dd></div>
-              <div><dt>Outcome</dt><dd><strong>75%</strong> less manual effort · <strong>zero</strong> data loss</dd></div>
-            </dl>
-            <p class="tags"><span>Graph API</span><span>PowerShell 7</span><span>M365</span></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects (GitHub) -->
-    <section id="projects" class="section">
-      <div class="wrap">
-        <div class="sec-head">
-          <h2 class="sec-title"><span class="mono num">04</span>Projects on GitHub</h2>
-          <a class="more mono" href="https://github.com/iamsrkg?tab=repositories" target="_blank" rel="noopener">all repos →</a>
-        </div>
-
-        <article class="flagship">
-          <div class="flagship-copy">
-            <p class="card-kicker mono">Flagship · Backend · 2026</p>
-            <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Secure Multi-Tenant Task Management API</a></h3>
-            <p>A production-style REST API in which every user sees only the projects and tasks they own or are assigned to. Built to show the patterns real services need: tenant isolation, safe concurrent writes and consistent error handling.</p>
-            <ul class="checks">
-              <li>Stateless <strong>JWT auth</strong> with <strong>RBAC</strong> through method-level security</li>
-              <li><strong>Optimistic locking</strong> (JPA <code>@Version</code>) that returns <code>409 Conflict</code> on concurrent edits</li>
-              <li>Global exception handling and a uniform response envelope, with no stack traces leaked</li>
-              <li>Pagination, sorting and status filtering. Multi-stage Docker build with Compose</li>
-            </ul>
-            <p class="tags"><span>Java 21</span><span>Spring Boot 3</span><span>Spring Security</span><span>JPA / Hibernate</span><span>PostgreSQL 15</span><span>Docker Compose</span></p>
-            <div class="cta">
-              <a class="btn btn-ghost" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">View source</a>
-            </div>
-          </div>
-          <div class="terminal endpoints" aria-label="API endpoints">
-            <div class="term-bar"><span></span><span></span><span></span><em class="mono">docker compose up --build</em></div>
-            <pre class="mono"><code><span class="c-m"># auth</span>
-<span class="c-k">POST</span>   /api/auth/register
-<span class="c-k">POST</span>   /api/auth/login        <span class="c-m">→ JWT</span>
-
-<span class="c-m"># tenant-scoped</span>
-<span class="c-ok">GET</span>    /api/projects
-<span class="c-k">POST</span>   /api/tasks
-<span class="c-ok">GET</span>    /api/tasks?status=TODO&amp;page=0
-<span class="c-s">PUT</span>    /api/tasks/{id}        <span class="c-m">→ 409 on stale version</span>
-<span class="c-s">PATCH</span>  /api/tasks/{id}/status
-<span class="c-v">DELETE</span> /api/tasks/{id}
-
-<span class="c-m"># admin only</span>
-<span class="c-ok">GET</span>    /api/admin/users</code></pre>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">Why multi-stage builds?</span>
+            <span class="ask-q">Tracing one request across services</span>
+            <button type="button" class="try mono" data-run="health">See X-Request-Id live →</button>
           </div>
         </article>
 
-        <div class="cards cards-sm">
+        <!-- 02 RATE LIMITER -->
+        <article class="hop" id="hop-limit" data-hop="02" data-name="rate limiter" data-t="2">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 02</span><span>t+2ms</span></p>
+            <h2>Rate limiter</h2>
+            <p class="hop-what">Before anything expensive happens, the request spends a token. No token, no entry, and a clear note on when to come back.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Reject cheaply first.</b> A request that's going to be refused should never reach the password hasher or the database.</li>
+                <li><b>Say when to retry.</b> <code>429</code> with <code>Retry-After</code> turns a flood into an orderly queue, and I honour it when I'm the client too.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Accenture · 2024–now:</b> Microsoft Graph automation that pages, batches calls into <code>$batch</code> and waits out <code>429 Retry-After</code> instead of hammering.</p>
+                <p><b>Freelance · 2025–26:</b> rate limiting (5 logins per 15 min per IP), IP throttling and role-based throttling on the partner API.</p>
+              </div>
+            </div>
+            <div class="hop-vis">
+              <div class="widget" data-widget="bucket">
+                <p class="w-cap mono">token bucket · capacity 10 · refills 2/s</p>
+                <div class="bucket" aria-hidden="true"></div>
+                <div class="w-row">
+                  <button type="button" class="w-btn" data-act="one">Send 1 request</button>
+                  <button type="button" class="w-btn ghost" data-act="burst">Send 12 at once</button>
+                </div>
+                <pre class="w-out mono" aria-live="polite">bucket full · go ahead</pre>
+              </div>
+            </div>
+          </div>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">Token bucket vs sliding window</span>
+            <span class="ask-q">Rate limiting across many instances</span>
+            <button type="button" class="try mono" data-run="burst">Trigger a real 429 →</button>
+          </div>
+        </article>
+
+        <!-- 03 AUTH -->
+        <article class="hop" id="hop-auth" data-hop="03" data-name="auth" data-t="5">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 03</span><span>t+5ms</span></p>
+            <h2>Auth</h2>
+            <p class="hop-what">The token is checked, not trusted: signature first, then expiry, then role. One service issues tokens and everyone else only verifies them.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Security code in one place.</b> Splitting auth from business logic means one small surface to review, and changes stop rippling across the codebase.</li>
+                <li><b>Two questions, two layers.</b> RBAC decides whether you may call the route, and ownership decides whether you may touch the row.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Freelance · 2025–26:</b> auth as its own service with JWT, RBAC, granular permissions, encryption and audit logs, which meant <b class="hl">60% less coupling</b>.</p>
+                <p><b>Accenture · 2021–24:</b> Spring Security with JWT and role-based access on every endpoint.</p>
+              </div>
+            </div>
+            <div class="hop-vis">
+              <div class="widget" data-widget="jwt">
+                <p class="w-cap mono">bearer token · HS256</p>
+                <p class="jwt mono"><span class="jh"></span>.<span class="jp"></span>.<span class="js"></span></p>
+                <pre class="w-out mono jwt-payload"></pre>
+                <label class="w-toggle"><input type="checkbox" data-act="tamper"> Tamper: change <code>role</code> to ADMIN</label>
+                <p class="verdict mono" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">JWT vs server sessions</span>
+            <span class="ask-q">Revoking a JWT early</span>
+            <span class="ask-q">404, not 403, across tenants</span>
+            <button type="button" class="try mono" data-run="tamper">Forge a token for real →</button>
+          </div>
+        </article>
+
+        <!-- 04 SERVICE -->
+        <article class="hop" id="hop-service" data-hop="04" data-name="service" data-t="9">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 04</span><span>t+9ms</span></p>
+            <h2>Service</h2>
+            <p class="hop-what">The business logic runs in stateless services, so any replica can take the request, and more replicas are one command away.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Stateless scales.</b> When no request depends on which pod it lands on, capacity is a replica count, not a rewrite.</li>
+                <li><b>One contract at the boundary.</b> Validate input at the edge of the service, and return one error shape from every endpoint.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Accenture · 2024–now:</b> Graph API automation that removed <b class="hl">75%</b> of manual operations work.</p>
+                <p><b>Freelance · 2025–26:</b> a NestJS and TypeScript platform, plus a versioned partner API with API keys, HMAC-signed webhooks and Swagger docs.</p>
+                <p><b>Accenture · 2021–24:</b> Spring Boot microservices on Kubernetes serving <b class="hl">10,000+ concurrent users</b>.</p>
+              </div>
+            </div>
+            <div class="hop-vis">
+              <div class="widget" data-widget="pods">
+                <p class="w-cap mono">deployment/api · horizontal pod autoscaler</p>
+                <div class="pods" aria-hidden="true"></div>
+                <div class="w-row">
+                  <button type="button" class="w-btn" data-act="spike">Simulate a traffic spike</button>
+                </div>
+                <pre class="w-out mono" aria-live="polite">replicas 3/3 · cpu 38%</pre>
+              </div>
+            </div>
+          </div>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">What makes a service stateless</span>
+            <span class="ask-q">How the autoscaler decides</span>
+            <span class="ask-q">One error format everywhere</span>
+            <button type="button" class="try mono" data-run="invalid">See a validation error →</button>
+          </div>
+        </article>
+
+        <!-- 05 CACHE + DB -->
+        <article class="hop" id="hop-data" data-hop="05" data-name="cache + database" data-t="14">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 05</span><span>t+14ms</span></p>
+            <h2>Cache &amp; database</h2>
+            <p class="hop-what">Hot reads come from the cache. Everything else hits an index, never a full table scan.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Fix the plan before buying hardware.</b> Most slow APIs are one missing composite index away from fast.</li>
+                <li><b>Cache on purpose.</b> Cache what's read often and changes rarely, and know exactly what invalidates it.</li>
+                <li><b>History is data.</b> Type-2 versioning keeps every change as a row, so audit trails come free.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Accenture · 2024–now:</b> multi-terabyte migrations with zero data loss.</p>
+                <p><b>Freelance · 2025–26:</b> MySQL and TypeORM tuning (20+ targeted indexes) to <b class="hl">sub-100ms</b> responses, plus a CMS with Type-2 audit versioning that made content ops <b class="hl">90% faster</b>.</p>
+                <p><b>Accenture · 2021–24:</b> indexing, query rewrites and Redis caching on PostgreSQL made APIs <b class="hl">75–80% faster</b>.</p>
+              </div>
+            </div>
+            <div class="hop-vis">
+              <div class="widget" data-widget="query">
+                <div class="tabs" role="tablist" aria-label="Query plan">
+                  <button type="button" role="tab" aria-selected="true" data-plan="scan">No index</button>
+                  <button type="button" role="tab" aria-selected="false" data-plan="index">With index</button>
+                  <button type="button" role="tab" aria-selected="false" data-plan="cache">Cache hit</button>
+                </div>
+                <pre class="w-out mono plan" aria-live="polite"></pre>
+                <p class="w-note">Illustrative plan on 2M rows, showing the kind of change behind the numbers.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">Composite index column order</span>
+            <span class="ask-q">Cache invalidation</span>
+            <span class="ask-q">Optimistic vs pessimistic locking</span>
+            <button type="button" class="try mono" data-run="conflict">Cause a 409 conflict →</button>
+          </div>
+        </article>
+
+        <!-- 06 QUEUE -->
+        <article class="hop" id="hop-queue" data-hop="06" data-name="queue" data-t="16">
+          <span class="hop-node" aria-hidden="true"></span>
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 06</span><span>t+16ms</span></p>
+            <h2>Queue</h2>
+            <p class="hop-what">Slow work doesn't happen on this request. It stores the file, publishes an event and moves on. Workers take it from there.</p>
+          </header>
+          <div class="hop-grid">
+            <div class="hop-copy">
+              <ul class="principles">
+                <li><b>Two latency budgets.</b> Acknowledge in milliseconds, process in seconds.</li>
+                <li><b>Let the queue absorb the spike</b> instead of the web tier.</li>
+                <li><b>Pay the price knowingly.</b> Async means eventual consistency, so consumers must be idempotent.</li>
+              </ul>
+              <div class="built">
+                <p class="built-cap mono">where I built this</p>
+                <p><b>Accenture · 2021–24:</b> document uploads go to Amazon S3, and processing moved to Kafka/RabbitMQ consumers off the request path, on the platform serving <b class="hl">10,000+ concurrent users</b>.</p>
+              </div>
+            </div>
+            <div class="hop-vis">
+              <figure class="arch">
+                <div class="arch-scroll">
+                  <svg viewBox="0 0 560 250" role="img" aria-labelledby="q-title">
+                    <title id="q-title">The API stores the upload in S3 and publishes an event to Kafka, then answers 202 Accepted. A worker consumes the event and fetches the document from S3.</title>
+                    <defs><marker id="arrQ" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+                    <path class="e" d="M120 70 H170" marker-end="url(#arrQ)"/>
+                    <path class="e back" d="M170 98 H120" marker-end="url(#arrQ)"/>
+                    <path class="e" d="M310 70 H360" marker-end="url(#arrQ)"/>
+                    <path class="e hot" d="M240 112 V170 H360" marker-end="url(#arrQ)"/>
+                    <path class="e hot" d="M480 196 H500" marker-end="url(#arrQ)"/>
+                    <path class="e" d="M525 170 V89 H480" marker-end="url(#arrQ)"/>
+                    <text class="lbl" x="125" y="124">202 · 16ms</text>
+                    <text class="lbl" x="250" y="160">publish</text>
+                    <text class="lbl" x="488" y="82">fetch</text>
+                    <g class="n"><rect x="10" y="56" width="110" height="52" rx="10"/><text class="t" x="65" y="78">Client</text><text class="s" x="65" y="96">upload</text></g>
+                    <g class="n hot"><rect x="170" y="56" width="140" height="56" rx="10"/><text class="t" x="240" y="80">Upload API</text><text class="s" x="240" y="98">Spring Boot</text></g>
+                    <g class="n"><rect x="360" y="56" width="120" height="66" rx="10"/><text class="t" x="420" y="84">Amazon S3</text><text class="s" x="420" y="102">documents</text></g>
+                    <g class="n hot"><rect x="360" y="170" width="120" height="52" rx="10"/><text class="t" x="420" y="192">Kafka</text><text class="s" x="420" y="210">or RabbitMQ</text></g>
+                    <g class="n"><rect x="500" y="170" width="50" height="52" rx="10"/><text class="t" x="525" y="200">⚙</text></g>
+                    <text class="s2" x="525" y="240">worker</text>
+                  </svg>
+                </div>
+                <figcaption>The client gets its answer at "event published". The slow part happens after the response, where a spike becomes queue depth instead of timeouts.</figcaption>
+              </figure>
+            </div>
+          </div>
+          <div class="ask">
+            <span class="ask-cap mono">ask me about</span>
+            <span class="ask-q">At-least-once delivery &amp; idempotency</span>
+            <span class="ask-q">Kafka vs RabbitMQ</span>
+            <span class="ask-q">Handling a poison message</span>
+          </div>
+        </article>
+
+        <!-- The response returns at the very end of the page -->
+        <div class="inflight mono">
+          <span class="dot" aria-hidden="true"></span> response in flight…
+          <a href="#lab">meanwhile, send a request of your own ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIVE API ============ -->
+    <section id="lab" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="sec-title">Your turn: send your own request</h2>
+          <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot source →</a>
+        </div>
+        <p class="section-lede">Everything above, working for real. This is a port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a> contract that runs in your browser. JWTs are really HMAC-signed and passwords really go through PBKDF2 via Web Crypto. It has a token-bucket limiter, tenant-scoped queries, optimistic locking and one error envelope. Pick an attack or write your own request.</p>
+
+        <div class="pg" id="playground">
+          <div class="pg-scenarios" role="group" aria-label="Scenarios">
+            <button type="button" data-scenario="health">Health check <span class="st s2">200</span></button>
+            <button type="button" data-scenario="login">Log in as alice <span class="st s2">200</span></button>
+            <button type="button" data-scenario="list">List my tasks <span class="st s2">200</span></button>
+            <button type="button" data-scenario="tenant">Read bob's task <span class="st s4">404</span></button>
+            <button type="button" data-scenario="noauth">No token <span class="st s4">401</span></button>
+            <button type="button" data-scenario="tamper">Forge admin JWT <span class="st s4">401</span></button>
+            <button type="button" data-scenario="admin">User → admin API <span class="st s4">403</span></button>
+            <button type="button" data-scenario="invalid">Invalid payload <span class="st s4">400</span></button>
+            <button type="button" data-scenario="conflict">Concurrent edit <span class="st s4">409</span></button>
+            <button type="button" data-scenario="burst">Traffic burst <span class="st s4">429</span></button>
+          </div>
+
+          <div class="pg-grid">
+            <form class="pg-req" id="pg-form" autocomplete="off">
+              <p class="pg-cap mono">request</p>
+              <div class="pg-line">
+                <label class="sr-only" for="pg-method">Method</label>
+                <select id="pg-method">
+                  <option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option>
+                </select>
+                <label class="sr-only" for="pg-path">Path</label>
+                <input id="pg-path" value="/actuator/health" spellcheck="false">
+                <button type="submit" class="btn btn-primary">Send</button>
+              </div>
+              <label class="pg-auth"><input type="checkbox" id="pg-useauth" checked> <span class="mono">Authorization: Bearer</span> <code id="pg-token">not logged in</code></label>
+              <label class="sr-only" for="pg-body">JSON body</label>
+              <textarea id="pg-body" spellcheck="false" rows="7" placeholder='{ "json": "body for POST / PUT / PATCH" }'></textarea>
+              <details class="pg-more">
+                <summary>Endpoints &amp; demo users</summary>
+                <pre class="mono">POST   /api/auth/register   {username, password}
+POST   /api/auth/login      {username, password}
+GET    /api/users/me
+GET    /api/admin/users     ADMIN only
+GET    /api/projects
+POST   /api/projects        {name}
+GET    /api/tasks?status=&amp;page=&amp;size=&amp;sort=
+GET    /api/tasks/{id}
+POST   /api/tasks           {title, projectId, status?, assigneeId?}
+PUT    /api/tasks/{id}      {title, status, version}
+PATCH  /api/tasks/{id}/status {status}
+DELETE /api/tasks/{id}      owner only
+GET    /actuator/health
+
+users: alice / alice123 · bob / bob123 · admin / admin123</pre>
+              </details>
+              <details class="pg-more">
+                <summary>Decoded JWT</summary>
+                <pre class="mono" id="pg-jwt">Log in to get a token.</pre>
+              </details>
+              <p class="pg-hint">State lives in memory, so reload the page to reset it.</p>
+            </form>
+
+            <div class="pg-res" aria-live="polite">
+              <div class="pg-status"><span id="pg-code" class="pg-code">…</span><span id="pg-time" class="pg-time mono"></span></div>
+              <p class="pg-cap mono">request lifecycle</p>
+              <ol class="pg-trace" id="pg-trace"></ol>
+              <p class="pg-cap mono">response headers</p>
+              <pre class="pg-headers mono" id="pg-headers"></pre>
+              <p class="pg-cap mono">body</p>
+              <pre class="pg-out mono" id="pg-out"></pre>
+            </div>
+          </div>
+
+          <div class="pg-log">
+            <div class="pg-log-head mono">server.log</div>
+            <div class="mono" id="pg-log" tabindex="0" aria-label="Server log"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FRONT END ============ -->
+    <section id="frontend" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">And yes, I ship the front end too</h2>
+        <p class="section-lede">Backend is where I go deep, but I own features end to end. Everything on this page is hand-built with no framework: the request journey, the widgets and the API client above.</p>
+        <div class="cards">
           <article class="card">
-            <p class="card-kicker mono">Full-stack · Web</p>
-            <h3><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">JOB-HUNT: job portal</a></h3>
-            <p>A job board with sign-up, profiles, job posting, applications and an admin area. Search by role and skills.</p>
-            <p class="tags"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>SCSS</span></p>
+            <p class="card-kicker mono">This site · 2026</p>
+            <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
+            <p>A REST API emulated in the browser with real crypto, a Postman-style client, request tracing and a live log. No build step, no dependencies.</p>
+            <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
           </article>
           <article class="card">
-            <p class="card-kicker mono">Mobile · Real-time</p>
-            <h3><a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Multiplayer Tic-Tac-Toe</a></h3>
-            <p>A React Native game for Android and iOS where each player's moves sync to the opponent in real time.</p>
-            <p class="tags"><span>React Native</span><span>JavaScript</span><span>Jest</span></p>
-          </article>
-          <article class="card">
-            <p class="card-kicker mono">Published research · CV</p>
-            <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
-            <p>A face-recognition gate system that identifies people and logs entry time, photos and video. Published in <em>IJAST</em> (SERSC).</p>
-            <p class="tags"><span>Python</span><span>OpenCV Haar</span><span>SVM</span><span>HMM</span><span>Tkinter</span></p>
+            <p class="card-kicker mono">Freelance · 2025–26 · internal</p>
+            <h3>Admin dashboard &amp; CMS for the B2B platform</h3>
+            <p>The React front end on top of my NestJS API: an admin dashboard, a CMS editor with version history, and paginated views. Server state is cached with React Query, search is debounced and images load lazily.</p>
+            <p class="tags"><span>React</span><span>React Query</span><span>REST</span><span>RBAC UI</span></p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- Skills -->
-    <section id="skills" class="section">
-      <div class="wrap">
-        <h2 class="sec-title"><span class="mono num">05</span>Skills</h2>
-        <div class="skills">
-          <div class="skill-group">
-            <h3 class="mono">backend_&amp;_apis</h3>
-            <p class="tags"><span>Java</span><span>Spring Boot</span><span>Node.js</span><span>NestJS</span><span>Express.js</span><span>REST</span><span>API Design</span><span>Swagger / OpenAPI</span></p>
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section">
+      <div class="wrap about-grid">
+        <div>
+          <h2 class="sec-title">About</h2>
+          <div class="prose">
+            <p>I'm Sudheer. I started out writing Spring Boot services at Accenture and scaled one to 10,000+ concurrent users. For the last two years I've automated enterprise Microsoft 365 over Graph API, and along the way I designed and shipped a B2B platform on my own as a freelancer. That platform is a client's internal system, so its code isn't public. My <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a> uses the same patterns in the open.</p>
+            <p>I'm a Thai citizen and an OCI cardholder. I'm based in Bengaluru and relocating to Bangkok, so I can work in either country without sponsorship, or remotely.</p>
+            <p>I learn new stacks quickly. I went from zero to shipping production automation on Microsoft Graph within weeks. I use AI tools like Claude Code the way I use any tool: I review every change and test it before it ships.</p>
           </div>
-          <div class="skill-group">
-            <h3 class="mono">distributed_systems</h3>
-            <p class="tags"><span>Microservices</span><span>System Design</span><span>Event-Driven</span><span>Kafka</span><span>RabbitMQ</span><span>SOA</span></p>
+        </div>
+
+        <div class="about-side">
+          <div class="side-block">
+            <p class="pg-cap mono">track record</p>
+            <ol class="track">
+              <li><span class="mono when">Mar 2024 – now</span><div><b>Infra Managed Service Analyst, Backend &amp; Automation</b><span>Accenture · Graph API automation, M365 governance</span></div></li>
+              <li><span class="mono when">Nov 2025 – Mar 2026</span><div><b>Backend Engineer, freelance</b><span>CA Sanjeev Gupta &amp; Co. · NestJS B2B platform · alongside Accenture</span></div></li>
+              <li><span class="mono when">Dec 2021 – Feb 2024</span><div><b>Application Development Associate</b><span>Accenture · Spring Boot microservices</span></div></li>
+            </ol>
+            <a class="more mono" href="assets/resume-remote.pdf" data-resume download>full details in the resume (<span data-edition>remote</span> edition) →</a>
           </div>
-          <div class="skill-group">
-            <h3 class="mono">data_&amp;_caching</h3>
-            <p class="tags"><span>PostgreSQL</span><span>MySQL</span><span>MongoDB</span><span>Redis</span><span>TypeORM</span><span>Schema Design</span><span>Query Optimisation</span></p>
-          </div>
-          <div class="skill-group">
-            <h3 class="mono">cloud_&amp;_devops</h3>
-            <p class="tags"><span>AWS</span><span>Amazon S3</span><span>Docker</span><span>Kubernetes</span><span>Nginx</span><span>Azure DevOps</span><span>CI/CD</span><span>Linux</span></p>
-          </div>
-          <div class="skill-group">
-            <h3 class="mono">security</h3>
-            <p class="tags"><span>Spring Security</span><span>JWT</span><span>RBAC</span><span>Rate Limiting</span><span>IP Throttling</span><span>Audit Logging</span></p>
-          </div>
-          <div class="skill-group">
-            <h3 class="mono">frontend_&amp;_full_stack</h3>
-            <p class="tags"><span>TypeScript</span><span>JavaScript</span><span>React Native</span><span>HTML</span><span>CSS / SCSS</span><span>PHP</span><span>Headless CMS</span></p>
-          </div>
-          <div class="skill-group">
-            <h3 class="mono">languages_&amp;_tools</h3>
-            <p class="tags"><span>Java</span><span>SQL</span><span>C++</span><span>Python</span><span>PowerShell</span><span>Git</span><span>Postman</span><span>Claude Code</span></p>
+
+          <div class="side-block">
+            <p class="pg-cap mono">credentials</p>
+            <ul class="creds-list">
+              <li><b>AWS Certified Solutions Architect – Associate</b> <span class="muted">· Feb 2025–Feb 2028 ·</span> <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">verify on Credly</a></li>
+              <li><b>B.Tech, Computer Science</b> <span class="muted">· Vel Tech R&amp;D Institute, Chennai · CGPA 8.23</span></li>
+              <li><b>3 publications</b> <span class="muted">· Mushroom-edibility ML (ICICCT 2021) · fetal-health prediction (TOJQI) · video-based human authentication (IJAST,</span> <a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">code</a><span class="muted">)</span></li>
+              <li><b>Co-founder</b> <span class="muted">· WUS Bhoomika Eco Logistics, B2B waste logistics (pre-launch)</span></li>
+              <li><b>Languages</b> <span class="muted">· English, Hindi, Thai (conversational)</span></li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Credentials -->
-    <section id="credentials" class="section">
+    <!-- ============ RESPONSE (the request returns) ============ -->
+    <section class="section response-section" aria-label="Response and contact">
       <div class="wrap">
-        <h2 class="sec-title"><span class="mono num">06</span>Credentials</h2>
-        <div class="creds">
-          <div class="cred">
-            <div class="badge" aria-hidden="true">AWS</div>
-            <div>
-              <h3>AWS Certified Solutions Architect – Associate</h3>
-              <p class="muted">Amazon Web Services · Issued Feb 2025 · Valid to Feb 2028</p>
-              <p><a class="more mono" href="https://www.credly.com/earner/earned/badge/1f077cc8-f8b9-416f-b686-b8c0348d51e6" target="_blank" rel="noopener">verify on Credly →</a></p>
-            </div>
-          </div>
-          <div class="cred">
-            <div class="badge" aria-hidden="true">B.Tech</div>
-            <div>
-              <h3>B.Tech, Computer Science &amp; Engineering <span class="muted">· 2017–2021</span></h3>
-              <p class="muted">Vel Tech Rangarajan Dr. Sagunthala R&amp;D Institute of Science and Technology, Chennai · CGPA 8.23/10</p>
-            </div>
-          </div>
-          <div class="cred">
-            <div class="badge" aria-hidden="true">★</div>
-            <div>
-              <h3>Recognition</h3>
-              <p class="muted">Recognised by stakeholders for delivering on critical deadlines · 3rd place (team) in an inter-department coding competition</p>
-            </div>
-          </div>
-          <div class="cred">
-            <div class="badge" aria-hidden="true">Co</div>
-            <div>
-              <h3>Co-founder, WUS Bhoomika Eco Logistics <span class="muted">· 2026–present</span></h3>
-              <p class="muted">B2B waste-logistics venture, pre-launch</p>
-            </div>
-          </div>
-        </div>
+        <article class="hop hop-final" id="hop-response" data-hop="07" data-name="response" data-t="18">
+          <header class="hop-head">
+            <p class="hop-meta mono"><span>hop 07</span><span>t+18ms · 200 OK</span></p>
+            <h2>Response</h2>
+            <p class="hop-what">The request is back, after everything you've seen. Here's what it was fetching.</p>
+          </header>
+          <div class="terminal response">
+            <div class="term-bar"><span></span><span></span><span></span><em class="mono">GET /hire/sudheer</em></div>
+<pre class="mono"><code><span class="c-ok">HTTP/1.1 200 OK</span>
+<span class="c-m">Content-Type: application/json
+X-Request-Id: 7f3a91c2
+X-Response-Time: 18ms
+Vary: X-Region
+X-Resume-Edition: <span data-edition>remote</span></span>
 
-        <h3 class="sub-title mono">publications</h3>
-        <ul class="pubs">
-          <li>
-            <p class="pub-title">Dimensionality Reduction based Component Discriminant Factor Implication for Mushroom Edibility Classification using Machine Learning</p>
-            <p class="muted">5th International Conference on Inventive Communication and Computational Technologies (ICICCT), 2021</p>
-          </li>
-          <li>
-            <p class="pub-title">Undersampling Aware Learning based Fetal Health Prediction using Cardiotocographic Data</p>
-            <p class="muted">Turkish Online Journal of Qualitative Inquiry</p>
-          </li>
-          <li>
-            <p class="pub-title">Video-Based Dynamic Human Authentication System</p>
-            <p class="muted">International Journal of Advanced Science and Technology (IJAST), SERSC · <a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">code</a></p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="section contact">
-      <div class="wrap">
-        <h2 class="sec-title"><span class="mono num">07</span>Contact</h2>
-        <div class="contact-box">
-          <div>
-            <p class="contact-lead">Hiring for a backend or full-stack role? I'd like to hear about it.</p>
-            <p class="muted">I'm available for roles in Thailand and India, and remote roles with flexible timezone overlap. No visa sponsorship needed in Thailand or India.</p>
+{
+  <span class="c-k">"name"</span>: <span class="c-s">"Sudheer Kumar Gupta"</span>,
+  <span class="c-k">"role"</span>: <span class="c-s">"Backend Engineer"</span>,
+  <span class="c-k">"experienceYears"</span>: <span class="c-v">5</span>,
+  <span class="c-k">"stack"</span>: [<span class="c-s">"Java"</span>, <span class="c-s">"Spring Boot"</span>, <span class="c-s">"Node.js"</span>, <span class="c-s">"NestJS"</span>, <span class="c-s">"PostgreSQL"</span>, <span class="c-s">"MySQL"</span>, <span class="c-s">"Redis"</span>, <span class="c-s">"Kafka"</span>, <span class="c-s">"AWS"</span>, <span class="c-s">"Kubernetes"</span>],
+  <span class="c-k">"openTo"</span>: [<span class="c-s">"Backend Engineer"</span>, <span class="c-s">"Software Engineer (Backend)"</span>, <span class="c-s">"Full-Stack Engineer (Node/TS)"</span>, <span class="c-s">"Platform Engineer"</span>],
+<span data-only="th">  <span class="c-k">"location"</span>: <span class="c-s">"Bangkok (relocating)"</span>,
+  <span class="c-k">"workAuthorization"</span>: { <span class="c-k">"thailand"</span>: <span class="c-s">"citizen"</span>, <span class="c-k">"sponsorshipNeeded"</span>: <span class="c-ok">false</span> },
+  <span class="c-k">"languages"</span>: [<span class="c-s">"English"</span>, <span class="c-s">"Thai (conversational)"</span>, <span class="c-s">"Hindi"</span>],
+</span><span data-only="in">  <span class="c-k">"location"</span>: <span class="c-s">"Bengaluru"</span>,
+  <span class="c-k">"workAuthorization"</span>: { <span class="c-k">"india"</span>: <span class="c-s">"OCI cardholder"</span>, <span class="c-k">"sponsorshipNeeded"</span>: <span class="c-ok">false</span> },
+</span><span data-only="remote">  <span class="c-k">"location"</span>: <span class="c-s">"Remote"</span>,
+  <span class="c-k">"timezone"</span>: <span class="c-s">"GMT+7, flexible overlap"</span>,
+  <span class="c-k">"workAuthorization"</span>: { <span class="c-k">"thailand"</span>: <span class="c-s">"citizen"</span>, <span class="c-k">"india"</span>: <span class="c-s">"OCI cardholder"</span> },
+</span>  <span class="c-k">"availability"</span>: <span class="c-s">"serving notice period"</span>,
+  <span class="c-k">"certification"</span>: <a class="c-s" href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">"AWS Solutions Architect – Associate ↗"</a>,
+  <span class="c-k">"contact"</span>: {
+    <span class="c-k">"email"</span>:    <a class="c-s" href="mailto:sudheerkgupta@outlook.com">"sudheerkgupta@outlook.com"</a>,
+    <span class="c-k">"linkedin"</span>: <a class="c-s" href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">"linkedin.com/in/iamsrkg ↗"</a>,
+    <span class="c-k">"line"</span>:     <a class="c-s" href="https://line.me/ti/p/~iamsrkg" target="_blank" rel="noopener">"iamsrkg ↗"</a>,
+    <span class="c-k">"github"</span>:   <a class="c-s" href="https://github.com/iamsrkg" target="_blank" rel="noopener">"github.com/iamsrkg ↗"</a>,
+    <span class="c-k">"resume"</span>:   <a class="c-s" href="assets/resume-remote.pdf" data-resume download>"resume (<span data-edition>remote</span> edition) ↓"</a>
+  }
+}</code></pre>
           </div>
-          <div class="contact-actions">
-            <a class="btn btn-primary" href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
-            <a class="btn btn-ghost" href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">Message on LinkedIn</a>
-          </div>
-        </div>
+        </article>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <p class="mono muted">© <span id="year">2026</span> Sudheer Kumar Gupta</p>
-      <p class="mono muted"><a href="#top">back to top ↑</a></p>
+      <p class="mono muted">© <span id="year">2026</span> Sudheer Kumar Gupta · hand-built, no framework</p>
+      <p class="mono muted">
+        <a href="mailto:sudheerkgupta@outlook.com">email</a> ·
+        <a href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">linkedin</a> ·
+        <a href="https://line.me/ti/p/~iamsrkg" target="_blank" rel="noopener">line</a> ·
+        <a href="#top">top ↑</a>
+      </p>
     </div>
   </footer>
 
+  <script src="journey.js" defer></script>
+  <script src="playground.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;
@@ -469,18 +614,6 @@
         try { localStorage.setItem('theme', next); } catch (e) {}
       });
       document.getElementById('year').textContent = new Date().getFullYear();
-
-      // Reveal sections on scroll
-      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        var els = document.querySelectorAll('.section, .stats');
-        els.forEach(function (el) { el.classList.add('reveal'); });
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-          });
-        }, { threshold: 0.08 });
-        els.forEach(function (el) { io.observe(el); });
-      }
     })();
   </script>
 </body>
