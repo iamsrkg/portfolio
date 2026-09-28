@@ -215,6 +215,15 @@ code { font-family: var(--mono); font-size: .88em; padding: 1px 6px; border-radi
   font-family: var(--mono); font-weight: 600; font-size: 13px; color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
 
+.cred .more { font-size: 12.5px; }
+.sub-title { font-size: 13px; font-weight: 500; color: var(--accent); margin: 36px 0 14px; }
+.pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--border);
+  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.pubs li { background: var(--surface); padding: 16px 20px; }
+.pubs p { margin: 0; }
+.pub-title { font-weight: 600; font-size: 15px; }
+.pubs .muted { font-size: 13.5px; margin-top: 4px; }
+
 /* Contact */
 .contact-box { display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap;
   padding: 36px; border-radius: var(--radius); border: 1px solid var(--border);
