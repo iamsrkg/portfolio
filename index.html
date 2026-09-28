@@ -455,7 +455,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
     <section id="work" class="section">
       <div class="wrap">
         <h2 class="sec-title">What I built at work, and how</h2>
-        <p class="section-lede">The hops above, told job by job from the backend side: the problem, what I built, what it changed, and a short example of the pattern. Client code stays with the client, so the examples are written for this page. They are not copied from anyone's codebase.</p>
+        <p class="section-lede">The hops above, told job by job from the backend side: the problem, what I built, and what it changed. Client code stays with the client, so each job gets a small working simulation you can click, plus a short sketch of the pattern. Both are written for this page.</p>
         <div class="cases">
 
           <article class="case">
@@ -480,6 +480,18 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
               </dl>
             </div>
             <div class="example">
+              <div class="widget" data-widget="type2">
+                <p class="w-cap mono">try it · a CMS page with Type-2 versioning (simulation)</p>
+                <label class="sr-only" for="t2-body">Page text</label>
+                <textarea id="t2-body" class="w-input mono" rows="2" spellcheck="false"></textarea>
+                <div class="w-row">
+                  <label class="w-toggle">edit as <select class="w-select mono"><option>partner</option><option>staff</option><option>client</option></select></label>
+                  <button type="button" class="w-btn" data-act="save">Save a new version</button>
+                </div>
+                <div class="t2-wrap"><table class="t2 mono"><thead><tr><th>ver</th><th>body</th><th>by</th><th>valid_from</th><th>valid_to</th></tr></thead><tbody></tbody></table></div>
+                <label class="w-toggle">time travel <input type="range" min="0" max="1" value="1"></label>
+                <pre class="w-out mono asof-out"></pre>
+              </div>
               <div class="terminal slim">
                 <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · Type-2 versioning in SQL</em></div>
 <pre class="mono"><code><span class="c-m">-- An edit never overwrites: it closes the current row and adds a new one.</span>
@@ -533,6 +545,14 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
               </dl>
             </div>
             <div class="example">
+              <div class="widget" data-widget="graph">
+                <p class="w-cap mono">try it · a tenant-wide governance run over a paged API (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn" data-act="run">Find ownerless Teams</button>
+                  <button type="button" class="w-btn ghost" data-act="csv" hidden>Download the report (CSV)</button>
+                </div>
+                <pre class="w-out mono" aria-live="polite">230 Teams in this pretend tenant. The API returns 100 per page.</pre>
+              </div>
               <div class="terminal slim">
                 <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · a governance report over Graph</em></div>
 <pre class="mono"><code><span class="c-m"># Find every Team with no owner. Graph pages its results, so follow nextLink.</span>
@@ -574,6 +594,16 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
               </dl>
             </div>
             <div class="example">
+              <div class="widget" data-widget="queue">
+                <p class="w-cap mono">try it · 40 users upload at once (simulation)</p>
+                <div class="w-row">
+                  <button type="button" class="w-btn ghost" data-mode="sync">Process inside the request</button>
+                  <button type="button" class="w-btn" data-mode="queue">S3 + Kafka, answer 202</button>
+                </div>
+                <div class="qbar"><span></span></div>
+                <p class="qdepth mono">idle</p>
+                <pre class="w-out mono" aria-live="polite">Each document takes ~900 ms to process. Watch who waits for it.</pre>
+              </div>
               <div class="terminal slim">
                 <div class="term-bar"><span></span><span></span><span></span><em class="mono">example · answer fast, process later (Spring Boot)</em></div>
 <pre class="mono"><code><span class="c-p">@PostMapping</span>(<span class="c-s">"/documents"</span>)
@@ -751,6 +781,7 @@ X-Response-Time: 18ms
 
   <script src="journey.js" defer></script>
   <script src="playground.js" defer></script>
+  <script src="work.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;
