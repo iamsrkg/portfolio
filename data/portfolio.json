@@ -10,10 +10,24 @@
     ],
     "status": "Open to work",
     "eligibility": "Authorized to work in India and Thailand · no visa sponsorship needed",
-    "work_modes": ["On-site", "Hybrid", "Remote"],
-    "roles": ["Backend Engineer", "Software Engineer", "Full-Stack Engineer (Node / TypeScript)", "Platform Engineer"],
+    "work_modes": [
+      "On-site",
+      "Hybrid",
+      "Remote"
+    ],
+    "roles": [
+      "Backend Engineer",
+      "Software Engineer",
+      "Full-Stack Engineer (Node / TypeScript)",
+      "Platform Engineer"
+    ],
     "certifications": [
-      { "name": "AWS Certified Solutions Architect – Associate", "issued": "2025-02", "expires": "2028-02", "url": "https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" }
+      {
+        "name": "AWS Certified Solutions Architect – Associate",
+        "issued": "2025-02",
+        "expires": "2028-02",
+        "url": "https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url"
+      }
     ],
     "education": "B.Tech, Computer Science & Engineering, Vel Tech R&D Institute, Chennai (2017–2021), CGPA 8.23",
     "publications": [
@@ -21,7 +35,11 @@
       "Mushroom edibility classification with dimensionality reduction (ICICCT 2021)",
       "Undersampling-aware learning for fetal health prediction (TOJQI)"
     ],
-    "languages": ["English", "Hindi", "Thai (conversational)"],
+    "languages": [
+      "English",
+      "Hindi",
+      "Thai (conversational)"
+    ],
     "contact": {
       "email": "sudheerkgupta@outlook.com",
       "linkedin": "https://www.linkedin.com/in/iamsrkg",
@@ -31,10 +49,22 @@
     }
   },
   "stats": [
-    { "value": "10,000+", "label": "concurrent users on a platform I built" },
-    { "value": "75–80%", "label": "faster APIs after query and cache work" },
-    { "value": "<100 ms", "label": "API responses on a platform I built solo" },
-    { "value": "20 → 3 min", "label": "deploy time after reworking the pipeline" }
+    {
+      "value": "10,000+",
+      "label": "concurrent users on a platform I built"
+    },
+    {
+      "value": "75–80%",
+      "label": "faster APIs after query and cache work"
+    },
+    {
+      "value": "<100 ms",
+      "label": "API responses on a platform I built solo"
+    },
+    {
+      "value": "20 → 3 min",
+      "label": "deploy time after reworking the pipeline"
+    }
   ],
   "experience": [
     {
@@ -48,7 +78,13 @@
         "Ran multi-terabyte migrations with structured validation and change management, with zero data loss.",
         "L2/L3 production support and root-cause analysis with 100% SLA compliance."
       ],
-      "stack": ["PowerShell 7", "Microsoft Graph", "REST", "OAuth2", "ServiceNow"]
+      "stack": [
+        "PowerShell 7",
+        "Microsoft Graph",
+        "REST",
+        "OAuth2",
+        "ServiceNow"
+      ]
     },
     {
       "company": "CA Sanjeev Gupta & Co. (freelance)",
@@ -62,7 +98,15 @@
         "20+ targeted MySQL indexes and caching brought APIs under 100 ms. A CMS with version history made content work 90% faster.",
         "Docker multi-stage builds took deploys from 20 minutes to 3."
       ],
-      "stack": ["NestJS", "TypeScript", "React", "MySQL", "TypeORM", "Docker", "Nginx"]
+      "stack": [
+        "NestJS",
+        "TypeScript",
+        "React",
+        "MySQL",
+        "TypeORM",
+        "Docker",
+        "Nginx"
+      ]
     },
     {
       "company": "Accenture",
@@ -75,7 +119,15 @@
         "Made APIs 75–80% faster with PostgreSQL indexing, query rewrites and Redis caching.",
         "Moved document processing off the request path with Kafka/RabbitMQ and S3. Added Azure DevOps CI/CD and Spring Security JWT with RBAC."
       ],
-      "stack": ["Java", "Spring Boot", "PostgreSQL", "Redis", "Kafka", "Kubernetes", "AWS S3"]
+      "stack": [
+        "Java",
+        "Spring Boot",
+        "PostgreSQL",
+        "Redis",
+        "Kafka",
+        "Kubernetes",
+        "AWS S3"
+      ]
     }
   ],
   "projects": [
@@ -86,9 +138,22 @@
       "year": 2026,
       "visibility": "public",
       "status": "Live on this page",
-      "stack": ["JavaScript", "Service Worker", "PostgreSQL", "PGlite", "Web Crypto"],
-      "tags": ["backend", "frontend"],
-      "highlights": ["Real HTTP via a Service Worker", "Real Postgres: RLS, full-text search, EXPLAIN ANALYZE", "Falls back gracefully when the browser can't run it"],
+      "stack": [
+        "JavaScript",
+        "Service Worker",
+        "PostgreSQL",
+        "PGlite",
+        "Web Crypto"
+      ],
+      "tags": [
+        "backend",
+        "frontend"
+      ],
+      "highlights": [
+        "Real HTTP via a Service Worker",
+        "Real Postgres: RLS, full-text search, EXPLAIN ANALYZE",
+        "Falls back gracefully when the browser can't run it"
+      ],
       "repo": "https://github.com/iamsrkg/iamsrkg.github.io",
       "live": "#backend"
     },
@@ -99,9 +164,23 @@
       "year": 2026,
       "visibility": "public",
       "status": "CI passing",
-      "stack": ["Java 21", "Spring Boot 4", "Spring Security", "PostgreSQL", "Docker", "GitHub Actions"],
-      "tags": ["backend", "security"],
-      "highlights": ["20 MockMvc integration tests", "No password hashes ever leave the API", "Render + Neon deploy blueprint"],
+      "stack": [
+        "Java 21",
+        "Spring Boot 4",
+        "Spring Security",
+        "PostgreSQL",
+        "Docker",
+        "GitHub Actions"
+      ],
+      "tags": [
+        "backend",
+        "security"
+      ],
+      "highlights": [
+        "20 MockMvc integration tests",
+        "No password hashes ever leave the API",
+        "Render + Neon deploy blueprint"
+      ],
       "repo": "https://github.com/iamsrkg/task-management-api",
       "live": null
     },
@@ -112,11 +191,50 @@
       "year": 2026,
       "visibility": "public",
       "status": "Hardened · 43/43 tests",
-      "stack": ["PHP 8", "MySQL", "PHPMailer", "Bootstrap"],
-      "tags": ["backend", "security", "full-stack"],
-      "highlights": ["Prepared statements everywhere", "Content-sniffed uploads, private resume storage", "Role and ownership checks enforced in SQL"],
+      "stack": [
+        "PHP 8",
+        "MySQL",
+        "PHPMailer",
+        "Bootstrap"
+      ],
+      "tags": [
+        "backend",
+        "security",
+        "full-stack"
+      ],
+      "highlights": [
+        "Prepared statements everywhere",
+        "Content-sniffed uploads, private resume storage",
+        "Role and ownership checks enforced in SQL"
+      ],
       "repo": "https://github.com/iamsrkg/JOB-HUNT",
       "live": null
+    },
+    {
+      "slug": "tic-tac-toe",
+      "name": "Real-time multiplayer Tic-Tac-Toe",
+      "summary": "Two players on different devices play the same board in real time over PubNub pub/sub and presence. It started in 2019 on React Native 0.59. In 2026 I upgraded it to Expo SDK 57 / React Native 0.86, fixed a join bug that made rooms impossible to enter, and shipped a web build. Open it on two devices and play.",
+      "year": 2026,
+      "visibility": "public",
+      "status": "Live · upgraded from 2019",
+      "stack": [
+        "React Native",
+        "Expo",
+        "PubNub",
+        "JavaScript"
+      ],
+      "tags": [
+        "mobile",
+        "realtime",
+        "frontend"
+      ],
+      "highlights": [
+        "One codebase: Android, iOS, web",
+        "Per-room channels, presence-based joining",
+        "Unit-tested rules; CI deploys to GitHub Pages"
+      ],
+      "repo": "https://github.com/iamsrkg/tic-tac-toe",
+      "live": "https://iamsrkg.github.io/tic-tac-toe/"
     },
     {
       "slug": "buddy-hub",
@@ -125,9 +243,20 @@
       "year": 2026,
       "visibility": "private",
       "status": "In production · private",
-      "stack": ["JavaScript", "Firebase Hosting", "Firestore"],
-      "tags": ["full-stack", "realtime"],
-      "highlights": ["Token-based per-table QR links", "Real-time updates without polling", "Optional GST handled consistently from cart to CSV"],
+      "stack": [
+        "JavaScript",
+        "Firebase Hosting",
+        "Firestore"
+      ],
+      "tags": [
+        "full-stack",
+        "realtime"
+      ],
+      "highlights": [
+        "Token-based per-table QR links",
+        "Real-time updates without polling",
+        "Optional GST handled consistently from cart to CSV"
+      ],
       "repo": null,
       "live": null
     },
@@ -138,9 +267,21 @@
       "year": 2026,
       "visibility": "private",
       "status": "Prototype · private",
-      "stack": ["Go", "SQLite", "JavaScript", "Vite"],
-      "tags": ["backend", "full-stack"],
-      "highlights": ["Go standard-library HTTP server", "Pure-Go SQLite (no CGO)", "Server-side PDF generation"],
+      "stack": [
+        "Go",
+        "SQLite",
+        "JavaScript",
+        "Vite"
+      ],
+      "tags": [
+        "backend",
+        "full-stack"
+      ],
+      "highlights": [
+        "Go standard-library HTTP server",
+        "Pure-Go SQLite (no CGO)",
+        "Server-side PDF generation"
+      ],
       "repo": null,
       "live": null
     },
@@ -151,23 +292,23 @@
       "year": 2020,
       "visibility": "public",
       "status": "Published research",
-      "stack": ["Python", "OpenCV", "LBPH", "pandas", "Tkinter"],
-      "tags": ["computer-vision", "research"],
-      "highlights": ["Enrollment → training → recognition pipeline", "Unknown faces saved for review", "Smoke-tested on Python 3.12 / OpenCV 5"],
+      "stack": [
+        "Python",
+        "OpenCV",
+        "LBPH",
+        "pandas",
+        "Tkinter"
+      ],
+      "tags": [
+        "computer-vision",
+        "research"
+      ],
+      "highlights": [
+        "Enrollment → training → recognition pipeline",
+        "Unknown faces saved for review",
+        "Smoke-tested on Python 3.12 / OpenCV 5"
+      ],
       "repo": "https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System",
-      "live": null
-    },
-    {
-      "slug": "tic-tac-toe",
-      "name": "Real-time multiplayer Tic-Tac-Toe",
-      "summary": "Two players on different phones play the same board. PubNub channels carry the lobby, the moves and rematch messages, and presence checks stop a third player joining a full room.",
-      "year": 2019,
-      "visibility": "public",
-      "status": "React Native",
-      "stack": ["React Native", "PubNub", "JavaScript"],
-      "tags": ["mobile", "realtime"],
-      "highlights": ["Pub/sub game state", "Presence-based room capacity", "Room codes with shortid"],
-      "repo": "https://github.com/iamsrkg/tic-tac-toe",
       "live": null
     },
     {
@@ -177,9 +318,18 @@
       "year": 2025,
       "visibility": "private",
       "status": "Early stage · private",
-      "stack": ["React Native", "Expo", "React Navigation"],
-      "tags": ["mobile"],
-      "highlights": ["Per-environment bundle IDs", "Environment-aware config"],
+      "stack": [
+        "React Native",
+        "Expo",
+        "React Navigation"
+      ],
+      "tags": [
+        "mobile"
+      ],
+      "highlights": [
+        "Per-environment bundle IDs",
+        "Environment-aware config"
+      ],
       "repo": null,
       "live": null
     },
@@ -190,9 +340,17 @@
       "year": 2020,
       "visibility": "public",
       "status": "Prototype",
-      "stack": ["Unity", "C#"],
-      "tags": ["game"],
-      "highlights": ["Rigidbody2D movement", "Grounded-only jumping"],
+      "stack": [
+        "Unity",
+        "C#"
+      ],
+      "tags": [
+        "game"
+      ],
+      "highlights": [
+        "Rigidbody2D movement",
+        "Grounded-only jumping"
+      ],
       "repo": "https://github.com/iamsrkg/Prototype-Turrican-2",
       "live": null
     }
