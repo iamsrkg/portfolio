@@ -51,7 +51,6 @@
           <li><a href="#work">Work</a></li>
           <li><a href="#lab">Live API</a></li>
           <li><a href="#github">Projects</a></li>
-          <li><a href="#private">Private</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#hop-response">Contact</a></li>
         </ul>
@@ -633,38 +632,50 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
       </div>
     </section>
 
-    <!-- ============ MORE ON GITHUB ============ -->
+    <!-- ============ PROJECTS ============ -->
     <section id="github" class="section">
       <div class="wrap">
         <div class="sec-head">
-          <h2 class="sec-title">Public repos, running</h2>
+          <h2 class="sec-title">Projects: live and running</h2>
           <a class="more mono" href="https://github.com/iamsrkg" target="_blank" rel="noopener">github.com/iamsrkg →</a>
         </div>
-        <p class="section-lede">Every public repo here builds, passes its tests and runs. Where it can be hosted for free, it's live. Where it needs a server, it's one command.</p>
+        <p class="section-lede">Backend is where I go deep, but I own features end to end. Every public repo here builds, passes its tests and runs. Open the live version first, then read the code.</p>
         <div class="cards">
           <article class="card">
             <p class="card-kicker mono">Backend · Java 21 · Spring Boot 4</p>
             <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
-            <p>The Spring Boot service behind the lab above: JWT + RBAC, tenant-scoped queries (404 across tenants), optimistic locking (409), token-bucket rate limiting (429), request IDs and one error envelope. 20 integration tests run in CI with a Docker build on every push.</p>
+            <p>The Spring Boot service behind the Live API on this page: JWT + RBAC, tenant-scoped queries (404 across tenants), optimistic locking (409), token-bucket rate limiting (429), request IDs and one error envelope. 20 integration tests run in CI with a Docker build on every push.</p>
             <p class="tags"><span>Spring Boot 4</span><span>Spring Security 7</span><span>PostgreSQL</span><span>JUnit + MockMvc</span><span>Docker</span></p>
-            <p class="card-links"><a href="#lab">Try its API above ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
-            <pre class="run mono">docker compose up --build</pre>
+            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
           <article class="card">
             <p class="card-kicker mono">Full stack · PHP 8.3 · MariaDB</p>
             <h3><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">JOB-HUNT job portal</a></h3>
-            <p>A 2020 PHP job portal I brought up to modern security: prepared statements everywhere, bcrypt passwords, CSRF tokens, uploads checked by content type and kept out of the web root. It ships as a Docker image with its own database and an end-to-end test script.</p>
+            <p>A 2020 PHP job portal I brought up to modern security: prepared statements everywhere, bcrypt passwords, CSRF tokens, uploads checked by content type and kept out of the web root. It ships as a Docker image with its own database, and 44 end-to-end checks run against that image in CI.</p>
             <p class="tags"><span>PHP 8.3</span><span>MariaDB</span><span>Apache</span><span>Docker</span><span>bash e2e</span></p>
             <p class="card-links"><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">Code ↗</a></p>
             <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -p 8080:8080 job-hunt</pre>
           </article>
           <article class="card">
-            <p class="card-kicker mono">Computer vision · Python · OpenCV</p>
+            <p class="card-kicker mono">Computer vision · OpenCV · runs in the browser</p>
             <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
-            <p>A gate access logger that recognizes enrolled people from a live webcam and records who entered and when. It uses Haar-cascade detection with an LBPH recognizer, chosen because it runs on a CPU and trains on a few dozen samples.</p>
-            <p class="tags"><span>Python</span><span>OpenCV</span><span>LBPH</span><span>pandas</span></p>
-            <p class="card-links"><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Code ↗</a></p>
-            <pre class="run mono">pip install -r requirements.txt &amp;&amp; python train.py</pre>
+            <p>A gate access logger: enroll a face, train, and it logs who walks past the camera and when. It uses Haar-cascade detection with an LBPH recognizer, chosen because it runs on a CPU and trains on a few dozen samples. The web version runs OpenCV in a Web Worker, and no frame leaves your device.</p>
+            <p class="tags"><span>Python</span><span>OpenCV</span><span>LBPH</span><span>JavaScript</span><span>Web Worker</span></p>
+            <p class="card-links"><a class="live" href="https://iamsrkg.github.io/Video-Based-Dynamic-Human-Authentication-System/" target="_blank" rel="noopener">Try it live ↗</a> <a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Code ↗</a></p>
+          </article>
+          <article class="card">
+            <p class="card-kicker mono">React Native · Expo SDK 57 · real time</p>
+            <h3><a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Online Tic-Tac-Toe</a></h3>
+            <p>Two players, two devices, one room code, synced in real time over PubNub. I upgraded it from React Native 0.59 to Expo SDK 57 so the same code runs on Android, iOS and the web. The game rules are tested on their own.</p>
+            <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
+            <p class="card-links"><a class="live" href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
+          </article>
+          <article class="card">
+            <p class="card-kicker mono">This site · no framework</p>
+            <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
+            <p>A REST API emulated in the browser with real crypto (HMAC-signed JWTs, PBKDF2), a Postman-style client, request tracing and a live log. The request journey and the widgets are hand-built too. No build step, no dependencies.</p>
+            <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
+            <p class="card-links"><a class="live" href="#top">You're on it ↑</a> <a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
           <article class="card">
             <p class="card-kicker mono">Game dev · Unity · C#</p>
@@ -672,100 +683,6 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p>A side-scrolling shooter prototype in Unity. I fixed the jump so it only fires from the ground and cleaned nearly 4,000 generated cache files out of the repo.</p>
             <p class="tags"><span>Unity</span><span>C#</span></p>
             <p class="card-links"><a href="https://github.com/iamsrkg/Prototype-Turrican-2" target="_blank" rel="noopener">Code ↗</a></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ PRIVATE PROJECTS ============ -->
-    <section id="private" class="section">
-      <div class="wrap">
-        <h2 class="sec-title">Private projects: what they do</h2>
-        <p class="section-lede">These repos are private because they belong to real organisations, so there's no code or link here. Each card says what the project does and how it works on the backend side, with a small simulation you can click.</p>
-        <div class="cards priv">
-          <article class="card">
-            <p class="card-kicker mono">Restaurant operating system · Firebase · real time</p>
-            <h3>Buddy Hub: QR table ordering</h3>
-            <p>Guests scan a per-table QR code (a token link, not a guessable <code>?table=1</code>) and order from their phone. The kitchen display, billing counter and admin panel all update live off the same Firestore data, with no polling.</p>
-            <ul class="priv-points">
-              <li><b>One session per table</b>, taken in a Firestore transaction, which expires so an abandoned scan never locks a table.</li>
-              <li><b>Orders move by themselves</b> from Preparing to Ready to Served on a timer. A manual staff correction takes an order off the timer for good.</li>
-              <li><b>Role-separated staff portals</b> (admin, manager, kitchen, billing), plus optional GST applied the same way everywhere.</li>
-            </ul>
-            <div class="widget" data-widget="ros">
-              <p class="w-cap mono">try it · scan a table's QR code (simulation)</p>
-              <div class="w-row"><button type="button" class="w-btn" data-scan="1">Scan T1</button><button type="button" class="w-btn" data-scan="2">Scan T2</button><button type="button" class="w-btn ghost" data-scan="1">Scan T1 again</button><span class="tables mono"></span></div>
-              <div class="ros-panes">
-                <div><p class="w-cap mono">kitchen display</p><ul class="kitchen mono"></ul></div>
-                <div><p class="w-cap mono">billing counter · <span class="ros-total"></span></p><ul class="billing mono"></ul></div>
-              </div>
-              <pre class="w-out mono ros-log" aria-live="polite"></pre>
-            </div>
-            <p class="tags"><span>JavaScript</span><span>Firebase Firestore</span><span>Firebase Hosting</span><span>real-time listeners</span></p>
-          </article>
-
-          <article class="card">
-            <p class="card-kicker mono">NGO web app · Go · SQLite · bilingual</p>
-            <h3>Goonj Foundation: civic sense &amp; donations</h3>
-            <p>A bilingual (English / हिन्दी) site for a rural-development foundation. It has a library of 137 civic-sense topics in 9 categories, campaign progress, impact stats, stories, and donations that come with a certificate.</p>
-            <ul class="priv-points">
-              <li><b>Go backend</b> on the standard library's <code>net/http</code>, with pure-Go SQLite (no CGO) seeded from JSON.</li>
-              <li><b>A PDF certificate</b> for every donation, generated on the server with gofpdf.</li>
-              <li><b>Language by default:</b> first-time visitors from India get Hindi, via an IP lookup with a 1-second timeout. After that, the saved choice wins.</li>
-            </ul>
-            <div class="widget" data-widget="goonj">
-              <p class="w-cap mono">try it · donate and get a certificate (simulation)</p>
-              <div class="w-row"><button type="button" class="w-btn ghost" data-lang="en">English</button><button type="button" class="w-btn ghost" data-lang="hi">हिन्दी</button></div>
-              <p class="topic"></p>
-              <div class="qbar gbar"><span></span></div><p class="qdepth mono graised"></p>
-              <form class="w-row" autocomplete="off">
-                <label class="sr-only" for="g-donor">Name</label><input id="g-donor" name="donor" class="w-input" placeholder="Your name" value="Asha">
-                <label class="sr-only" for="g-amount">Amount</label><input id="g-amount" name="amount" class="w-input" type="number" value="500" min="1">
-                <button type="submit" class="w-btn">Donate</button>
-              </form>
-              <pre class="w-out mono" aria-live="polite"><span class="dim">POST /api/donate · POST /api/certificate</span></pre>
-              <canvas width="460" height="210" hidden></canvas>
-            </div>
-            <p class="tags"><span>Go</span><span>net/http</span><span>SQLite</span><span>gofpdf</span><span>Vite</span><span>i18n</span></p>
-          </article>
-
-          <article class="card">
-            <p class="card-kicker mono">Mobile app foundation · Expo · early stage</p>
-            <h3>WUS/KUS mobile app</h3>
-            <p>The groundwork for the app of the waste-logistics venture I co-founded: project setup, navigation and a first screen. It's early stage, and the interesting part so far is the build setup.</p>
-            <ul class="priv-points">
-              <li><b>One codebase, three installable apps</b> (Dev, Pre-prod and Prod), selected by <code>APP_ENV</code> in <code>app.config.js</code>.</li>
-              <li><b>Only public config in the app.</b> Anything bundled into an app can be read by its users, so secrets stay on a backend.</li>
-            </ul>
-            <div class="widget" data-widget="appenv">
-              <p class="w-cap mono">try it · build for an environment (simulation)</p>
-              <div class="w-row"><button type="button" class="w-btn ghost" data-env="development">development</button><button type="button" class="w-btn ghost" data-env="preprod">preprod</button><button type="button" class="w-btn ghost" data-env="production">production</button></div>
-              <pre class="w-out mono" aria-live="polite"></pre>
-            </div>
-            <p class="tags"><span>Expo SDK 54</span><span>React Native 0.81</span><span>React 19</span><span>React Navigation 7</span></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ FRONT END ============ -->
-    <section id="frontend" class="section">
-      <div class="wrap">
-        <h2 class="sec-title">And yes, I ship the front end too</h2>
-        <p class="section-lede">Backend is where I go deep, but I own features end to end. Everything on this page is hand-built with no framework: the request journey, the widgets and the API client above.</p>
-        <div class="cards">
-          <article class="card">
-            <p class="card-kicker mono">This site · 2026</p>
-            <h3><a href="https://github.com/iamsrkg/iamsrkg.github.io" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
-            <p>A REST API emulated in the browser with real crypto, a Postman-style client, request tracing and a live log. No build step, no dependencies.</p>
-            <p class="tags"><span>JavaScript</span><span>Web Crypto</span><span>CSS</span><span>SVG</span></p>
-          </article>
-          <article class="card">
-            <p class="card-kicker mono">React Native · Expo SDK 57 · live</p>
-            <h3><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Online Tic-Tac-Toe</a></h3>
-            <p>Two players, two devices, one room code, synced in real time over PubNub. I upgraded it from React Native 0.59 to Expo SDK 57 so the same code runs on Android, iOS and the web. The game rules are tested on their own.</p>
-            <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
-            <p class="card-links"><a href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
         </div>
       </div>
@@ -861,7 +778,6 @@ X-Response-Time: 18ms
   <script src="journey.js" defer></script>
   <script src="playground.js" defer></script>
   <script src="work.js" defer></script>
-  <script src="private.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;
