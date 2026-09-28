@@ -654,7 +654,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p>A 2020 PHP job portal I brought up to modern security: prepared statements everywhere, bcrypt passwords, CSRF tokens, uploads checked by content type and kept out of the web root. It ships as a Docker image with its own database, and 44 end-to-end checks run against that image in CI.</p>
             <p class="tags"><span>PHP 8.3</span><span>MariaDB</span><span>Apache</span><span>Docker</span><span>bash e2e</span></p>
             <p class="card-links"><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">Code ↗</a></p>
-            <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -p 8080:8080 job-hunt</pre>
+            <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -e PORT=8080 -p 8080:8080 job-hunt</pre>
           </article>
           <article class="card">
             <p class="card-kicker mono">Computer vision · OpenCV · runs in the browser</p>
