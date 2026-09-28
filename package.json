@@ -1,0 +1,13 @@
+{
+  "name": "iamsrkg.github.io",
+  "private": true,
+  "type": "module",
+  "description": "Portfolio served by its own in-browser backend: Service Worker HTTP + PostgreSQL (PGlite).",
+  "scripts": {
+    "test": "node tests/backend.test.mjs",
+    "start": "npx --yes serve -l 8080 ."
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}
