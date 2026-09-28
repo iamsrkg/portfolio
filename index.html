@@ -43,10 +43,9 @@
       <a class="brand mono" href="#top"><span class="prompt">~/</span>iamsrkg</a>
       <nav aria-label="Primary">
         <ul class="nav-links">
-          <li><a href="#work">Experience</a></li>
+          <li><a href="#backend">Live backend</a></li>
           <li><a href="#projects">Projects</a></li>
-          <li><a href="#backend">Backend</a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="#work">In production</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -70,7 +69,7 @@
           <p class="headline" data-bind="headline">I build backends that stay fast and correct under load, and I pick up whatever stack the problem needs.</p>
           <p class="eligibility"><span class="check" aria-hidden="true">✓</span> <span data-bind="eligibility">Authorized to work in India and Thailand · no visa sponsorship needed</span></p>
           <div class="cta">
-            <a class="btn btn-primary" href="#backend">See the backend running</a>
+            <a class="btn btn-primary" href="#backend">Try the live backend</a>
             <a class="btn btn-ghost" href="#projects">Projects</a>
             <a class="btn btn-ghost" href="#contact">Contact</a>
           </div>
@@ -88,62 +87,11 @@
       </div>
     </section>
 
-    <!-- ======================= EXPERIENCE ======================= -->
-    <section class="section" id="work">
-      <div class="wrap">
-        <div class="sec-head">
-          <h2>Experience</h2>
-          <button class="source mono" type="button" data-source="experience">GET /api/experience</button>
-        </div>
-        <ol class="timeline" id="experience"></ol>
-      </div>
-    </section>
-
-    <!-- ======================= PROJECTS ======================= -->
-    <section class="section" id="projects">
-      <div class="wrap">
-        <div class="sec-head">
-          <h2>Projects</h2>
-          <button class="source mono" type="button" data-source="projects">GET /api/projects</button>
-        </div>
-        <p class="lede">Everything I've built, public and private. Search and filters go to the API and run as Postgres full-text search and array queries.</p>
-        <form class="filters" id="project-filters" role="search">
-          <label class="sr-only" for="project-q">Search projects</label>
-          <input id="project-q" type="search" placeholder="Search: e.g. postgres, security, realtime…" autocomplete="off">
-          <div class="chips" id="project-tags" role="group" aria-label="Filter by tag"></div>
-        </form>
-        <div class="cards" id="project-list"></div>
-      </div>
-    </section>
-
-    <!-- ======================= STACK ======================= -->
-    <section class="section" id="stack-section">
-      <div class="wrap">
-        <div class="sec-head">
-          <h2>What I work with</h2>
-          <button class="source mono" type="button" data-source="stack">GET /api/stack</button>
-        </div>
-        <p class="lede">Counted by Postgres (<code>unnest</code> + <code>GROUP BY</code>) across my projects and roles, not typed by hand.</p>
-        <div class="bars" id="stack"></div>
-      </div>
-    </section>
-
-    <!-- ======================= HOW I WORK ======================= -->
-    <section class="section" id="how">
-      <div class="wrap">
-        <div class="sec-head">
-          <h2>How I work</h2>
-          <button class="source mono" type="button" data-source="strengths">GET /api/strengths</button>
-        </div>
-        <div class="strengths" id="strengths"></div>
-      </div>
-    </section>
-
-    <!-- ======================= BACKEND LAB ======================= -->
+    <!-- ======================= LIVE BACKEND ======================= -->
     <section class="section" id="backend">
       <div class="wrap">
-        <div class="sec-head"><h2>The backend, up close</h2></div>
-        <p class="lede">Architecture of what's running right now:</p>
+        <div class="sec-head"><h2>Try the backend</h2></div>
+        <p class="lede">Not screenshots. The API behind this page is running right now, so you can poke it. Here's the architecture:</p>
         <div class="arch mono" aria-label="Architecture">
           <div class="arch-node"><b>UI</b><span>this page</span></div><span class="arch-arrow">fetch /api/*</span>
           <div class="arch-node"><b>sw.js</b><span>HTTP layer</span></div><span class="arch-arrow">postMessage</span>
@@ -154,22 +102,14 @@
 
         <div class="lab">
           <div class="tabs" role="tablist" aria-label="Backend tools">
-            <button role="tab" aria-selected="true" aria-controls="tab-network" id="t-network" type="button">Requests <span class="count" id="req-count">0</span></button>
-            <button role="tab" aria-selected="false" aria-controls="tab-api" id="t-api" type="button">Auth &amp; tenants</button>
+            <button role="tab" aria-selected="true" aria-controls="tab-api" id="t-api" type="button">Auth &amp; tenants</button>
             <button role="tab" aria-selected="false" aria-controls="tab-sql" id="t-sql" type="button">SQL console</button>
-          </div>
-
-          <!-- Requests -->
-          <div class="tab-panel" role="tabpanel" id="tab-network" aria-labelledby="t-network">
-            <div class="net">
-              <div class="net-list" id="net-list" tabindex="0" aria-label="Requests handled by the backend"></div>
-              <div class="net-detail" id="net-detail"><p class="muted">Select a request to see its headers, body and the SQL it ran.</p></div>
-            </div>
+            <button role="tab" aria-selected="false" aria-controls="tab-network" id="t-network" type="button">Requests <span class="count" id="req-count">0</span></button>
           </div>
 
           <!-- Auth & tenants -->
-          <div class="tab-panel" role="tabpanel" id="tab-api" aria-labelledby="t-api" hidden>
-            <p class="panel-intro">A small task API. Tenant isolation is enforced by <b>Postgres row-level security</b>: queries run as an unprivileged role and never filter by owner themselves.</p>
+          <div class="tab-panel" role="tabpanel" id="tab-api" aria-labelledby="t-api">
+            <p class="panel-intro">A task API with the same design as my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot task-management-api</a>. Tenant isolation is enforced by <b>Postgres row-level security</b>: queries run as an unprivileged role and never filter by owner themselves.</p>
             <pre class="policy mono">CREATE POLICY tenant_isolation ON tasks
   USING (owner_id = current_setting('app.user_id')::int);</pre>
             <div class="api-grid">
@@ -203,7 +143,7 @@
 
           <!-- SQL console -->
           <div class="tab-panel" role="tabpanel" id="tab-sql" aria-labelledby="t-sql" hidden>
-            <p class="panel-intro">The real database behind this page, as a superuser. It's your own sandbox: it lives in your tab, and a reload resets it. Try the index walkthrough to see a query plan change for real.</p>
+            <p class="panel-intro">The real database behind this page, as a superuser. It's your own sandbox: it lives in your tab, and a reload resets it. Try the index walkthrough to see a query plan change for real. That's the kind of tuning behind the "75–80% faster APIs" on my resume.</p>
             <div class="presets" id="sql-presets"></div>
             <label class="sr-only" for="sql-in">SQL</label>
             <textarea id="sql-in" class="mono" spellcheck="false" rows="6">SELECT name, status, array_to_string(stack, ', ') AS stack
@@ -217,27 +157,67 @@ ORDER BY year DESC;</textarea>
             </div>
             <div class="sql-out" id="sql-out"></div>
           </div>
+
+          <!-- Requests -->
+          <div class="tab-panel" role="tabpanel" id="tab-network" aria-labelledby="t-network" hidden>
+            <div class="net">
+              <div class="net-list" id="net-list" tabindex="0" aria-label="Requests handled by the backend"></div>
+              <div class="net-detail" id="net-detail"><p class="muted">Select a request to see its headers, body and the SQL it ran.</p></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ======================= ABOUT ======================= -->
-    <section class="section" id="about">
-      <div class="wrap about-grid">
-        <div>
-          <div class="sec-head">
-            <h2>About</h2>
-            <button class="source mono" type="button" data-source="profile">GET /api/profile</button>
-          </div>
-          <div class="prose" id="summary"></div>
-          <p class="roles"><span class="cap mono">roles I'm looking for</span><span class="tags" id="roles"></span></p>
+    <!-- ======================= PROJECTS ======================= -->
+    <section class="section" id="projects">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Projects</h2>
+          <button class="source mono" type="button" data-source="projects">GET /api/projects</button>
         </div>
-        <div class="side">
-          <div class="side-block"><p class="cap mono">certification</p><div id="certs"></div></div>
-          <div class="side-block"><p class="cap mono">education</p><p id="education"></p></div>
-          <div class="side-block"><p class="cap mono">publications</p><ul id="publications"></ul></div>
-          <div class="side-block"><p class="cap mono">languages</p><p id="languages"></p></div>
+        <p class="lede">Public code you can run, read and try. Search and filters go to the API and run as Postgres full-text search and array queries.</p>
+        <form class="filters" id="project-filters" role="search">
+          <label class="sr-only" for="project-q">Search projects</label>
+          <input id="project-q" type="search" placeholder="Search: e.g. postgres, security, realtime…" autocomplete="off">
+          <div class="chips" id="project-tags" role="group" aria-label="Filter by tag"></div>
+        </form>
+        <div class="cards" id="project-list"></div>
+      </div>
+    </section>
+
+    <!-- ======================= STACK ======================= -->
+    <section class="section" id="stack-section">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>What I work with</h2>
+          <button class="source mono" type="button" data-source="stack">GET /api/stack</button>
         </div>
+        <p class="lede">Counted by Postgres (<code>unnest</code> + <code>GROUP BY</code>) across my projects and roles, not typed by hand.</p>
+        <div class="bars" id="stack"></div>
+      </div>
+    </section>
+
+    <!-- ======================= IN PRODUCTION ======================= -->
+    <section class="section" id="work">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>In production</h2>
+          <button class="source mono" type="button" data-source="experience">GET /api/experience</button>
+        </div>
+        <p class="lede">The same ideas, at work. Durations are computed by Postgres.</p>
+        <div class="work-cards" id="experience"></div>
+      </div>
+    </section>
+
+    <!-- ======================= HOW I WORK ======================= -->
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>How I work</h2>
+          <button class="source mono" type="button" data-source="strengths">GET /api/strengths</button>
+        </div>
+        <div class="strengths" id="strengths"></div>
       </div>
     </section>
 
@@ -248,6 +228,7 @@ ORDER BY year DESC;</textarea>
           <div>
             <h2>Let's talk.</h2>
             <p class="muted">I'm open to backend, software and full-stack roles: on-site, hybrid or remote.<br><span data-bind="eligibility">Authorized to work in India and Thailand · no visa sponsorship needed</span>.</p>
+            <p class="creds mono" id="creds"></p>
           </div>
           <div class="contact-links" id="contact-links">
             <a class="btn btn-primary" href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
@@ -261,8 +242,8 @@ ORDER BY year DESC;</textarea>
     </section>
 
     <noscript>
-      <section class="section"><div class="wrap prose">
-        <p>This portfolio renders from its in-browser backend, which needs JavaScript. The short version: <b>Sudheer Kumar Gupta</b>, backend engineer (Java / Spring Boot, Node.js / NestJS, PostgreSQL, MySQL, AWS, Kubernetes), with 5 years at Accenture and freelance. Authorized to work in India and Thailand, no visa sponsorship needed.</p>
+      <section class="section"><div class="wrap">
+        <p>This portfolio renders from its in-browser backend, which needs JavaScript. <b>Sudheer Kumar Gupta</b>, backend engineer (Java / Spring Boot, Node.js / NestJS, PostgreSQL, MySQL, AWS, Kubernetes). Authorized to work in India and Thailand, no visa sponsorship needed.</p>
         <p>Email <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a> · <a href="https://www.linkedin.com/in/iamsrkg">LinkedIn</a> · <a href="https://github.com/iamsrkg">GitHub</a></p>
       </div></section>
     </noscript>

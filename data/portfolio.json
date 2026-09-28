@@ -4,9 +4,8 @@
     "role": "Backend Engineer",
     "headline": "I build backends that stay fast and correct under load, and I pick up whatever stack the problem needs.",
     "summary": [
-      "Five years of building and running backend systems: Java / Spring Boot and Node.js / NestJS services on PostgreSQL and MySQL, shipped with Docker, Kubernetes and AWS. That includes a platform serving 10,000+ concurrent users.",
-      "I work AI-augmented. I use Claude Code every day to move faster, and I verify every change with tests before it ships.",
-      "I'm happiest on the hard problems: a slow query, a leaky auth boundary, a flaky deploy."
+      "Backend engineer with almost 5 years of experience. Java / Spring Boot and Node.js / NestJS services on PostgreSQL and MySQL, shipped with Docker, Kubernetes and AWS.",
+      "I work AI-augmented with Claude Code, and I validate every change through testing and review."
     ],
     "status": "Open to work",
     "eligibility": "Authorized to work in India and Thailand · no visa sponsorship needed",
@@ -30,16 +29,6 @@
       }
     ],
     "education": "B.Tech, Computer Science & Engineering, Vel Tech R&D Institute, Chennai (2017–2021), CGPA 8.23",
-    "publications": [
-      "Video-based dynamic human authentication (IJAST)",
-      "Mushroom edibility classification with dimensionality reduction (ICICCT 2021)",
-      "Undersampling-aware learning for fetal health prediction (TOJQI)"
-    ],
-    "languages": [
-      "English",
-      "Hindi",
-      "Thai (conversational)"
-    ],
     "contact": {
       "email": "sudheerkgupta@outlook.com",
       "linkedin": "https://www.linkedin.com/in/iamsrkg",
@@ -74,34 +63,28 @@
       "end": null,
       "kind": "Full-time",
       "highlights": [
-        "Built API automation on Microsoft Graph (OAuth2 client credentials, paging, $batch, throttling-aware retries) that removed 75% of manual operations work across enterprise Microsoft 365 tenants.",
-        "Ran multi-terabyte migrations with structured validation and change management, with zero data loss.",
-        "L2/L3 production support and root-cause analysis with 100% SLA compliance."
+        "API-driven workflows with PowerShell 7 and Microsoft Graph, plus PnP PowerShell automation that cut manual operational effort by 75%.",
+        "L2/L3 production support and root-cause analysis for enterprise Microsoft 365."
       ],
       "stack": [
         "PowerShell 7",
-        "Microsoft Graph",
-        "REST",
-        "OAuth2",
-        "ServiceNow"
+        "PnP PowerShell",
+        "Microsoft Graph"
       ]
     },
     {
-      "company": "CA Sanjeev Gupta & Co. (freelance)",
-      "title": "Backend Engineer",
+      "company": "CA Sanjeev Gupta & Co.",
+      "title": "Backend Engineer (freelance)",
       "start": "2025-11-01",
       "end": "2026-03-31",
       "kind": "Freelance",
       "highlights": [
-        "Designed and shipped a B2B client platform solo: NestJS + TypeScript APIs, a React front end and MySQL, deployed with Docker and Nginx.",
-        "Split authentication into its own service, which cut coupling by 60%. Added a versioned partner API with API keys, HMAC-signed webhooks and Swagger docs.",
-        "20+ targeted MySQL indexes and caching brought APIs under 100 ms. A CMS with version history made content work 90% faster.",
-        "Docker multi-stage builds took deploys from 20 minutes to 3."
+        "A secure B2B platform built solo in Node.js, NestJS and TypeScript, with auth split from core services (60% less coupling).",
+        "Sub-100 ms APIs through query tuning and indexing. Docker multi-stage deploys cut from 20 to 3 minutes."
       ],
       "stack": [
         "NestJS",
         "TypeScript",
-        "React",
         "MySQL",
         "TypeORM",
         "Docker",
@@ -115,9 +98,8 @@
       "end": "2024-02-29",
       "kind": "Full-time",
       "highlights": [
-        "Built Spring Boot microservices on Kubernetes serving 10,000+ concurrent users.",
-        "Made APIs 75–80% faster with PostgreSQL indexing, query rewrites and Redis caching.",
-        "Moved document processing off the request path with Kafka/RabbitMQ and S3. Added Azure DevOps CI/CD and Spring Security JWT with RBAC."
+        "Spring Boot microservices on Kubernetes serving 10,000+ concurrent users.",
+        "APIs 75–80% faster through query optimization, indexing and Redis caching. Kafka/RabbitMQ for async processing."
       ],
       "stack": [
         "Java",
@@ -237,55 +219,6 @@
       "live": "https://iamsrkg.github.io/tic-tac-toe/"
     },
     {
-      "slug": "buddy-hub",
-      "name": "Buddy Hub: restaurant ordering system",
-      "summary": "In production on Firebase. Customers order by scanning a per-table QR code, and the kitchen display, billing counter and admin panel update in real time. Staff have separate roles, and table sessions are claimed inside transactions so two customers can't grab the same table.",
-      "year": 2026,
-      "visibility": "private",
-      "status": "In production · private",
-      "stack": [
-        "JavaScript",
-        "Firebase Hosting",
-        "Firestore"
-      ],
-      "tags": [
-        "full-stack",
-        "realtime"
-      ],
-      "highlights": [
-        "Token-based per-table QR links",
-        "Real-time updates without polling",
-        "Optional GST handled consistently from cart to CSV"
-      ],
-      "repo": null,
-      "live": null
-    },
-    {
-      "slug": "goonj",
-      "name": "Goonj Foundation: civic sense & donations",
-      "summary": "A bilingual (English/Hindi) app for a rural-development NGO, with 137 illustrated civic-sense topics, campaign progress, impact stats, stories and donations. Donors get PDF certificates generated on the server.",
-      "year": 2026,
-      "visibility": "private",
-      "status": "Prototype · private",
-      "stack": [
-        "Go",
-        "SQLite",
-        "JavaScript",
-        "Vite"
-      ],
-      "tags": [
-        "backend",
-        "full-stack"
-      ],
-      "highlights": [
-        "Go standard-library HTTP server",
-        "Pure-Go SQLite (no CGO)",
-        "Server-side PDF generation"
-      ],
-      "repo": null,
-      "live": null
-    },
-    {
       "slug": "video-auth",
       "name": "Video-based human authentication",
       "summary": "A gate access logger that recognizes enrolled people from a live webcam and records who entered and when, using OpenCV Haar-cascade detection and an LBPH recognizer. It was published as a research paper, and I later revived it to run on current Python and OpenCV.",
@@ -309,28 +242,6 @@
         "Smoke-tested on Python 3.12 / OpenCV 5"
       ],
       "repo": "https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System",
-      "live": null
-    },
-    {
-      "slug": "wus-kus",
-      "name": "WUS/KUS mobile app",
-      "summary": "The foundation of a mobile app on Expo SDK 54 and React Native 0.81 with the New Architecture. One codebase builds separate development, pre-production and production apps.",
-      "year": 2025,
-      "visibility": "private",
-      "status": "Early stage · private",
-      "stack": [
-        "React Native",
-        "Expo",
-        "React Navigation"
-      ],
-      "tags": [
-        "mobile"
-      ],
-      "highlights": [
-        "Per-environment bundle IDs",
-        "Environment-aware config"
-      ],
-      "repo": null,
       "live": null
     },
     {
@@ -358,15 +269,15 @@
   "strengths": [
     {
       "title": "AI-augmented, not AI-dependent",
-      "body": "Claude Code is part of my daily workflow for building, debugging and reviewing, and it makes me faster. I stay the engineer: I read the diff, I write the test, I own the result. This site and the JOB-HUNT hardening were both built that way."
+      "body": "I use Claude Code to move faster on building, debugging and refactoring, then I verify through tests and review. The public repos here show it: every fix comes with the tests that prove it."
     },
     {
       "title": "A fast learner",
-      "body": "I went from zero to production Microsoft Graph automation in weeks. I picked up Go, Unity and React Native for projects that needed them. New stacks don't scare me, and unfamiliar codebases are just puzzles."
+      "body": "Java, TypeScript, PowerShell, React Native, Unity. I pick up the stack the problem needs. Tic-Tac-Toe went from React Native 0.59 to Expo SDK 57 and onto the web, and a 2020 PHP app was brought up to modern security standards."
     },
     {
       "title": "A problem solver",
-      "body": "I like the bugs nobody wants: an auth filter that returned 500s, tenant data leaking through a 403, an upload path that allowed code execution. I find it, prove it with a test, and fix it so it stays fixed."
+      "body": "I like the bugs nobody wants: a 403 that leaks tenant data, an upload path that allows code execution, a room that can never be joined. I find it, prove it with a test, and fix it so it stays fixed."
     }
   ]
 }

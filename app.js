@@ -163,24 +163,22 @@ const monthsLabel = (m) => {
 function renderProfile(p) {
   $$('[data-bind]').forEach((el) => { if (p[el.dataset.bind]) el.textContent = p[el.dataset.bind]; });
   $('#stats').innerHTML = (p.stats || []).map((s) => `<div><dt>${esc(s.label)}</dt><dd>${esc(s.value)}</dd></div>`).join('');
-  $('#summary').innerHTML = (p.summary || []).map((s) => `<p>${esc(s)}</p>`).join('');
-  $('#roles').innerHTML = (p.roles || []).map((r) => `<span>${esc(r)}</span>`).join('');
-  $('#certs').innerHTML = (p.certifications || []).map((c) => `<p><b>${esc(c.name)}</b><br><span class="muted">${esc(c.issued)} → ${esc(c.expires)}</span> · <a href="${esc(c.url)}" target="_blank" rel="noopener">verify on Credly</a></p>`).join('');
-  $('#education').textContent = p.education || '';
-  $('#publications').innerHTML = (p.publications || []).map((x) => `<li>${esc(x)}</li>`).join('');
-  $('#languages').textContent = (p.languages || []).join(' · ');
+  const cert = (p.certifications || [])[0];
+  $('#creds').innerHTML = [
+    cert ? `${esc(cert.name)} · <a href="${esc(cert.url)}" target="_blank" rel="noopener">verify</a>` : '',
+    p.education ? esc(p.education) : '',
+  ].filter(Boolean).join('<br>');
 }
 
 function renderExperience(rows) {
   $('#experience').innerHTML = rows.map((e) => `
-    <li class="job">
-      <div class="job-head">
-        <div><h3>${esc(e.title)}</h3><p class="org">${esc(e.company)} · ${esc(e.kind)}</p></div>
-        <p class="when mono">${esc(e.from)} – ${esc(e.to)}<br><span class="muted">${esc(monthsLabel(e.months))}</span></p>
-      </div>
+    <article class="work-card">
+      <p class="when mono">${esc(e.from)} – ${esc(e.to)} · ${esc(monthsLabel(e.months))}</p>
+      <h3>${esc(e.title)}</h3>
+      <p class="org">${esc(e.company)}</p>
       <ul>${e.highlights.map((h) => `<li>${esc(h)}</li>`).join('')}</ul>
       <p class="tags">${e.stack.map((s) => `<span>${esc(s)}</span>`).join('')}</p>
-    </li>`).join('');
+    </article>`).join('');
 }
 
 function renderProjects(rows) {
