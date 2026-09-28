@@ -83,9 +83,9 @@
         "Sub-100 ms APIs through query tuning and indexing. Docker multi-stage deploys cut from 20 to 3 minutes."
       ],
       "stack": [
+        "Node.js",
         "NestJS",
         "TypeScript",
-        "MySQL",
         "TypeORM",
         "Docker",
         "Nginx"
