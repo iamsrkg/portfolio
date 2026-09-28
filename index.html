@@ -74,6 +74,7 @@
           <li><a href="#journey">The request</a></li>
           <li><a href="#lab">Live API</a></li>
           <li><a href="#frontend">Front end</a></li>
+          <li><a href="#github">GitHub</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#hop-response">Contact</a></li>
         </ul>
@@ -500,6 +501,30 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <h3>Admin dashboard &amp; CMS for the B2B platform</h3>
             <p>The React front end on top of my NestJS API: an admin dashboard, a CMS editor with version history, and paginated views. Server state is cached with React Query, search is debounced and images load lazily.</p>
             <p class="tags"><span>React</span><span>React Query</span><span>REST</span><span>RBAC UI</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MORE ON GITHUB ============ -->
+    <section id="github" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="sec-title">More on GitHub</h2>
+          <a class="more mono" href="https://github.com/iamsrkg" target="_blank" rel="noopener">github.com/iamsrkg →</a>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <p class="card-kicker mono">Backend · Java 21 · 2026</p>
+            <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
+            <p>The Spring Boot service behind the lab above: JWT + RBAC, tenant-scoped queries (404 across tenants), optimistic locking (409), token-bucket rate limiting (429), request IDs. It has 20 integration tests, with CI and a Docker build on every push.</p>
+            <p class="tags"><span>Spring Boot 4</span><span>Spring Security</span><span>PostgreSQL</span><span>JUnit + MockMvc</span><span>GitHub Actions</span></p>
+          </article>
+          <article class="card">
+            <p class="card-kicker mono">Computer vision · published research</p>
+            <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
+            <p>A gate access logger that recognizes enrolled people from a live webcam and records who entered and when. It uses Haar-cascade detection with an LBPH recognizer, chosen because it runs on a CPU and trains on a few dozen samples. Published in IJAST.</p>
+            <p class="tags"><span>Python</span><span>OpenCV</span><span>LBPH</span><span>pandas</span></p>
           </article>
         </div>
       </div>
