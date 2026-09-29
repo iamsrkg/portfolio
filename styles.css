@@ -483,6 +483,24 @@ main, .footer { position: relative; z-index: 1; }
 
 .run-note { margin: -4px 0 0; font-size: 12.5px; color: var(--text-2); }
 
+/* request my resume */
+.resume-req { max-width: 860px; margin: 28px 0 0; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); scroll-margin-top: 90px; }
+.resume-req h3 { font-size: 20px; margin: 0 0 4px; }
+.rr-lead { margin: 0 0 16px; color: var(--text-2); }
+.rr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.rr-grid label { display: grid; gap: 5px; font-size: 13.5px; font-weight: 600; }
+.rr-grid .rr-wide { grid-column: 1 / -1; }
+.rr-grid input, .rr-grid select { font: 15px var(--font); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-2); color: var(--text); }
+.rr-grid input:focus, .rr-grid select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.req { color: var(--accent); } .opt { color: var(--text-2); font-weight: 400; }
+.rr-honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.rr-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 16px; }
+.rr-status { margin: 0; font-size: 14px; color: var(--text-2); }
+.rr-status[data-tone="ok"] { color: var(--accent); } .rr-status[data-tone="bad"] { color: var(--pink); }
+.rr-status a { color: inherit; }
+.rr-privacy { margin: 10px 0 0; font-size: 12.5px; color: var(--text-2); }
+@media (max-width: 720px) { .rr-grid { grid-template-columns: 1fr; } .resume-req { padding: 18px; } }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .hop-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }
