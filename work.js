@@ -141,11 +141,12 @@
     const hop = a && document.querySelector(a.getAttribute('href'));
     if (hop && !hop.classList.contains('open')) hop.querySelector('.hop-more')?.click();
   });
-  // ---------- availability: once the start date has passed, say "available now" ----------
+  // ---------- availability: from the start date on, say "can join immediately" ----------
   const avail = $('.avail[data-from]');
   if (avail && new Date() >= new Date(avail.dataset.from + 'T00:00:00')) {
-    avail.querySelector('.avail-text').textContent = 'Open to work · available now';
-    const notice = $('.notice[data-until]');
-    if (notice) notice.remove();
+    avail.querySelector('.avail-text').textContent = 'Open to work · can join immediately';
+    $('.notice[data-until]')?.remove();
+    const json = $('#avail-json');
+    if (json) json.textContent = '"immediately"';
   }
 })();
