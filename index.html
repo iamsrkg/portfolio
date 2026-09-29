@@ -249,8 +249,8 @@
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
                 <p><b>Accenture · 2021–24:</b> Spring Boot microservices on Kubernetes, handling <b class="hl">10,000+ concurrent users</b>.</p>
-                <p><b>Freelance · 2025–26:</b> a B2B client platform in NestJS and TypeScript that I built and deployed on my own.</p>
-                <p><b>Accenture · 2024–now:</b> PowerShell 7 and Microsoft Graph API workflows for bulk provisioning, governance and reporting. They took away <b class="hl">about 75%</b> of the manual work.</p>
+                <p><b>Freelance · 2025–26:</b> an internal client management platform in NestJS and TypeScript that I built and deployed on my own.</p>
+                <p><b>Accenture · 2024–now:</b> PowerShell 7 and Microsoft Graph API workflows for bulk provisioning, governance and reporting. Across 40,000+ users, they took away <b class="hl">about 75%</b> of the manual work.</p>
               </div>
             </div>
             <div class="hop-vis">
@@ -512,15 +512,17 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
               <p class="org">Infra Managed Service Analyst, Backend &amp; Automation · Accenture, Bengaluru</p>
               <dl>
                 <dt>The problem</dt>
-                <dd>Provisioning, governance and reporting across big Microsoft 365 tenants were being done by hand, one admin portal at a time.</dd>
+                <dd>An enterprise Microsoft 365 environment with 40,000+ users and around 100,000 sites. Provisioning, governance and reporting were being done by hand, one admin portal at a time.</dd>
                 <dt>What I built</dt>
                 <dd><ul>
                   <li>API-driven admin workflows in <b>PowerShell 7</b> on the <b>Microsoft Graph API</b> for provisioning, governance and reporting.</li>
                   <li><b>PnP PowerShell</b> automation for server management and tenant-wide governance across SharePoint, Teams, OneDrive and Power Platform.</li>
-                  <li><b>L2/L3 production support:</b> root-cause analysis on complex, cross-platform incidents while keeping the service reliable.</li>
+                  <li><b>Governance reports and dashboards</b> so the platform team could see compliance and usage across all 40,000+ users.</li>
+                  <li><b>New features, rolled out safely:</b> I gathered requirements with stakeholders and reviewed each feature with the security team (access, data exposure) before it went live.</li>
+                  <li><b>Mentoring:</b> I help junior team members with automation and engineering practices.</li>
                 </ul></dd>
                 <dt>What changed</dt>
-                <dd class="result"><b>75% less manual effort</b></dd>
+                <dd class="result"><b>75% less manual effort</b><b>40,000+ users</b><b>~100,000 sites</b></dd>
               </dl>
             </div>
             <div class="example">
@@ -557,11 +559,11 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
           <article class="case" id="case-freelance">
             <div>
               <p class="case-meta mono">Nov 2025 – Mar 2026 · freelance, solo</p>
-              <h3>A B2B client management platform</h3>
+              <h3>An internal client management platform</h3>
               <p class="org">Backend Engineer · CA Sanjeev Gupta &amp; Co., a chartered accountancy firm</p>
               <dl>
                 <dt>The problem</dt>
-                <dd>The firm handled its internal work and its client requests by hand. They wanted one secure platform for both, and I was the only engineer on it.</dd>
+                <dd>The firm managed its clients and internal work by hand. They wanted one secure internal platform for it, and I was the only engineer on it.</dd>
                 <dt>What I built</dt>
                 <dd><ul>
                   <li><b>Architecture:</b> Node.js, NestJS and TypeScript in a hybrid service-oriented design, with <b>authentication split out from the core business services</b>.</li>
@@ -641,6 +643,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
                   <li><b>Uploads to Amazon S3</b>, with processing moved off the request path onto <b>Kafka/RabbitMQ</b> consumers.</li>
                   <li><b>Spring Security with JWT</b> and role-based access on the endpoints.</li>
                   <li><b>Azure DevOps CI/CD</b> that builds, tests and ships Docker images to Kubernetes.</li>
+                  <li><b>Code reviews</b> for the team, and mentoring junior developers.</li>
                 </ul></dd>
                 <dt>What changed</dt>
                 <dd class="result"><b>10,000+ concurrent users</b><b>APIs 75–80% faster</b><b>uploads off the request path</b></dd>
@@ -689,7 +692,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
           <h2 class="sec-title">About</h2>
           <div class="prose">
             <p>I'm Sudheer. I started at Accenture in 2021 writing Spring Boot services for a platform that grew to 10,000+ people online at once. That's where I learned most of what's on this page: Kafka for the slow work, Redis and indexes for the slow queries, Docker and Kubernetes for shipping it.</p>
-            <p>Since 2024 I've been automating Microsoft 365 for enterprise clients through the Graph API. On the side, from late 2025, I built a B2B platform for a CA firm on my own, in NestJS and TypeScript. Being the only engineer taught me a lot: I owned everything from the database to the deploy.</p>
+            <p>Since 2024 I've been automating an enterprise Microsoft 365 environment of 40,000+ users through the Graph API, and mentoring the juniors on my team. On the side, from late 2025, I built an internal client management platform for a CA firm on my own, in NestJS and TypeScript. Being the only engineer taught me a lot: I owned everything from the database to the deploy.</p>
             <p>The parts I enjoy most are the ones users never see: why a query is slow, who's allowed to see which row, what happens when two people save the same thing at once. I pick up new stacks quickly, and I use Claude Code every day, but I read and test everything before it ships.</p>
             <p>I'm looking for a Java backend role, or a backend or full-stack one. I can work in India or Thailand without visa sponsorship, on-site, hybrid or remote.</p>
           </div>
@@ -716,7 +719,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
             <ul class="creds-list">
               <li><b>AWS Certified Solutions Architect – Associate</b> <span class="muted">· valid to Feb 2028 ·</span> <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">verify on Credly</a></li>
               <li><b>B.Tech, Computer Science</b> <span class="muted">· Vel Tech R&amp;D Institute, Chennai · CGPA 8.23</span></li>
-              <li><b>Co-founder</b> <span class="muted">· WUS Bhoomika Eco Logistics, B2B waste logistics (pre-launch)</span></li>
+              <li><b>Co-founder</b> <span class="muted">· WUS Bhoomika Eco Logistics, connecting businesses that produce waste with processors (waiting on government approvals)</span></li>
             </ul>
           </div>
         </div>
