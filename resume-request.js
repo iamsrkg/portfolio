@@ -40,11 +40,15 @@ Sudheer Kumar Gupta`,
     button.disabled = true;
     show('Sending…');
     try {
+      // never leave a visitor on "Sending…": give up after 15 s and offer the email route
+      const timeout = new AbortController();
+      const timer = setTimeout(() => timeout.abort(), 15000);
       const res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload),
-      });
+        signal: timeout.signal,
+      }).finally(() => clearTimeout(timer));
       const body = await res.json().catch(() => ({}));
       if (!res.ok || String(body.success) !== 'true') throw new Error(body.message || `HTTP ${res.status}`);
       form.reset();
@@ -54,7 +58,7 @@ Sudheer Kumar Gupta`,
         + `&body=${encodeURIComponent(`Hi Sudheer,\n\nPlease send your resume for: ${data.position} (${data.country}).\n\n${data.company ? 'Company: ' + data.company + '\n' : ''}`)}`;
       status.innerHTML = '';
       status.dataset.tone = 'bad';
-      status.append('That didn\'t go through. ');
+      status.append('The form couldn\'t send just now. ');
       const a = Object.assign(document.createElement('a'), { href: mail, textContent: 'Send the request by email instead' });
       status.append(a, '.');
     } finally {
