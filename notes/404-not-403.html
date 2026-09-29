@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why someone else&#x27;s task is a 404, not a 403 · Sudheer Kumar Gupta</title>
+  <meta name="description" content="In a multi-tenant API, a 403 tells an attacker the record exists. Why I answer 404, and how the query does the checking.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Why someone else&#x27;s task is a 404, not a 403">
+  <meta property="og:description" content="In a multi-tenant API, a 403 tells an attacker the record exists. Why I answer 404, and how the query does the checking.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="note.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+  <main class="note-page">
+    <a class="note-back" href="../#notes">← back to the portfolio</a>
+    <p class="note-meta">Engineering note · multi-tenant APIs · 4 min read</p>
+    <h1>Why someone else&#x27;s task is a 404, not a 403</h1>
+    <p class="lead">In my task API, if Bob asks for one of Alice's tasks, he gets <strong>404 Not Found</strong>, exactly what he'd get for a task that doesn't exist. That's on purpose.</p>
+
+    <h2>The problem with 403</h2>
+    <p>The obvious version fetches the task by ID, then checks whether you're allowed to see it and answers <strong>403 Forbidden</strong> if not. It looks correct, but it leaks something: a 403 means "this exists, you just can't have it". Task IDs in URLs get guessed, copied and logged. With a 403, anyone can find out which IDs belong to real records in other people's accounts. In a multi-tenant system, that alone is information about other customers.</p>
+    <p>There's a second problem too: fetch-then-check means every endpoint has to remember to do the check. Forget it once and you have a data leak.</p>
+
+    <h2>Put the tenant in the query</h2>
+    <p>So the check isn't a separate step. The only way to load a task is a query that already contains "and it belongs to you":</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskRepository.java</em></div>
+      <pre class="mono"><code>@Query(&quot;&quot;&quot;
+        select t from Task t left join t.assignee a
+        where t.id = :id and (t.project.owner.id = :userId or a.id = :userId)
+        &quot;&quot;&quot;)
+Optional&lt;Task&gt; findVisibleById(@Param(&quot;id&quot;) UUID id, @Param(&quot;userId&quot;) UUID userId);</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/repository/TaskRepository.java#L22-L27" target="_blank" rel="noopener">see it in the repo ↗</a>
+    <p>If the task isn't yours, the query returns nothing, and the service turns "nothing" into the same 404 as a missing ID. There's no code path where someone else's task gets loaded into memory and then rejected.</p>
+
+    <h2>When 403 is the honest answer</h2>
+    <p>This doesn't mean 403 never happens. If you're the <em>assignee</em> of a task, you can see it, but only the project owner can edit or delete it. You already know the task exists, so hiding it would just be confusing. That case gets a real 403.</p>
+    <ul>
+      <li><strong>Can't see it:</strong> 404, same as if it didn't exist.</li>
+      <li><strong>Can see it, not allowed to change it:</strong> 403.</li>
+    </ul>
+
+    <h2>Proving it</h2>
+    <p>A rule like this is easy to break later, so there's a test for it. It checks GET, PUT and DELETE on another user's task, and compares the result with a random ID that never existed:</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java</em></div>
+      <pre class="mono"><code>mvc.perform(get(&quot;/api/tasks/&quot; + taskId).header(&quot;Authorization&quot;, bearer(bob)))
+        .andExpect(status().isNotFound());
+// ... PUT and DELETE get the same 404 ...
+
+// Same answer as for a task that doesn&#x27;t exist at all.
+mvc.perform(get(&quot;/api/tasks/&quot; + UUID.randomUUID()).header(&quot;Authorization&quot;, bearer(bob)))
+        .andExpect(status().isNotFound());</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L88-L106" target="_blank" rel="noopener">see it in the repo ↗</a>
+
+    <h2>The trade-off</h2>
+    <p>Debugging is a little harder: "not found" can mean two things, so support staff can't tell from the status code alone. I think that's the right price. The logs still carry the request ID and the user, so the real reason is one search away, just not in the response.</p>
+    <div class="end">
+      <a href="../#notes">← all notes</a>
+      <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api on GitHub ↗</a>
+      <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
+    </div>
+  </main>
+</body>
+</html>

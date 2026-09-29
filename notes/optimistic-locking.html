@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two people save the same task at once · Sudheer Kumar Gupta</title>
+  <meta name="description" content="The lost-update problem, and why a version column and a 409 beat locking rows.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Two people save the same task at once">
+  <meta property="og:description" content="The lost-update problem, and why a version column and a 409 beat locking rows.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="note.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+  <main class="note-page">
+    <a class="note-back" href="../#notes">← back to the portfolio</a>
+    <p class="note-meta">Engineering note · data consistency · 4 min read</p>
+    <h1>Two people save the same task at once</h1>
+    <p class="lead">Alice and Bob open the same task. Alice changes the title and saves. A minute later Bob, still looking at the old version, changes the status and saves. Without protection, Bob's save quietly wipes out Alice's change. Nobody gets an error. That's a <strong>lost update</strong>.</p>
+
+    <h2>Two ways to stop it</h2>
+    <ul>
+      <li><strong>Pessimistic locking:</strong> lock the row when someone opens it, and make everyone else wait. Safe, but people keep a task open for minutes, and locks held that long block others and can deadlock.</li>
+      <li><strong>Optimistic locking:</strong> don't lock anything. Remember which version you read, and when you save, only succeed if it's still that version.</li>
+    </ul>
+    <p>Real conflicts on a task are rare, so I went optimistic: no waiting in the normal case, and a clear error in the rare one.</p>
+
+    <h2>How it works</h2>
+    <p>The task has a version number that JPA increments on every update:</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">Task.java</em></div>
+      <pre class="mono"><code>@Version
+private Long version;</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/entity/Task.java#L17-L18" target="_blank" rel="noopener">see it in the repo ↗</a>
+    <p>Every update has to say which version it's based on. If the client doesn't send one, that's a 400, because an update without a version can't be checked. If the version is stale, the service refuses:</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">TaskService.java</em></div>
+      <pre class="mono"><code>if (request.getVersion() == null) {
+    throw new IllegalArgumentException(&quot;version is required when updating a task (optimistic locking)&quot;);
+}
+// ...
+if (!request.getVersion().equals(task.getVersion())) {
+    throw new ObjectOptimisticLockingFailureException(Task.class, task.getId());
+}</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/service/TaskService.java#L67-L76" target="_blank" rel="noopener">see it in the repo ↗</a>
+    <p>One exception handler turns that into <strong>409 Conflict</strong> with a message telling the client to reload. Behind that check, Hibernate adds <code>WHERE version = ?</code> to the actual <code>UPDATE</code>, so even two saves arriving at the same millisecond can't both win.</p>
+
+    <h2>The test replays the race</h2>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">ApiIntegrationTests.java</em></div>
+      <pre class="mono"><code>update(alice, taskId, 0L).andExpect(status().isOk()).andExpect(jsonPath(&quot;$.data.version&quot;).value(1));
+// A second client still holding version 0 must not overwrite the first client&#x27;s change.
+update(alice, taskId, 0L).andExpect(status().isConflict());</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/test/java/com/example/taskmanagement/ApiIntegrationTests.java#L139-L141" target="_blank" rel="noopener">see it in the repo ↗</a>
+
+    <h2>What the client has to do</h2>
+    <p>A 409 isn't a crash, it's a question: "things changed, what now?" A UI should reload the task, show what's different and let the user save again. You can try it on my portfolio: in the Live API, run "Concurrent edit" and you'll get the 409 with the current and the stale version in the response.</p>
+    <div class="end">
+      <a href="../#notes">← all notes</a>
+      <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api on GitHub ↗</a>
+      <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
+    </div>
+  </main>
+</body>
+</html>

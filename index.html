@@ -59,6 +59,7 @@
           <li><a href="#lab">Live API</a></li>
           <li><a href="#github">Projects</a></li>
           <li><a href="#work">Work</a></li>
+          <li><a href="#notes">Notes</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#hop-response">Contact</a></li>
         </ul>
@@ -74,7 +75,7 @@
     <!-- ============ OPENING ============ -->
     <section class="opening" id="top">
       <div class="wrap">
-        <p class="avail mono"><span class="dot" aria-hidden="true"></span> Open to work · from 3 Nov 2026</p>
+        <p class="avail mono" data-from="2026-11-03"><span class="dot" aria-hidden="true"></span> <span class="avail-text">Open to work · from 3 Nov 2026</span></p>
         <h1 class="who"><span>Sudheer Kumar Gupta</span> <span class="muted">· Backend Engineer · Java / Spring Boot</span></h1>
         <p class="req-hero mono" aria-label="GET /hire/sudheer HTTP/1.1">
           <span class="verb">GET</span> <span class="path">/hire/sudheer</span> <span class="proto">HTTP/1.1</span><span class="cursor" aria-hidden="true">▍</span>
@@ -95,7 +96,7 @@
           <div><dt>deploy time after the pipeline rework</dt><dd>20 → 3 min</dd></div>
         </dl>
         <p class="opening-meta mono">
-          <span>Serving notice at Accenture · last day 2 Nov 2026</span>
+          <span class="notice" data-until="2026-11-02">Serving notice at Accenture · last day 2 Nov 2026</span>
           <span>Open to Java backend, backend and full-stack roles</span>
           <span>Authorized to work in India and Thailand · no visa sponsorship needed</span>
           <a href="https://www.credly.com/badges/1f077cc8-f8b9-416f-b686-b8c0348d51e6/public_url" target="_blank" rel="noopener">AWS Certified ↗</a>
@@ -462,17 +463,18 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
           <article class="card" id="proj-task-api">
             <p class="card-kicker mono">Backend · Java 21 · Spring Boot 4</p>
             <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
-            <p>The Spring Boot service the Live API is based on. JWT auth with roles, per-tenant queries (someone else's task is a 404), optimistic locking (409), a token-bucket rate limiter (429), request IDs and one error format. CI runs 20 integration tests and a Docker build on every push.</p>
+            <p>The Spring Boot service the Live API is based on. JWT auth with roles, per-tenant queries (someone else's task is a 404), optimistic locking (409), a token-bucket rate limiter (429), request IDs and one error format. CI runs 21 tests and a Docker build on every push. Open it in Codespaces and you get the real service with Swagger UI to click through.</p>
             <p class="tags"><span>Java 21</span><span>Spring Boot 4</span><span>Spring Security 7</span><span>Spring Data JPA</span><span>PostgreSQL</span><span>JUnit 5 + MockMvc</span><span>Maven</span><span>Docker</span></p>
-            <p class="card-links"><a class="live" href="#lab">Try it live ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/task-management-api?quickstart=1" target="_blank" rel="noopener">Run the real API ↗</a> <a href="#lab">Browser demo ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="run-note">Starts Spring Boot + PostgreSQL in your own GitHub account (free, about 2–3 minutes), then opens Swagger UI.</p>
           </article>
           <article class="card" id="proj-jobhunt">
             <p class="card-kicker mono">Full stack · PHP 8.3 · MariaDB · Docker</p>
             <h3><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">JOB-HUNT job portal</a></h3>
             <p>A PHP job portal from 2020 that I brought up to date: prepared statements everywhere, bcrypt passwords, CSRF tokens, and uploads checked by content type and stored outside the web root. It runs as one Docker image with its own database, and CI runs 44 end-to-end checks against it.</p>
             <p class="tags"><span>PHP 8.3</span><span>MariaDB</span><span>Apache</span><span>Docker</span><span>bash e2e</span></p>
-            <p class="card-links"><a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">Code ↗</a></p>
-            <pre class="run mono">docker build -t job-hunt . &amp;&amp; docker run -e PORT=8080 -p 8080:8080 job-hunt</pre>
+            <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/JOB-HUNT?quickstart=1" target="_blank" rel="noopener">Run it live ↗</a> <a href="https://github.com/iamsrkg/JOB-HUNT" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="run-note">Starts the real portal with its own MariaDB in your GitHub account (free, about 2 minutes). Demo logins are in the README.</p>
           </article>
           <article class="card" id="proj-video">
             <p class="card-kicker mono">Full stack · OpenCV · runs in the browser</p>
@@ -682,6 +684,34 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
             </div>
           </article>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NOTES ============ -->
+    <section id="notes" class="section">
+      <div class="wrap">
+        <h2 class="sec-title">Notes</h2>
+        <p class="section-lede">Short write-ups of decisions in my own code: what I chose, why, and what it costs. These are the conversations I enjoy having in interviews.</p>
+        <div class="cards notes">
+          <a class="card note-card" href="notes/404-not-403.html">
+            <p class="card-kicker mono">multi-tenant APIs · 4 min</p>
+            <h3>Why someone else's task is a 404, not a 403</h3>
+            <p>A 403 tells an attacker the record exists. Putting the tenant in the query means there's no code path that can leak it.</p>
+            <span class="note-go mono">read →</span>
+          </a>
+          <a class="card note-card" href="notes/rate-limit-before-auth.html">
+            <p class="card-kicker mono">API security · 4 min</p>
+            <h3>Why my rate limiter runs before authentication</h3>
+            <p>Password checks are slow on purpose. Reject cheaply first, or attackers get your server to do expensive work for free.</p>
+            <span class="note-go mono">read →</span>
+          </a>
+          <a class="card note-card" href="notes/optimistic-locking.html">
+            <p class="card-kicker mono">data consistency · 4 min</p>
+            <h3>Two people save the same task at once</h3>
+            <p>The lost-update problem, and why a version column and a 409 beat locking rows for this kind of data.</p>
+            <span class="note-go mono">read →</span>
+          </a>
         </div>
       </div>
     </section>

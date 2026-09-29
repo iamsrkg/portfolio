@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why my rate limiter runs before authentication · Sudheer Kumar Gupta</title>
+  <meta name="description" content="Checking a password is deliberately slow. Putting the rate limiter after it means an attacker can make your server do expensive work for free.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Why my rate limiter runs before authentication">
+  <meta property="og:description" content="Checking a password is deliberately slow. Putting the rate limiter after it means an attacker can make your server do expensive work for free.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="note.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+  <main class="note-page">
+    <a class="note-back" href="../#notes">← back to the portfolio</a>
+    <p class="note-meta">Engineering note · API security · 4 min read</p>
+    <h1>Why my rate limiter runs before authentication</h1>
+    <p class="lead">In my Spring Boot API the order of filters is: tag the request with an ID, <strong>then rate limit, then authenticate</strong>. The order matters more than it looks.</p>
+
+    <h2>Password checks are slow on purpose</h2>
+    <p>Passwords are hashed with BCrypt, which is designed to be slow, around a tenth of a second per check. That's what makes stolen hashes hard to crack. But it also means every login attempt costs the server real CPU time.</p>
+    <p>If rate limiting happens <em>after</em> authentication, someone hammering the login endpoint makes the server run BCrypt on every single attempt before anything says no. The protection arrives after the expensive part. So the rule I follow: <strong>reject cheaply first</strong>. A request that's going to be refused anyway shouldn't reach the password hasher or the database.</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">SecurityConfig.java</em></div>
+      <pre class="mono"><code>// Cheapest checks first: tag the request, then rate limit, then authenticate.
+if (rateLimitEnabled) {
+    http.addFilterBefore(new RateLimitFilter(rateLimitCapacity, rateLimitRefillPerSecond), JwtAuthenticationFilter.class);
+    http.addFilterBefore(new RequestIdFilter(), RateLimitFilter.class);
+}</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/config/SecurityConfig.java#L71-L76" target="_blank" rel="noopener">see it in the repo ↗</a>
+
+    <h2>A token bucket per client</h2>
+    <p>Each client IP gets a bucket of tokens (20 by default) that refills at a steady rate (5 per second). Every request takes one. That allows short bursts, like a page loading several things at once, but not a sustained flood. When the bucket is empty the answer is <strong>429 Too Many Requests</strong> with a <code>Retry-After</code> header, so a well-behaved client knows exactly how long to wait instead of retrying in a tight loop.</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">RateLimitFilter.java</em></div>
+      <pre class="mono"><code>synchronized (bucket) {
+    bucket.refill(capacity, refillPerSecond);
+    allowed = bucket.tokens &gt;= 1;
+    if (allowed) {
+        bucket.tokens -= 1;
+    } else {
+        retryAfterSeconds = (long) Math.ceil((1 - bucket.tokens) / refillPerSecond);
+    }
+    remaining = (long) Math.floor(bucket.tokens);
+}</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/task-management-api/blob/ec24a529a5220af957a3c68693fc74d00d231df8/src/main/java/com/example/taskmanagement/security/RateLimitFilter.java#L54-L63" target="_blank" rel="noopener">see it in the repo ↗</a>
+    <p>Two details that are easy to miss: the lock is per bucket, not global, so one busy client doesn't slow everyone else down. And idle buckets get evicted once there are more than 10,000 clients tracked, so the map can't grow forever.</p>
+
+    <h2>What this doesn't solve</h2>
+    <ul>
+      <li><strong>More than one server.</strong> The buckets live in each instance's memory. With three instances behind a load balancer, a client effectively gets three buckets. The fix is a shared store: a Redis counter with a short expiry, or rate limiting at the gateway.</li>
+      <li><strong>Everyone behind one IP.</strong> An office or a mobile network can put many real users behind one address. For logged-in traffic, limiting per user (from the token) is fairer. Per-IP is the right tool in front of the login, where there's no user yet.</li>
+    </ul>
+    <p>For a single service, an in-memory bucket in front of auth is simple, fast and easy to test, and it covers the case that actually costs money: floods against the login.</p>
+    <div class="end">
+      <a href="../#notes">← all notes</a>
+      <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api on GitHub ↗</a>
+      <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
+    </div>
+  </main>
+</body>
+</html>
