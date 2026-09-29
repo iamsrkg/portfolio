@@ -117,6 +117,8 @@
   // ---------- resilience: what happens when the database misbehaves ----------
   // mode: healthy | slow (every query hangs past the 500 ms timeout) | down (connection refused)
   const DB = { mode: 'healthy', timeoutMs: 500, attempts: 3 };
+  // POSTs with an Idempotency-Key: the first response is stored and replayed for retries with the same key
+  const IDEMPOTENCY = new Map();
   const BREAKER = { state: 'closed', failures: 0, threshold: 3, openedAt: 0, coolMs: 10000 };
   const unavailable = (ctx, why, retryAfter) => {
     ctx.headers['Retry-After'] = String(retryAfter);
@@ -159,7 +161,7 @@
     }
     throw unavailable(ctx, `Database ${DB.mode === 'slow' ? 'timed out' : 'unreachable'} after ${DB.attempts} attempts.`, 5);
   }
-  const STATUS = { 503: 'Service Unavailable', 200: 'OK', 201: 'Created', 204: 'No Content', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
+  const STATUS = { 422: 'Unprocessable Entity', 503: 'Service Unavailable', 200: 'OK', 201: 'Created', 204: 'No Content', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
     404: 'Not Found', 405: 'Method Not Allowed', 409: 'Conflict', 429: 'Too Many Requests', 500: 'Internal Server Error' };
 
   function validate(ctx, rules) {
@@ -455,9 +457,28 @@
         params, query: Object.fromEntries(new URLSearchParams(qs)), body: parsed, user, headers, step,
       };
       ctx.sql = (sql, args) => dbCall(ctx, sql, args);
-      const res = await r.handler(ctx);
-      status = res.status;
-      body = res.body;
+
+      const idemKey = req.method === 'POST' ? (req.idempotencyKey || '').trim() : '';
+      const idemSlot = idemKey && `${user ? user.sub : 'anonymous'}:${idemKey}`;
+      const fingerprint = `${req.method} ${pathname} ${(req.body || '').trim()}`;
+      const seen = idemSlot && IDEMPOTENCY.get(idemSlot);
+      if (seen && seen.fingerprint !== fingerprint) {
+        step('IdempotencyKey', false, 'this key was already used for a different request body');
+        throw new HttpError(422, 'IDEMPOTENCY_KEY_REUSED', 'This Idempotency-Key was already used with a different request. Use a new key.');
+      }
+      if (seen) {
+        step('IdempotencyKey', true, `seen ${Math.round((performance.now() - seen.at) / 1000)}s ago · replaying the stored ${seen.status}, the handler does not run again`);
+        headers['Idempotent-Replayed'] = 'true';
+        if (seen.location) headers.Location = seen.location;
+        status = seen.status;
+        body = seen.body;
+      } else {
+        if (idemSlot) step('IdempotencyKey', true, 'new key · the response will be stored for retries');
+        const res = await r.handler(ctx);
+        status = res.status;
+        body = res.body;
+        if (idemSlot && status < 300) IDEMPOTENCY.set(idemSlot, { fingerprint, status, body, location: headers.Location, at: performance.now() });
+      }
     } catch (err) {
       let e = err;
       if (!(e instanceof HttpError)) {
@@ -480,7 +501,7 @@
   // ---------- UI ----------
   const ui = {
     form: $('#pg-form'), method: $('#pg-method'), path: $('#pg-path'), body: $('#pg-body'),
-    useAuth: $('#pg-useauth'), token: $('#pg-token'), jwt: $('#pg-jwt'),
+    useAuth: $('#pg-useauth'), token: $('#pg-token'), jwt: $('#pg-jwt'), idem: $('#pg-idem'),
     code: $('#pg-code'), time: $('#pg-time'), trace: $('#pg-trace'), headers: $('#pg-headers'), out: $('#pg-out'), log: $('#pg-log'),
   };
 
@@ -545,6 +566,7 @@
     const res = await handle({
       method: ui.method.value, path, body: ui.body.value,
       authorization: ui.useAuth.checked && bearer ? 'Bearer ' + bearer : '',
+      idempotencyKey: ui.idem ? ui.idem.value : '',
     });
     if (res.status === 200 && res.body && res.body.data && res.body.data.accessToken) {
       token = res.body.data.accessToken;
@@ -559,6 +581,7 @@
     ui.path.value = path;
     ui.body.value = body === undefined ? '' : JSON.stringify(body, null, 2);
     ui.useAuth.checked = opts.auth !== false;
+    if (ui.idem) ui.idem.value = opts.idem || '';
     return execute(opts.token);
   }
 
@@ -592,6 +615,14 @@
       const v = current.body.data.version;
       await send('PUT', '/api/tasks/2', { title: 'Add Redis cache for FX rates', status: 'IN_PROGRESS', version: v });
       return send('PUT', '/api/tasks/2', { title: 'Cache FX rates in Redis', status: 'DONE', version: v });
+    },
+    idempotent: async () => {
+      await asAlice();
+      const key = 'pay-' + newRequestId();
+      const order = { title: 'Charge invoice #1042 (₹4,999)', projectId: 1 };
+      await send('POST', '/api/tasks', order, { idem: key });
+      await sleep(600);                               // the client never saw the answer, so it retries
+      return send('POST', '/api/tasks', order, { idem: key });
     },
     burst: async () => {
       await asAlice();

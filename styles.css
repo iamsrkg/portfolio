@@ -523,6 +523,8 @@ main, .footer { position: relative; z-index: 1; }
 .case-arch-cap { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-2); }
 @media (max-width: 720px) { .case-arch svg { min-width: 640px; } }
 
+.pg-idem input { flex: 1; min-width: 0; font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #25303c; background: #0a0d12; color: #d6dde5; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
   .hop-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }

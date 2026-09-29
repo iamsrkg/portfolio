@@ -21,9 +21,9 @@
   <meta name="twitter:image" content="https://iamsrkg.github.io/portfolio/og.png">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="styles.css">
 
   <script type="application/ld+json">
@@ -397,6 +397,7 @@
             <button type="button" data-scenario="admin">User → admin API <span class="st s4">403</span></button>
             <button type="button" data-scenario="invalid">Invalid payload <span class="st s4">400</span></button>
             <button type="button" data-scenario="conflict">Concurrent edit <span class="st s4">409</span></button>
+            <button type="button" data-scenario="idempotent">Retry a POST <span class="st s2">201 ×1</span></button>
             <button type="button" data-scenario="burst">Traffic burst <span class="st s4">429</span></button>
           </div>
 
@@ -413,6 +414,7 @@
                 <button type="submit" class="btn btn-primary">Send</button>
               </div>
               <label class="pg-auth"><input type="checkbox" id="pg-useauth" checked> <span class="mono">Authorization: Bearer</span> <code id="pg-token">not logged in</code></label>
+              <label class="pg-auth pg-idem"><span class="mono">Idempotency-Key:</span> <input id="pg-idem" class="mono" placeholder="optional, for POST" autocomplete="off" spellcheck="false"></label>
               <label class="sr-only" for="pg-body">JSON body</label>
               <textarea id="pg-body" spellcheck="false" rows="7" placeholder='{ "json": "body for POST / PUT / PATCH" }'></textarea>
               <details class="pg-more">
