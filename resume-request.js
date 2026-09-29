@@ -49,6 +49,45 @@
     }
   }
 
+  async function deliver(req, onSlow) {
+    for (const [i, service] of services.entries()) {
+      if (i > 0 && onSlow) onSlow();
+      if (await trySend(service, req)) return true;
+    }
+    return false;
+  }
+
+  // If every service is down, keep the request and try again, so nobody who asked is lost:
+  // every minute for 10 minutes while the page is open, and again on the visitor's next visit.
+  const QUEUE = 'resume-request-pending';
+  const saveQueue = (list) => { try { localStorage.setItem(QUEUE, JSON.stringify(list)); } catch { /* private mode */ } };
+  const loadQueue = () => { try { return JSON.parse(localStorage.getItem(QUEUE) || '[]'); } catch { return []; } };
+  let flushing = false;
+  async function flushQueue() {
+    if (flushing) return false;
+    flushing = true;
+    try {
+      const left = [];
+      for (const req of loadQueue()) if (!(await deliver({ ...req, note: `${req.note} (delivered on a retry)` }))) left.push(req);
+      saveQueue(left);
+      return left.length === 0;
+    } finally {
+      flushing = false;
+    }
+  }
+  function keepTrying(req) {
+    saveQueue([...loadQueue(), req]);
+    let tries = 0;
+    const timer = setInterval(async () => {
+      tries++;
+      if (await flushQueue()) {
+        clearInterval(timer);
+        show(`Sent after all. I'll email my resume to ${req.email}, usually within 15–60 minutes.`, 'ok');
+      } else if (tries >= 10) clearInterval(timer);
+    }, 60000);
+  }
+  if (loadQueue().length) setTimeout(flushQueue, 3000);   // a request left over from an earlier visit
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
@@ -68,11 +107,7 @@
 
     button.disabled = true;
     show('Sending…');
-    let sent = false;
-    for (const [i, service] of services.entries()) {
-      if (i > 0) show('Still sending, this can take up to 30 seconds…');
-      if (await trySend(service, req)) { sent = true; break; }
-    }
+    const sent = await deliver(req, () => show('Still sending, this can take up to 30 seconds…'));
     button.disabled = false;
 
     if (sent) {
@@ -82,10 +117,11 @@
     }
     const mail = `mailto:sudheerkgupta@outlook.com?subject=${encodeURIComponent(req.subject)}`
       + `&body=${encodeURIComponent(`Hi Sudheer,\n\nPlease send your resume for: ${data.position} (${data.country}).\n\n${data.company ? 'Company: ' + data.company + '\n' : ''}`)}`;
+    keepTrying(req);
     status.innerHTML = '';
     status.dataset.tone = 'bad';
-    status.append('The form couldn\'t send just now. ');
-    const a = Object.assign(document.createElement('a'), { href: mail, textContent: 'Send the request by email instead' });
-    status.append(a, '.');
+    status.append('The form service is busy. I\'ll keep trying in the background, or reach me directly: ');
+    const link = (href, text) => Object.assign(document.createElement('a'), { href, textContent: text, target: href.startsWith('http') ? '_blank' : '', rel: 'noopener' });
+    status.append(link(mail, 'email'), ' · ', link('https://www.linkedin.com/in/iamsrkg', 'LinkedIn'), ' · ', link('https://line.me/ti/p/~iamsrkg', 'LINE'), '.');
   });
 })();
