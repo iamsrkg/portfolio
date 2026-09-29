@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retrying safely: idempotency keys · Sudheer Kumar Gupta</title>
+  <meta name="description" content="A timeout doesn't tell you whether the request went through. Why a blind retry can charge twice, and how an idempotency key makes retries safe.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Retrying safely: idempotency keys">
+  <meta property="og:description" content="A timeout doesn't tell you whether the request went through. Why a blind retry can charge twice, and how an idempotency key makes retries safe.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="note.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+  <main class="note-page">
+    <a class="note-back" href="../#notes">← back to the portfolio</a>
+    <p class="note-meta">Engineering note · resilience · 4 min read</p>
+    <h1>Retries are easy. Retrying safely isn't.</h1>
+    <p class="lead">A client sends "charge invoice #1042". The request times out. Did the charge happen? The client can't tell, and if it simply retries, the customer may pay twice.</p>
+
+    <h2>A timeout is not a "no"</h2>
+    <p>When a request times out, three different things could have happened: it never reached the server, it failed on the server, or it <strong>succeeded</strong> and only the response got lost on the way back. From the client's side these look identical.</p>
+    <p>For some requests that's fine. <code>GET</code>, <code>PUT</code> and <code>DELETE</code> are idempotent by design: doing them twice leaves things the same as doing them once. <code>POST</code> is not. "Create a charge" twice means two charges. That's exactly where retries do damage, and retries are everywhere: HTTP clients, load balancers, message consumers, users pressing the button again.</p>
+
+    <h2>The idea: give the operation a name</h2>
+    <p>The client generates a unique key for each <em>operation</em> (not each attempt) and sends it as an <code>Idempotency-Key</code> header. The server remembers the first response for that key. A retry with the same key gets the stored response back, and the work doesn't run again.</p>
+    <ul>
+      <li><strong>Same key, same request:</strong> replay the stored response, marked with <code>Idempotent-Replayed: true</code>.</li>
+      <li><strong>Same key, different request:</strong> <code>422</code>. That's a client bug, and guessing which request it meant would be worse.</li>
+      <li><strong>No key:</strong> the request runs normally, with no protection.</li>
+    </ul>
+    <p>This is what I built into the Live API on my portfolio:</p>
+    <div class="terminal slim">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">playground.js · the Live API</em></div>
+      <pre class="mono"><code>const idemSlot = idemKey &amp;&amp; `${user ? user.sub : 'anonymous'}:${idemKey}`;
+const fingerprint = `${req.method} ${pathname} ${(req.body || '').trim()}`;
+const seen = idemSlot &amp;&amp; IDEMPOTENCY.get(idemSlot);
+if (seen &amp;&amp; seen.fingerprint !== fingerprint) {
+  throw new HttpError(422, 'IDEMPOTENCY_KEY_REUSED', 'This Idempotency-Key was already used with a different request.');
+}
+if (seen) {                                 // a retry: replay, don't redo
+  headers['Idempotent-Replayed'] = 'true';
+  status = seen.status;
+  body = seen.body;
+} else {
+  const res = await r.handler(ctx);         // first time: do the work
+  status = res.status;
+  body = res.body;
+  if (idemSlot &amp;&amp; status &lt; 300) IDEMPOTENCY.set(idemSlot, { fingerprint, status, body });
+}</code></pre>
+    </div>
+    <a class="src" href="https://github.com/iamsrkg/portfolio/blob/12369af36bc463bf3623aec5aa1d060016c7cc70/playground.js#L461-L481" target="_blank" rel="noopener">see it in the repo ↗</a>
+    <p>Two details matter. The key is scoped to the user, so one customer can't replay another's response. And only successful responses are stored: if the first attempt failed, the retry should really try again.</p>
+
+    <h2>What changes in production</h2>
+    <p>The demo keeps keys in memory, which is enough to show the behaviour. A real service needs a few more things:</p>
+    <ul>
+      <li><strong>Durable storage with an expiry.</strong> Keys go in the database or Redis with a TTL (24 hours is common), so a retry after a restart still finds them.</li>
+      <li><strong>Atomic "claim the key, then do the work".</strong> Insert the key with a unique constraint in the same transaction as the work. Otherwise two copies of the same request arriving together can both pass the "not seen yet" check.</li>
+      <li><strong>A request still in flight.</strong> If a duplicate arrives while the first is running, answer <code>409</code> ("in progress, retry shortly") instead of starting it twice.</li>
+      <li><strong>Consumers too.</strong> Kafka and RabbitMQ deliver at least once, so a consumer can see the same message twice. The same idea applies there: record processed message IDs and skip repeats.</li>
+    </ul>
+
+    <h2>Try it</h2>
+    <p>On the portfolio's Live API, press <strong>Retry a POST</strong>. It sends the same "charge invoice #1042" request twice with one key, like a client retrying after a timeout. Both answers are <code>201</code>, but the second is a replay: same task, <code>Idempotent-Replayed: true</code>, and the trace shows the database insert ran only once. Then change the body and send it again with the same key to get the <code>422</code>.</p>
+    <p>It pairs with the database switch on the same page. Retries, timeouts and a circuit breaker keep a service answering when things break; idempotency keys make sure those retries don't do the work twice.</p>
+
+    <div class="end">
+      <a href="../#notes">← all notes</a>
+      <a href="../#lab">try it in the Live API ↗</a>
+      <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
+    </div>
+  </main>
+</body>
+</html>

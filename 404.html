@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 Not Found · Sudheer Kumar Gupta</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/portfolio/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/portfolio/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/portfolio/fonts/fonts.css">
+  <link rel="stylesheet" href="/portfolio/styles.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+  <style>
+    .nf { min-height: 100vh; min-height: 100svh; display: grid; place-content: center; padding: 32px 16px; }
+    .nf .terminal { max-width: 640px; width: calc(100vw - 32px); }
+    .nf pre { white-space: pre-wrap; word-break: break-all; }
+    .nf .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .nf p.lead { color: var(--text-2); margin: 22px 0 0; max-width: 60ch; }
+  </style>
+</head>
+<body>
+  <main class="nf">
+    <div class="terminal">
+      <div class="term-bar"><span></span><span></span><span></span><em class="mono">iamsrkg.github.io</em></div>
+<pre class="mono"><code><span class="c-m">→</span> GET <span id="nf-path">/portfolio/…</span> HTTP/1.1
+
+<span class="c-k">HTTP/1.1 404 Not Found</span>
+<span class="c-m">Content-Type: application/json</span>
+
+{
+  <span class="c-k">"error"</span>: <span class="c-s">"NOT_FOUND"</span>,
+  <span class="c-k">"message"</span>: <span class="c-s">"Nothing lives at this address."</span>,
+  <span class="c-k">"tryInstead"</span>: <span class="c-s">"/portfolio/"</span>
+}</code></pre>
+    </div>
+    <p class="lead">That page doesn't exist, or it moved. Everything is on the portfolio.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/portfolio/">Go to the portfolio</a>
+      <a class="btn btn-ghost" href="/portfolio/#lab">Try the live API</a>
+      <a class="btn btn-ghost" href="/portfolio/#resume-form">Request my resume</a>
+    </div>
+  </main>
+  <script>document.getElementById('nf-path').textContent = location.pathname;</script>
+</body>
+</html>

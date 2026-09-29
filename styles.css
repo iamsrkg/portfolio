@@ -482,6 +482,7 @@ main, .footer { position: relative; z-index: 1; }
   color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: 999px; }
 
 /* notes */
+.cards.notes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .note-card { text-decoration: none; color: inherit; }
 .note-card h3 { font-size: 18px; }
 .note-card .note-go { margin-top: auto; color: var(--accent); font-size: 13px; }
