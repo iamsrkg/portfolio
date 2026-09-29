@@ -376,9 +376,17 @@
           <h2 class="sec-title">Your turn: send your own request</h2>
           <a class="more mono" href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Spring Boot source →</a>
         </div>
-        <p class="section-lede">This is the API from the hops above, and it really runs. It's a browser port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>: the JWTs are actually HMAC-signed and passwords go through PBKDF2 with Web Crypto. Try one of the attacks, or write your own request.</p>
+        <p class="section-lede">This is the API from the hops above, and it really runs. It's a browser port of my <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>: the JWTs are actually HMAC-signed and passwords go through PBKDF2 with Web Crypto. Try one of the attacks, write your own request, or break the database and watch it cope: timeouts, retries and a circuit breaker.</p>
 
         <div class="pg" id="playground">
+          <div class="pg-chaos" role="group" aria-label="Database failure switch">
+            <span class="pg-cap mono">database</span>
+            <button type="button" data-db="healthy" aria-pressed="true">healthy</button>
+            <button type="button" data-db="slow" aria-pressed="false">slow</button>
+            <button type="button" data-db="down" aria-pressed="false">down</button>
+            <span class="pg-breaker mono" data-state="closed">circuit breaker: closed</span>
+            <span class="pg-chaos-hint">Break it, then send a few requests: watch the timeouts, retries and the circuit breaker in the trace.</span>
+          </div>
           <div class="pg-scenarios" role="group" aria-label="Scenarios">
             <button type="button" data-scenario="health">Health check <span class="st s2">200</span></button>
             <button type="button" data-scenario="login">Log in as alice <span class="st s2">200</span></button>
@@ -434,7 +442,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
 
             <div class="pg-res" aria-live="polite">
               <div class="pg-status"><span id="pg-code" class="pg-code">…</span><span id="pg-time" class="pg-time mono"></span></div>
-              <p class="pg-cap mono">request lifecycle</p>
+              <p class="pg-cap mono">request trace · time per step</p>
               <ol class="pg-trace" id="pg-trace"></ol>
               <p class="pg-cap mono">response headers</p>
               <pre class="pg-headers mono" id="pg-headers"></pre>
@@ -683,6 +691,47 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
               </details>
               <p class="note">The client code stays with Accenture's client. The same patterns are in my public <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>.</p>
             </div>
+            <figure class="arch case-arch">
+              <p class="case-arch-cap mono">how the platform fit together (simplified)</p>
+              <div class="arch-scroll">
+                <svg viewBox="0 0 980 444" role="img" aria-labelledby="pf-title">
+                  <title id="pf-title">Clients reach two Spring Boot microservices through the Kubernetes ingress. The feedback service reads and writes PostgreSQL with Redis as a cache. The document service stores uploads in Amazon S3 and publishes an event to Kafka or RabbitMQ; workers consume it, fetch the file from S3 and write results to PostgreSQL. Azure DevOps builds Docker images and deploys them to the cluster.</title>
+                  <defs><marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+                  <!-- Kubernetes boundary -->
+                  <rect x="180" y="16" width="620" height="388" rx="14" fill="none" stroke="var(--accent)" stroke-opacity=".45" stroke-width="1.5" stroke-dasharray="6 6"/>
+                  <text class="lbl" x="196" y="38">Kubernetes · scales out under load</text>
+                  <!-- edges -->
+                  <path class="e hot" d="M130 206 H206" marker-end="url(#arrP)"/>
+                  <path class="e hot" d="M330 190 L400 104" marker-end="url(#arrP)"/>
+                  <path class="e hot" d="M330 222 L400 300" marker-end="url(#arrP)"/>
+                  <path class="e" d="M560 90 H616" marker-end="url(#arrP)"/>
+                  <path class="e" d="M560 108 L616 158" marker-end="url(#arrP)"/>
+                  <path class="e hot" d="M560 300 H616" marker-end="url(#arrP)"/>
+                  <path class="e hot" d="M548 332 C 570 438, 830 440, 880 358" marker-end="url(#arrP)"/>
+                  <path class="e back" d="M694 328 V356" marker-end="url(#arrP)"/>
+                  <path class="e back" d="M774 368 L 840 336" marker-end="url(#arrP)"/>
+                  <path class="e" d="M774 386 C 812 380, 812 110, 776 92" marker-end="url(#arrP)"/>
+                  <path class="e" d="M110 380 H206" marker-end="url(#arrP)"/>
+                  <text class="lbl" x="136" y="198">HTTPS</text>
+                  <text class="lbl" x="566" y="292">publish</text>
+                  <text class="lbl" x="702" y="350">consume</text>
+                  <text class="lbl" x="812" y="228">write</text><text class="lbl" x="812" y="242">results</text><text class="lbl" x="784" y="340">fetch</text><text class="lbl" x="676" y="436">upload</text>
+                  <text class="lbl" x="116" y="372">deploy</text>
+                  <!-- nodes -->
+                  <g class="n"><rect x="10" y="178" width="120" height="56" rx="10"/><text class="t" x="70" y="202">Clients</text><text class="s" x="70" y="220">10,000+ online</text></g>
+                  <g class="n hot"><rect x="206" y="178" width="124" height="56" rx="10"/><text class="t" x="268" y="202">Ingress</text><text class="s" x="268" y="220">load balancing</text></g>
+                  <g class="n hot"><rect x="400" y="70" width="160" height="62" rx="10"/><text class="t" x="480" y="94">Feedback service</text><text class="s" x="480" y="112">Spring Boot · JWT/RBAC</text></g>
+                  <g class="n hot"><rect x="400" y="270" width="160" height="62" rx="10"/><text class="t" x="480" y="294">Document service</text><text class="s" x="480" y="312">Spring Boot · JWT/RBAC</text></g>
+                  <g class="n"><rect x="616" y="64" width="156" height="52" rx="10"/><text class="t" x="694" y="86">PostgreSQL</text><text class="s" x="694" y="104">tuned indexes</text></g>
+                  <g class="n"><rect x="616" y="140" width="156" height="46" rx="10"/><text class="t" x="694" y="160">Redis</text><text class="s" x="694" y="176">hot reads</text></g>
+                  <g class="n hot"><rect x="616" y="274" width="156" height="54" rx="10"/><text class="t" x="694" y="296">Kafka / RabbitMQ</text><text class="s" x="694" y="314">document events</text></g>
+                  <g class="n"><rect x="616" y="356" width="156" height="44" rx="10"/><text class="t" x="694" y="382">Workers</text></g>
+                  <g class="n"><rect x="842" y="300" width="128" height="56" rx="10"/><text class="t" x="906" y="324">Amazon S3</text><text class="s" x="906" y="342">uploaded files</text></g>
+                  <g class="n"><rect x="10" y="356" width="100" height="48" rx="10"/><text class="t" x="60" y="376">Azure DevOps</text><text class="s" x="60" y="393">CI/CD · Docker</text></g>
+                </svg>
+              </div>
+              <figcaption>The shape of the platform, drawn from memory and simplified, with no client specifics. The fast path (clients → services → Redis/PostgreSQL) answers in milliseconds; uploads go to S3 and a Kafka/RabbitMQ event, and workers do the slow processing off the request path. That split is what kept it standing at 10,000+ users.</figcaption>
+            </figure>
           </article>
 
         </div>

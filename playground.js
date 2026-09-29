@@ -113,7 +113,53 @@
     }
   }
   const ok = (data, status = 200) => ({ status, body: { success: true, data, timestamp: iso() } });
-  const STATUS = { 200: 'OK', 201: 'Created', 204: 'No Content', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
+
+  // ---------- resilience: what happens when the database misbehaves ----------
+  // mode: healthy | slow (every query hangs past the 500 ms timeout) | down (connection refused)
+  const DB = { mode: 'healthy', timeoutMs: 500, attempts: 3 };
+  const BREAKER = { state: 'closed', failures: 0, threshold: 3, openedAt: 0, coolMs: 10000 };
+  const unavailable = (ctx, why, retryAfter) => {
+    ctx.headers['Retry-After'] = String(retryAfter);
+    return new HttpError(503, 'SERVICE_UNAVAILABLE', why, { retryAfterSeconds: retryAfter });
+  };
+  function dbCall(ctx, sql, args) {
+    const query = sql + (args ? '  <- ' + JSON.stringify(args) : '');
+    if (BREAKER.state === 'open') {
+      const left = BREAKER.coolMs - (performance.now() - BREAKER.openedAt);
+      if (left > 0) {
+        ctx.step('CircuitBreaker', false, `open · failing fast, the database is not called (${Math.ceil(left / 1000)}s until a trial request)`, 0.05);
+        throw unavailable(ctx, 'Database unavailable (circuit open). Try again shortly.', Math.ceil(left / 1000));
+      }
+      BREAKER.state = 'half-open';
+      ctx.step('CircuitBreaker', true, 'half-open · letting one trial request through', 0.05);
+    }
+    if (DB.mode === 'healthy') {
+      ctx.step('Repository', true, query, 1 + Math.random() * 3);
+      if (BREAKER.state === 'half-open' || BREAKER.failures) {
+        const wasHalfOpen = BREAKER.state === 'half-open';
+        BREAKER.state = 'closed'; BREAKER.failures = 0;
+        if (wasHalfOpen) ctx.step('CircuitBreaker', true, 'closed · trial succeeded, back to normal', 0.05);
+      }
+      return;
+    }
+    for (let attempt = 1; attempt <= DB.attempts; attempt++) {
+      if (DB.mode === 'slow') ctx.step('Repository', false, `attempt ${attempt}: no answer within the ${DB.timeoutMs} ms timeout · ${query}`, DB.timeoutMs);
+      else ctx.step('Repository', false, `attempt ${attempt}: connection refused · ${query}`, 1.5);
+      if (attempt < DB.attempts) {
+        const backoff = 50 * 2 ** (attempt - 1);
+        ctx.step('Retry', true, `backing off ${backoff} ms, then retrying`, backoff);
+      }
+    }
+    BREAKER.failures++;
+    if (BREAKER.state === 'half-open' || BREAKER.failures >= BREAKER.threshold) {
+      BREAKER.state = 'open'; BREAKER.openedAt = performance.now();
+      ctx.step('CircuitBreaker', false, `opened after ${BREAKER.failures} failed request${BREAKER.failures > 1 ? 's' : ''} · the next ${BREAKER.coolMs / 1000}s fail fast`, 0.05);
+    } else {
+      ctx.step('CircuitBreaker', true, `closed · ${BREAKER.failures}/${BREAKER.threshold} failures before it opens`, 0.05);
+    }
+    throw unavailable(ctx, `Database ${DB.mode === 'slow' ? 'timed out' : 'unreachable'} after ${DB.attempts} attempts.`, 5);
+  }
+  const STATUS = { 503: 'Service Unavailable', 200: 'OK', 201: 'Created', 204: 'No Content', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
     404: 'Not Found', 405: 'Method Not Allowed', 409: 'Conflict', 429: 'Too Many Requests', 500: 'Internal Server Error' };
 
   function validate(ctx, rules) {
@@ -149,10 +195,16 @@
   const AUTH = 'c.i.tasks.web.AuthController';
   const TASKS = 'c.i.tasks.web.TaskController';
 
-  route('GET', '/actuator/health', { auth: false, ctrl: 'o.s.b.a.health.HealthEndpoint' }, () => ({
-    status: 200,
-    body: { status: 'UP', components: { db: { status: 'UP', details: { database: 'PostgreSQL', validationQuery: 'isValid()' } }, ping: { status: 'UP' } } },
-  }));
+  route('GET', '/actuator/health', { auth: false, ctrl: 'o.s.b.a.health.HealthEndpoint' }, () => {
+    const dbUp = DB.mode === 'healthy';
+    return {
+      status: dbUp ? 200 : 503,
+      body: { status: dbUp ? 'UP' : 'DOWN', components: {
+        db: { status: dbUp ? 'UP' : 'DOWN', details: { database: 'PostgreSQL', ...(dbUp ? { validationQuery: 'isValid()' } : { error: DB.mode === 'slow' ? 'validation query timed out' : 'connection refused' }) } },
+        circuitBreaker: { status: BREAKER.state === 'open' ? 'OPEN' : BREAKER.state === 'half-open' ? 'HALF_OPEN' : 'CLOSED' },
+        ping: { status: 'UP' } } },
+    };
+  });
 
   route('POST', '/api/auth/register', { auth: false, ctrl: AUTH }, async (ctx) => {
     const b = ctx.body || {};
@@ -334,7 +386,14 @@
     const t0 = performance.now();
     const trace = [];
     const headers = { 'Content-Type': 'application/json', 'X-Request-Id': newRequestId() };
-    const step = (name, pass, note) => trace.push({ name, pass, note });
+    let simulated = 0, lastEnd = 0;
+    const elapsed = () => performance.now() - t0 + simulated;
+    const step = (name, pass, note, extraMs = 0) => {
+      const start = lastEnd;
+      simulated += extraMs;
+      lastEnd = Math.max(elapsed(), start + 0.05);
+      trace.push({ name, pass, note, start, end: lastEnd });
+    };
     const [pathname, qs = ''] = req.path.split('?');
     let status, body, user = null, ctrl = 'o.s.web.servlet.DispatcherServlet';
 
@@ -394,8 +453,8 @@
 
       const ctx = {
         params, query: Object.fromEntries(new URLSearchParams(qs)), body: parsed, user, headers, step,
-        sql: (sql, args) => step('Repository', true, sql + (args ? '  ← ' + JSON.stringify(args) : '')),
       };
+      ctx.sql = (sql, args) => dbCall(ctx, sql, args);
       const res = await r.handler(ctx);
       status = res.status;
       body = res.body;
@@ -410,9 +469,10 @@
       body = { success: false, error: { status: e.status, code: e.code, message: e.message, path: pathname, ...(e.details ? { details: e.details } : {}) }, timestamp: iso() };
     }
 
-    await sleep(4 + Math.random() * 14);
+    step('Response', status < 400, `${status} ${STATUS[status]} written as JSON`, 0.3);
+    await sleep(Math.min(simulated, 1800));            // let slow requests feel slow
     if (status === 204) { body = undefined; delete headers['Content-Type']; }
-    const ms = Math.max(1, Math.round(performance.now() - t0));
+    const ms = Math.max(1, Math.round(lastEnd));
     writeLog(status, req.method, req.path, ms, headers['X-Request-Id'], user && user.sub, ctrl);
     return { status, headers, body, ms, trace };
   }
@@ -462,9 +522,17 @@
     ui.code.textContent = `${res.status} ${STATUS[res.status]}`;
     ui.code.className = 'pg-code s' + String(res.status)[0];
     ui.time.textContent = `${res.ms} ms`;
-    ui.trace.innerHTML = res.trace.map((s) =>
-      `<li class="${s.pass ? 'ok' : 'fail'}"><span class="pg-mark">${s.pass ? '✓' : '✗'}</span>`
-      + `<span class="pg-step">${esc(s.name)}</span><span class="pg-note">${esc(s.note || '')}</span></li>`).join('');
+    const total = Math.max(res.ms, 1);
+    const fmt = (ms) => (ms < 1 ? ms.toFixed(2) : ms < 10 ? ms.toFixed(1) : Math.round(ms)) + ' ms';
+    ui.trace.innerHTML = res.trace.map((s) => {
+      const left = Math.min((s.start / total) * 100, 99.2), width = Math.max(((s.end - s.start) / total) * 100, 0.8);
+      return `<li class="${s.pass ? 'ok' : 'fail'}"><span class="pg-mark">${s.pass ? '✓' : '✗'}</span>`
+        + `<span class="pg-step">${esc(s.name)}</span>`
+        + `<span class="pg-bar" aria-hidden="true"><i style="left:${left.toFixed(2)}%;width:${Math.min(width, 100 - left).toFixed(2)}%"></i></span>`
+        + `<span class="pg-dur">${fmt(s.end - s.start)}</span>`
+        + `<span class="pg-note">${esc(s.note || '')}</span></li>`;
+    }).join('');
+    renderBreaker();
     ui.headers.textContent = `HTTP/1.1 ${res.status} ${STATUS[res.status]}\n`
       + Object.entries(res.headers).map(([k, v]) => `${k}: ${v}`).join('\n');
     ui.out.innerHTML = res.body === undefined ? '<span class="j-c">(no body)</span>' : highlight(res.body);
@@ -556,6 +624,21 @@
       run(fn);
     });
   });
+
+  const breakerEl = root.querySelector('.pg-breaker');
+  function renderBreaker() {
+    if (!breakerEl) return;
+    const left = Math.ceil((BREAKER.coolMs - (performance.now() - BREAKER.openedAt)) / 1000);
+    breakerEl.textContent = BREAKER.state === 'open' && left > 0 ? `circuit breaker: open (${left}s)`
+      : BREAKER.state === 'open' ? 'circuit breaker: open (trial due)' : `circuit breaker: ${BREAKER.state}`;
+    breakerEl.dataset.state = BREAKER.state;
+  }
+  root.querySelectorAll('[data-db]').forEach((b) => b.addEventListener('click', () => {
+    DB.mode = b.dataset.db;
+    root.querySelectorAll('[data-db]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    run(scenarios.health);
+  }));
+  setInterval(renderBreaker, 1000);
 
   showToken(null);
   run(scenarios.health);
