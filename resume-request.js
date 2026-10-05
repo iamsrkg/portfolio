@@ -125,3 +125,73 @@
     status.append(link(mail, 'email'), ' · ', link('https://www.linkedin.com/in/iamsrkg', 'LinkedIn'), ' · ', link('https://line.me/ti/p/~iamsrkg', 'LINE'), '.');
   });
 })();
+
+// Two floating buttons, bottom right: "Contact" (email, LinkedIn, LINE) and, under it, "Request my resume",
+// which opens the same form in a dialog, so there is one form and one submit path.
+(() => {
+  'use strict';
+  const form = document.getElementById('resume-form');
+  if (!form) return;
+  const icon = (id) => `<svg class="ic" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+
+  const stack = document.createElement('div');
+  stack.className = 'fab-stack';
+  stack.innerHTML = `
+    <div class="fab-menu" id="fab-menu" hidden>
+      <a href="mailto:sudheerkgupta@outlook.com">${icon('mail')}<span><b>Email</b>sudheerkgupta@outlook.com</span></a>
+      <a href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener">${icon('linkedin')}<span><b>LinkedIn</b>in/iamsrkg</span></a>
+      <a href="https://line.me/ti/p/~iamsrkg" target="_blank" rel="noopener">${icon('line')}<span><b>LINE</b>iamsrkg</span></a>
+    </div>
+    <button type="button" class="fab fab-contact" aria-expanded="false" aria-controls="fab-menu">${icon('chat')}<span>Contact</span></button>
+    <button type="button" class="fab fab-resume">${icon('doc')}<span class="full">Request my resume</span><span class="short">Resume</span></button>`;
+  document.body.append(stack);
+  const menu = stack.querySelector('.fab-menu');
+  const contact = stack.querySelector('.fab-contact');
+  const resume = stack.querySelector('.fab-resume');
+
+  const showMenu = (open) => { menu.hidden = !open; contact.setAttribute('aria-expanded', String(open)); };
+  contact.addEventListener('click', () => showMenu(menu.hidden));
+  menu.addEventListener('click', () => showMenu(false));
+  document.addEventListener('click', (e) => { if (!menu.hidden && !stack.contains(e.target)) showMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { showMenu(false); contact.focus(); } });
+
+  // near the end of the page the form and the contact buttons are on screen, so the floating ones step aside
+  new IntersectionObserver(([entry]) => { stack.classList.toggle('away', entry.isIntersecting); if (entry.isIntersecting) showMenu(false); }, { threshold: 0.2 }).observe(form);
+
+  if (!window.HTMLDialogElement) {            // very old browsers: just go to the form
+    resume.addEventListener('click', () => form.scrollIntoView({ behavior: 'smooth' }));
+    return;
+  }
+  const dialog = document.createElement('dialog');
+  dialog.className = 'rr-dialog';
+  dialog.setAttribute('aria-label', 'Request my resume');
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'rr-close';
+  close.setAttribute('aria-label', 'Close');
+  close.textContent = '×';
+  dialog.append(close);
+  document.body.append(dialog);
+
+  // the form lives in the page; while the dialog is open it moves in, and goes back when it closes
+  const home = document.createComment('resume form');
+  function open() {
+    if (dialog.open) return;
+    showMenu(false);
+    form.replaceWith(home);
+    dialog.append(form);
+    dialog.showModal();
+    form.querySelector('input[name="email"]').focus();
+  }
+  const putBack = () => { if (home.parentNode) home.replaceWith(form); };
+  const shut = () => { dialog.close(); putBack(); };
+  dialog.addEventListener('close', putBack);                                              // Escape closes it too
+  close.addEventListener('click', shut);
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) shut(); });           // a click on the backdrop
+  resume.addEventListener('click', open);
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href="#resume-form"]');
+    if (a) { e.preventDefault(); open(); }
+  });
+  if (location.hash === '#resume-form') open();
+})();

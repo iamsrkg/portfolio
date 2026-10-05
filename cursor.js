@@ -1,14 +1,16 @@
 /* The cursor is a client. Moving it sends requests into a small backend drawn behind the page:
    gateway (rate limit) → auth (JWT) → service → cache / database / Kafka, and the response travels back.
      GET  /api/tasks        read:   cache hit → 200, or miss → database → fill the cache → 200
-     PUT  /api/tasks/42     write:  database with a version check → 200, or 409 if someone saved first
+     PUT  /api/tasks/42     write:  database with a version check → 200, or 409 if someone saved first;
+                                    a good write evicts the cached list, so the next read is fresh
      POST /api/documents    upload: publish to Kafka → 202 straight away; a worker consumes it later
-   The gateway holds a token bucket, so moving fast gets 429s. Off on touch screens and with reduced motion. */
+   The gateway holds a token bucket, so moving fast gets 429s. On a phone, scrolling and tapping send the requests.
+   Off with reduced motion. The drawing loop stops when nothing is moving. */
 (() => {
   'use strict';
   const fine = window.matchMedia('(pointer: fine)').matches;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!fine || calm) return;
+  if (calm) return;
 
   const canvas = document.createElement('canvas');
   canvas.className = 'mesh';
@@ -16,13 +18,42 @@
   document.body.prepend(canvas);
   const hud = document.createElement('div');
   hud.className = 'mesh-hud mono';
-  hud.setAttribute('aria-hidden', 'true');
-  document.body.append(hud);
+  const status = document.createElement('span');
+  status.setAttribute('aria-hidden', 'true');
+  const helpBtn = document.createElement('button');
+  helpBtn.type = 'button';
+  const helpLabel = fine ? "what's this?" : "what's moving?";
+  helpBtn.textContent = helpLabel;
+  helpBtn.setAttribute('aria-expanded', 'false');
+  helpBtn.setAttribute('aria-controls', 'mesh-help');
+  hud.append(status, helpBtn);
+  const help = document.createElement('aside');
+  help.className = 'mesh-help';
+  help.id = 'mesh-help';
+  help.hidden = true;
+  help.innerHTML = `
+    <h2>What's moving behind the page</h2>
+    <p>A small model of a request path. ${fine ? 'Your cursor is the client' : 'You are the client: scrolling and tapping send requests'}, and every dot is a request following the same rules as the rest of this site.</p>
+    <ul>
+      <li><b>gateway</b> A token bucket. ${fine ? 'Move the cursor fast' : 'Scroll fast'} and it answers <code>429</code> before anything else runs.</li>
+      <li><b>auth</b> Checks the JWT. An expired token stops here with <code>401</code>.</li>
+      <li><b>read</b> <code>GET</code> asks the cache first. A hit answers at once. A miss goes to the database, then fills the cache.</li>
+      <li><b>write</b> <code>PUT</code> updates the database with a version check. A stale version gets <code>409</code>. A good write evicts the cached copy.</li>
+      <li><b>upload</b> <code>POST</code> publishes an event to Kafka and answers <code>202</code> straight away. A worker does the slow part later.</li>
+    </ul>
+    <p class="mesh-key"><span><i class="k-ok"></i>request and reply</span><span><i class="k-warn"></i>rejected</span><span><i class="k-async"></i>work after the reply</span></p>
+    <p>The reply travels back the way it came. It's simplified: a real system also has load balancers, replicas and several copies of each service.</p>`;
+  document.body.append(hud, help);
+  const toggleHelp = (open) => { help.hidden = !open; helpBtn.setAttribute('aria-expanded', String(open)); helpBtn.textContent = open ? 'close' : helpLabel; };
+  helpBtn.addEventListener('click', () => toggleHelp(help.hidden));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !help.hidden) toggleHelp(false); });
+  document.addEventListener('click', (e) => { if (!help.hidden && !help.contains(e.target) && !hud.contains(e.target)) toggleHelp(false); });
   const ctx = canvas.getContext('2d');
 
   const ROLES = ['gateway', 'auth', 'service', 'cache', 'db', 'kafka', 'worker'];
   const REASON = { 200: 'OK', 202: 'Accepted', 401: 'Unauthorized', 409: 'Conflict', 429: 'Too Many Requests' };
 
+  const quiet = fine ? 0.75 : 0.5;     // text sits on top of the map, so labels stay faint, fainter on a small screen
   let W, H, dpr, nodes = [];
   const packets = [], labels = [];
   let served = 0, windowStart = performance.now(), rps = 0, last = '';
@@ -64,8 +95,9 @@
 
   function say(node, text, tone = 'ok') {
     node.glow = 1;
-    if (labels.some((l) => l.node === node && l.life > 0.4)) return;   // one label per node at a time
-    labels.push({ node, x: node.x, y: node.y, text, tone, life: 1 });
+    const here = labels.filter((l) => l.node === node && l.life > 0.4);
+    if (here.some((l) => l.text === text)) return;                     // don't repeat what is already showing
+    labels.push({ node, x: node.x, y: node.y + here.length * 13 * dpr, text, tone, life: 1 });   // a second line goes underneath
   }
 
   // ---------------------------------------------------------------- requests
@@ -77,6 +109,7 @@
     const gateway = nearest(client, 'gateway');
     if (!gateway) return;
     packets.push({ kind, line, client, path: [client], from: client, to: gateway, t: 0, phase: 'request', t0: performance.now() });
+    wake();
   }
 
   // what each service does with the request, and where it goes next
@@ -102,7 +135,8 @@
         if (p.kind === 'read') { say(n, `SELECT … · ${2 + (Math.random() * 6 | 0)} ms`); p.filled = true; return forward(p, n, 'cache'); }
         if (Math.random() < 0.1) { say(n, '409 · stale version', 'warn'); return respond(p, 409); }
         say(n, 'UPDATE … WHERE version = 3 ✓');
-        return respond(p, 200, 'version 3 → 4');
+        evict(p.from);
+        return respond(p, 200, 'version 3 → 4, cache evicted');
       case 'kafka':
         say(n, 'publish · document-uploaded');
         spawnConsumer(n);
@@ -141,8 +175,15 @@
     packets.push({ kind: 'async', from: kafka, to: worker, t: -0.6, phase: 'consume' });
   }
 
+  // after a good write the service drops the cached copy, so the next read can't serve the old row
+  function evict(service) {
+    const cache = nearest(service, 'cache');
+    if (cache) packets.push({ kind: 'async', from: service, to: cache, t: -0.3, phase: 'evict' });
+  }
+
   function arrive(p) {
     if (p.phase === 'request') return handle(p, p.to);
+    if (p.phase === 'evict') { say(p.to, 'evict tasks · next read is fresh'); p.done = true; return; }
     if (p.phase === 'consume') {
       say(p.to, 'worker · consume + process');
       const db = nearest(p.to, 'db');
@@ -161,19 +202,26 @@
 
   // ---------------------------------------------------------------- input
   let lastSend = 0;
-  window.addEventListener('pointermove', (e) => {
+  function client(x, y, gap) {
     const now = performance.now();
-    if (now - lastSend < 120 || packets.length > 28) return;
+    if (now - lastSend < gap || packets.length > (fine ? 28 : 12)) return;
     lastSend = now;
-    send(e.clientX * dpr, e.clientY * dpr);
-  }, { passive: true });
-  window.addEventListener('resize', layout);
+    send(x * dpr, y * dpr);
+  }
+  window.addEventListener('pointermove', (e) => client(e.clientX, e.clientY, 120), { passive: true });
+  if (!fine) {
+    // a phone has no cursor: a tap is one request, and scrolling sends them from where the finger last was
+    let touch = { x: innerWidth / 2, y: innerHeight / 2 };
+    window.addEventListener('pointerdown', (e) => { touch = { x: e.clientX, y: e.clientY }; client(touch.x, touch.y, 120); }, { passive: true });
+    window.addEventListener('scroll', () => client(touch.x + (Math.random() - 0.5) * 80, touch.y + (Math.random() - 0.5) * 160, 260), { passive: true });
+  }
+  window.addEventListener('resize', () => { layout(); wake(); });
 
   const cssVar = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
   let color, warn, blue;
   const readColors = () => { color = cssVar('--accent', '#3ddc97'); warn = cssVar('--amber', '#f5c26b'); blue = cssVar('--accent-2', '#5cc8ff'); };
   readColors();
-  new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  new MutationObserver(() => { readColors(); wake(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------------------------------------------------------------- draw
   function frame(now) {
@@ -188,7 +236,7 @@
       n.glow *= 0.94;
       ctx.globalAlpha = 0.12 + n.glow * 0.7; ctx.fillStyle = color;
       ctx.beginPath(); ctx.arc(n.x, n.y, (2.2 + n.glow * 3) * dpr, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 0.08 + n.glow * 0.5;
+      ctx.globalAlpha = 0.08 + n.glow * 0.5 * quiet;
       ctx.fillText(n.role, n.x + 7 * dpr, n.y - 6 * dpr);
     }
     for (const p of packets) {
@@ -209,15 +257,19 @@
     for (let i = packets.length - 1; i >= 0; i--) if (packets[i].done) packets.splice(i, 1);
     for (const l of labels) {
       l.life -= 0.011; l.y -= 0.25 * dpr;
-      ctx.globalAlpha = Math.max(0, l.life) * 0.8; ctx.fillStyle = l.tone === 'warn' ? warn : color;
+      ctx.globalAlpha = Math.max(0, l.life) * quiet; ctx.fillStyle = l.tone === 'warn' ? warn : color;
       ctx.fillText(l.text, l.x + 8 * dpr, l.y + 14 * dpr);
     }
     for (let i = labels.length - 1; i >= 0; i--) if (labels[i].life <= 0) labels.splice(i, 1);
     ctx.globalAlpha = 1;
     if (now - windowStart > 1000) { rps = served; served = 0; windowStart = now; }
-    hud.textContent = last ? `${rps} req/s · ${last}` : 'move the cursor: you are the client';
-    requestAnimationFrame(frame);
+    status.textContent = last ? `${rps} req/s · ${last}` : fine ? 'move the cursor: you are the client' : 'scroll or tap: you are the client';
+    // keep drawing only while something is moving or fading
+    running = packets.length > 0 || labels.length > 0 || rps > 0 || nodes.some((n) => n.glow > 0.02);
+    if (running) requestAnimationFrame(frame);
   }
+  let running = false;
+  function wake() { if (!running) { running = true; requestAnimationFrame(frame); } }
   layout();
-  requestAnimationFrame(frame);
+  wake();
 })();

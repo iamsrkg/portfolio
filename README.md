@@ -10,8 +10,8 @@ Everything is plain HTML, CSS and JavaScript, written by hand, with no framework
 - `journey.js`: the request's progress bar and the small demo at each stop
 - `playground.js`: the live API, a browser port of my [task-management-api](https://github.com/iamsrkg/task-management-api) with real HMAC-signed JWTs and PBKDF2 passwords (Web Crypto)
 - `work.js`: the demos in the work section, the phone menu and the folding stops
-- `cursor.js`: moving the cursor sends requests through a small service map behind the page
-- `resume-request.js`: the "request my resume" form. It emails me, falls back to a second mail service, and queues the request in the browser if both are down
+- `cursor.js`: moving the cursor (or scrolling, on a phone) sends requests through a small service map behind the page
+- `resume-request.js`: the floating Contact and Resume buttons and the "request my resume" form. It emails me, falls back to a second mail service, and queues the request in the browser if both are down
 - `notes/`: four short engineering notes (404 vs 403, rate limiting before auth, optimistic locking, idempotency keys)
 - `fonts/`: Inter and JetBrains Mono, self-hosted
 - `404.html`: the not-found page
