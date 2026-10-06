@@ -17,4 +17,6 @@ Everything is plain HTML, CSS and JavaScript, written by hand, with no framework
 - `404.html`: the not-found page
 - `og.png`: the preview image for shared links
 
+Visits are counted with [GoatCounter](https://www.goatcounter.com/): no cookies, and no personal data is stored.
+
 To run it locally, serve the folder with any static server, for example `npx serve .`.
