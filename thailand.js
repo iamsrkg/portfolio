@@ -7,7 +7,7 @@
   try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
   const query = new URLSearchParams(location.search);
   const preview = query.has('th') || query.get('preview') === 'thailand';   // a link ending in ?th always shows it
-  const thaiBrowser = (navigator.languages || [navigator.language || '']).some((l) => /^th/i.test(l));   // a Thai-language browser, wherever it is
+  const thaiBrowser = (navigator.languages || [navigator.language || '']).some((l) => /^th(-|$)/i.test(l));   // a Thai-language browser, wherever it is
   if (zone !== 'Asia/Bangkok' && !thaiBrowser && !preview) return;
 
   const lede = document.querySelector('.opening-lede');
