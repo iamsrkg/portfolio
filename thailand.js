@@ -1,11 +1,12 @@
 /* For visitors whose clock is set to Thailand: a short hello and the resume form pre-set to Thailand.
    It goes by the device's time zone, so nothing is looked up and no address is used.
-   Everyone else sees the page unchanged. Adding ?preview=thailand to the address shows it from anywhere. */
+   Everyone else sees the page unchanged. A link ending in ?th shows it from anywhere, for sending to a recruiter directly. */
 (() => {
   'use strict';
   let zone = '';
   try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) {}
-  const preview = new URLSearchParams(location.search).get('preview') === 'thailand';
+  const query = new URLSearchParams(location.search);
+  const preview = query.has('th') || query.get('preview') === 'thailand';   // a link ending in ?th always shows it
   if (zone !== 'Asia/Bangkok' && !preview) return;
 
   const lede = document.querySelector('.opening-lede');
