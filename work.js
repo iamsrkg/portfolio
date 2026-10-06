@@ -150,3 +150,37 @@
     if (json) json.textContent = '"immediately"';
   }
 })();
+
+// Section links scroll the page without adding "#section" to the address, so the URL stays clean.
+// A link that arrives with one (from the 404 page or a note) still lands on its section, then the address is tidied.
+(() => {
+  'use strict';
+  const clean = () => { if (location.hash) history.replaceState(null, '', location.pathname + location.search); };
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const id = a.getAttribute('href').slice(1);
+    if (id === 'resume-form') return;                    // opens the dialog instead
+    const target = id ? document.getElementById(id) : document.body;
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView();                             // the stylesheet makes this smooth and leaves room for the top bar
+    if (id && id !== 'top') {                            // keep keyboard and screen-reader users in step with the scroll
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    }
+  });
+  // A link that arrives with "#section": the page above it keeps changing height for a moment after loading
+  // (fonts, the folded stops, the live API), so stay on the section until it settles or the visitor scrolls.
+  const arrived = location.hash.length > 1 && location.hash !== '#resume-form' && document.getElementById(location.hash.slice(1));
+  if (arrived) {
+    const hold = () => arrived.scrollIntoView({ behavior: 'instant' });
+    const settle = new ResizeObserver(hold);
+    const release = () => { settle.disconnect(); ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((t) => removeEventListener(t, release)); };
+    settle.observe(document.body);
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((t) => addEventListener(t, release, { passive: true }));
+    window.addEventListener('load', () => { hold(); setTimeout(release, 2500); });
+  }
+  window.addEventListener('load', () => setTimeout(clean, 400));
+  window.addEventListener('hashchange', clean);
+})();
