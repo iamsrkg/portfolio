@@ -854,6 +854,9 @@ X-Response-Time: 18ms
             <h3>Request my resume</h3>
             <p class="rr-lead">Tell me where the role is and I'll email you the right version, usually within 15–60 minutes.</p>
             <div class="rr-grid">
+              <label><span class="rr-label">Your name <span class="opt">(optional)</span></span>
+                <input type="text" name="name" maxlength="80" autocomplete="name">
+              </label>
               <label><span class="rr-label">Your email <span class="req">*</span></span>
                 <input type="email" name="email" required autocomplete="email" placeholder="you@company.com">
               </label>
@@ -866,7 +869,7 @@ X-Response-Time: 18ms
                   <option>Other</option>
                 </select>
               </label>
-              <label class="rr-wide"><span class="rr-label">Position <span class="req">*</span></span>
+              <label><span class="rr-label">Position <span class="req">*</span></span>
                 <input type="text" name="position" required maxlength="120" placeholder="e.g. Senior Java Backend Engineer">
               </label>
               <label><span class="rr-label">Company <span class="opt">(optional)</span></span>
@@ -887,7 +890,7 @@ X-Response-Time: 18ms
             <a class="btn btn-primary" href="mailto:sudheerkgupta@outlook.com"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>Email sudheerkgupta@outlook.com</a>
             <a class="btn btn-ghost" href="https://www.linkedin.com/in/iamsrkg" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-linkedin"/></svg>LinkedIn</a>
             <a class="btn btn-ghost" href="https://github.com/iamsrkg" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
-            <a class="btn btn-ghost" href="https://line.me/ti/p/~iamsrkg" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-line"/></svg>LINE</a>
+            <a class="btn btn-ghost" href="https://line.me/ti/p/~iamsrkg" target="_blank" rel="noopener"><svg class="ic ic-line" aria-hidden="true"><use href="#i-line"/></svg>LINE</a>
           </div>
                 </article>
       </div>
@@ -913,6 +916,7 @@ X-Response-Time: 18ms
   <script src="cursor.js" defer></script>
   <script src="resume-request.js" defer></script>
   <script src="track.js" defer></script>
+  <script src="thailand.js" defer></script>
   <script>
     (function () {
       var root = document.documentElement;

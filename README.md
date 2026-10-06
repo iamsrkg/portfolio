@@ -13,6 +13,7 @@ Everything is plain HTML, CSS and JavaScript, written by hand, with no framework
 - `cursor.js`: moving the cursor (or scrolling, on a phone) sends requests through a small service map behind the page
 - `resume-request.js`: the floating Contact and Resume buttons and the "request my resume" form. It emails me, falls back to a second mail service, and queues the request in the browser if both are down
 - `track.js`: counts which buttons get used (resume form, contact links, live API, repo links)
+- `thailand.js`: visitors on Thailand time get a short hello and the form pre-set to Thailand (time zone only, nothing is looked up)
 - `notes/`: four short engineering notes (404 vs 403, rate limiting before auth, optimistic locking, idempotency keys)
 - `fonts/`: Inter and JetBrains Mono, self-hosted
 - `404.html`: the not-found page

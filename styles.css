@@ -581,7 +581,8 @@ main, .footer { position: relative; z-index: 1; }
 
 /* brand and action icons next to their text */
 .ic { width: 1.1em; height: 1.1em; flex: none; vertical-align: -0.18em; margin-right: .45em; }
-.btn .ic { margin-right: 0; }
+.btn .ic { margin-right: 0; width: 1.35em; height: 1.35em; stroke: none; }   /* .btn svg adds a stroke for the arrow; on a logo it fills in the details */
+.ic.ic-line, .fab-menu .ic.ic-line { color: #06c755; }   /* LINE's own green, so the small logo is recognisable */
 .creds-list .ic { color: var(--text-2); }
 
 /* floating buttons (contact, request my resume) and the resume dialog */
@@ -624,3 +625,8 @@ main, .footer { position: relative; z-index: 1; }
   .footer { padding-bottom: 120px; }
 }
 @media (prefers-reduced-motion: reduce) { .fab, .fab-stack { transition: none; } }
+
+/* shown only to visitors on Thailand time */
+.thai-hello { max-width: 62ch; margin: 0 0 26px; padding: 12px 16px; font-size: 15px; line-height: 1.55; color: var(--text-2);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border)); border-radius: 12px; }
+.thai-hello b { color: var(--accent); margin-right: 6px; font-weight: 600; }

@@ -95,12 +95,13 @@
     if (data._honey) return;                       // bots fill the hidden field; people don't
     const req = {
       subject: `Resume request: ${data.position} · ${data.country}`,
+      name: data.name || '(not given)',
       email: data.email,                           // becomes the reply-to, so "Reply" goes to the requester
       country: data.country,
       position: data.position,
       company: data.company || '(not given)',
       note: data.note || '(none)',
-      message: `${data.email} is asking for my resume for the "${data.position}" role in ${data.country}`
+      message: `${data.name ? `${data.name} (${data.email})` : data.email} is asking for my resume for the "${data.position}" role in ${data.country}`
         + `${data.company ? ` at ${data.company}` : ''}.${data.note ? ` Note: ${data.note}` : ''} Reply to this email to send it.`,
       page: location.href,
     };
@@ -132,7 +133,7 @@
   'use strict';
   const form = document.getElementById('resume-form');
   if (!form) return;
-  const icon = (id) => `<svg class="ic" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+  const icon = (id) => `<svg class="ic ic-${id}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 
   const stack = document.createElement('div');
   stack.className = 'fab-stack';
@@ -181,7 +182,7 @@
     form.replaceWith(home);
     dialog.append(form);
     dialog.showModal();
-    form.querySelector('input[name="email"]').focus();
+    form.querySelector('input[name="name"]').focus();
   }
   const putBack = () => { if (home.parentNode) home.replaceWith(form); };
   const shut = () => { dialog.close(); putBack(); };
