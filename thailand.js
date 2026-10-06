@@ -13,7 +13,7 @@
     const hello = document.createElement('p');
     hello.className = 'thai-hello';
     hello.innerHTML = '<b lang="th">สวัสดีครับ</b> Hello to Thailand. '
-      + "I'm a Thai citizen. I built my career in India, and I'm moving to Bangkok for family reasons and for the long term. "
+      + "I'm a Thai citizen with family in Thailand. I built my career in India, and now I'm moving to Bangkok to settle down for the long term. "
       + "I need no visa, work permit or sponsorship, and I'm ready to relocate. "
       + "Until then I'm only 1.5 hours behind you, so interviews in your working day are easy.";
     lede.after(hello);
