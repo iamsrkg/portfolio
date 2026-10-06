@@ -446,14 +446,14 @@ code { font-family: var(--mono); font-size: .86em; padding: 1px 6px; border-radi
 /* cursor-driven service mesh behind the page */
 .mesh { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 main, .footer { position: relative; z-index: 1; }
-.mesh-hud { position: fixed; left: 14px; bottom: 12px; z-index: 40; pointer-events: none; font-size: 11px; color: var(--text-2);
+.mesh-hud { position: fixed; right: 14px; bottom: 12px; z-index: 40; pointer-events: none; font-size: 11px; color: var(--text-2);
   background: color-mix(in srgb, var(--surface) 85%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 4px 5px 4px 9px;
   max-width: min(640px, calc(100vw - 260px)); display: flex; align-items: center; gap: 8px; }
 .mesh-hud span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .mesh-hud button { pointer-events: auto; flex: none; font: 600 11px var(--mono); color: var(--accent); background: none; cursor: pointer;
   border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 6px; padding: 2px 8px; }
 .mesh-hud button:hover { border-color: var(--accent); }
-.mesh-help { position: fixed; left: 14px; bottom: 48px; z-index: 46; width: min(400px, calc(100vw - 28px)); max-height: calc(100vh - 80px); overflow: auto;
+.mesh-help { position: fixed; right: 14px; bottom: 48px; z-index: 46; width: min(400px, calc(100vw - 28px)); max-height: calc(100vh - 80px); overflow: auto;
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 13.5px; line-height: 1.5; color: var(--text-2);
   box-shadow: 0 12px 40px rgb(0 0 0 / .35); }
 .mesh-help[hidden] { display: none; }
@@ -585,7 +585,7 @@ main, .footer { position: relative; z-index: 1; }
 .creds-list .ic { color: var(--text-2); }
 
 /* floating buttons (contact, request my resume) and the resume dialog */
-.fab-stack { position: fixed; right: 16px; bottom: 16px; z-index: 45; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+.fab-stack { position: fixed; left: 16px; bottom: 16px; z-index: 45; display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
   transition: opacity .2s ease; }
 .fab-stack.away { opacity: 0; pointer-events: none; }
 .fab { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; font: 600 14px var(--font); border-radius: 999px; cursor: pointer;
@@ -614,13 +614,13 @@ main, .footer { position: relative; z-index: 1; }
   background: none; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
 .rr-close:hover { color: var(--text); border-color: var(--accent); }
 @media (max-width: 720px) {
-  .fab-stack { right: 12px; bottom: 12px; gap: 8px; }
+  .fab-stack { left: 12px; bottom: 12px; gap: 8px; }
   .fab { padding: 10px 14px; font-size: 13.5px; }
   .fab .full { display: none; } .fab .short { display: inline; }
-  .mesh-hud { left: 12px; bottom: 12px; max-width: calc(100vw - 150px); padding: 4px 5px; background: var(--surface); }
+  .mesh-hud { right: 12px; bottom: 12px; max-width: calc(100vw - 150px); padding: 4px 5px; background: var(--surface); }
   .mesh-help { width: calc(100vw - 24px); }
   .mesh-hud span { display: none; }
-  .mesh-help { left: 12px; bottom: 50px; }
+  .mesh-help { right: 12px; bottom: 50px; }
   .footer { padding-bottom: 120px; }
 }
 @media (prefers-reduced-motion: reduce) { .fab, .fab-stack { transition: none; } }

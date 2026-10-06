@@ -126,7 +126,7 @@
   });
 })();
 
-// Two floating buttons, bottom right: "Contact" (email, LinkedIn, LINE) and, under it, "Request my resume",
+// Two floating buttons, bottom left: "Contact" (email, LinkedIn, LINE) and, under it, "Request my resume",
 // which opens the same form in a dialog, so there is one form and one submit path.
 (() => {
   'use strict';
