@@ -24,7 +24,7 @@
     if (href.includes('credly.com')) return event('aws-certificate');
     const repo = href.match(/github\.com\/iamsrkg\/?([\w.-]*)/);
     if (repo) return event('github-' + (repo[1] || 'profile'));
-    if (/iamsrkg\.github\.io\/(tic-tac-toe|Video-Based)/.test(href)) return event('demo-' + (href.includes('tic-tac-toe') ? 'tic-tac-toe' : 'video-auth'));
+    if (/iamsrkg\.github\.io\/(tic-tac-toe|Video-Based|opsflow-ai)/.test(href)) return event('demo-' + (href.includes('tic-tac-toe') ? 'tic-tac-toe' : href.includes('opsflow') ? 'opsflow' : 'video-auth'));
   }, true);
 
   // a resume request that went through

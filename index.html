@@ -482,6 +482,14 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/task-management-api?quickstart=1" target="_blank" rel="noopener">Run the real API ↗</a> <a href="#lab">Browser demo ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
             <p class="run-note">Starts Spring Boot + PostgreSQL in your own GitHub account (free, about 2–3 minutes), then opens Swagger UI.</p>
           </article>
+          <article class="card" id="proj-opsflow">
+            <p class="card-kicker mono">Backend · Java 17 · Spring Boot 3.3 · in progress</p>
+            <h3><a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">OpsFlow AI</a></h3>
+            <p>A backend that treats an operational problem, like a payment that was charged but never confirmed, as a workflow. A request can only move through fixed states, concurrent edits are caught with optimistic locking, and every change writes its event to a transactional outbox for Kafka. An AI step investigates and recommends, but a manager has to approve before anything runs. I'm still building it: the Kafka consumers, Redis and vector search are designed but not written yet, and the README lists exactly what works today.</p>
+            <p class="tags"><span>Java 17</span><span>Spring Boot 3.3</span><span>Spring Security</span><span>Spring Data JPA</span><span>Kafka outbox</span><span>React</span><span>TypeScript</span></p>
+            <p class="card-links"><a class="live" href="https://iamsrkg.github.io/opsflow-ai/" target="_blank" rel="noopener">Open the dashboard ↗</a> <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="run-note">The dashboard runs on built-in sample data; no backend is connected to it.</p>
+          </article>
           <article class="card" id="proj-video">
             <p class="card-kicker mono">Full stack · OpenCV · runs in the browser</p>
             <h3><a href="https://github.com/iamsrkg/Video-Based-Dynamic-Human-Authentication-System" target="_blank" rel="noopener">Video-based human authentication</a></h3>
@@ -496,7 +504,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p class="tags"><span>React Native</span><span>Expo</span><span>PubNub</span><span>GitHub Pages</span></p>
             <p class="card-links"><a class="live" href="https://iamsrkg.github.io/tic-tac-toe/" target="_blank" rel="noopener">Play it live ↗</a> <a href="https://github.com/iamsrkg/tic-tac-toe" target="_blank" rel="noopener">Code ↗</a></p>
           </article>
-          <article class="card">
+          <article class="card card-wide">
             <p class="card-kicker mono">This site · no framework</p>
             <h3><a href="https://github.com/iamsrkg/portfolio" target="_blank" rel="noopener">Portfolio + in-browser API</a></h3>
             <p>The Live API runs inside your browser with real crypto (HMAC-signed JWTs, PBKDF2), along with the client, the request trace and the log. The rest, the request journey and the demos, is plain HTML, CSS and JavaScript I wrote by hand. No framework, no build step.</p>

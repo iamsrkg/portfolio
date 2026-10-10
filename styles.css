@@ -474,6 +474,7 @@ main, .footer { position: relative; z-index: 1; }
 .hop-more { display: none; }
 @media (min-width: 1001px) {
   #github .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #github .cards .card-wide { grid-column: 1 / -1; }   /* five cards: the last one takes the full row */
 }
 @media (max-width: 720px) {
   .nav nav { display: none; position: absolute; top: 60px; left: 0; right: 0; flex: none; overflow: visible;
