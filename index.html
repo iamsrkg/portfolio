@@ -83,6 +83,7 @@
           <span class="verb">GET</span> <span class="path">/hire/sudheer</span> <span class="proto">HTTP/1.1</span><span class="cursor" aria-hidden="true">▍</span>
         </p>
         <p class="opening-lede">Hi, I'm Sudheer. I've spent almost five years on backends, mostly <strong>Java and Spring Boot</strong> with Kafka, Docker and Kubernetes around them, and more recently <strong>Node.js and NestJS</strong>. Instead of a list of skills, here's a request going through a backend. At each stop I'll show you where I've built that part myself.</p>
+        <a class="latest" href="#proj-opsflow"><b>New, October 2026</b> OpsFlow AI: a Spring Boot, Kafka, PostgreSQL and Redis backend I built in the open. Run the whole thing in one click <span aria-hidden="true">→</span></a>
         <div class="cta">
           <a class="btn btn-primary" href="#journey">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
@@ -141,6 +142,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> the whole stack (API, PostgreSQL, Kafka, Redis and the dashboard) starts with one Docker Compose command, and CI runs it that way on every push.</p>
                 <p><b>Freelance · 2025–26:</b> I set up multi-stage Docker builds behind Nginx, and deploys went <b class="hl">from about 20 minutes to 3</b>.</p>
                 <p><b>Accenture · 2021–24:</b> our Azure DevOps pipelines built, tested and shipped Docker images to Kubernetes.</p>
               </div>
@@ -180,6 +182,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> a rate limiter kept in Redis and updated by one Lua script, checked before authentication, with a lower limit on login.</p>
                 <p><b>Freelance · 2025–26:</b> rate limiting and IP throttling in front of the login and the client APIs.</p>
                 <p><b>Public · <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a>:</b> a token-bucket filter that answers <code>429</code> with <code>Retry-After</code>. It has its own tests.</p>
               </div>
@@ -218,6 +221,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> JWT with five roles and a role check on every endpoint. Only a manager can approve an action; an agent who tries gets a 403.</p>
                 <p><b>Freelance · 2025–26:</b> auth runs as its own service with JWT, RBAC, fine-grained permissions, encryption and audit logs. Splitting it out cut coupling by <b class="hl">about 60%</b>.</p>
                 <p><b>Accenture · 2021–24:</b> Spring Security with JWT and role-based access on every endpoint.</p>
               </div>
@@ -254,6 +258,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> a workflow state machine with optimistic locking, so an illegal or conflicting change is refused with a 409.</p>
                 <p><b>Accenture · 2021–24:</b> Spring Boot microservices on Kubernetes, handling <b class="hl">10,000+ concurrent users</b>.</p>
                 <p><b>Freelance · 2025–26:</b> an internal client management platform in NestJS and TypeScript that I built and deployed on my own.</p>
                 <p><b>Accenture · 2024–now:</b> PowerShell 7 and Microsoft Graph API workflows for bulk provisioning, governance and reporting. Across 40,000+ users, they took away <b class="hl">about 75%</b> of the manual work.</p>
@@ -293,6 +298,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> Flyway migrations, and runbook search on pgvector with an HNSW index.</p>
                 <p><b>Accenture · 2021–24:</b> indexes, rewritten queries and Redis caching on PostgreSQL made our APIs <b class="hl">75–80% faster</b>.</p>
                 <p><b>Freelance · 2025–26:</b> MySQL query tuning, TypeORM indexes and caching got API responses <b class="hl">under 100 ms</b>. I also built a headless CMS with Type-2 versioning, which made content work <b class="hl">about 90% faster</b>.</p>
               </div>
@@ -332,6 +338,7 @@
               </ul>
               <div class="built">
                 <p class="built-cap mono">where I built this</p>
+                <p><b><a href="#proj-opsflow">OpsFlow AI · 2026</a> (public code):</b> a transactional outbox to Kafka. Events are marked as sent only when the broker confirms; the consumer handles each one once, and unreadable messages go to a dead-letter topic. Tested against a real broker.</p>
                 <p><b>Accenture · 2021–24:</b> document uploads went to Amazon S3, and processing moved to Kafka and RabbitMQ consumers, on the platform with <b class="hl">10,000+ concurrent users</b>.</p>
               </div>
             </div>
@@ -477,7 +484,7 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
           <article class="card" id="proj-opsflow">
             <p class="card-kicker mono">Backend · Java 17 · Spring Boot 3.3 · Kafka · my latest</p>
             <h3><a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">OpsFlow AI</a></h3>
-            <p>A backend that treats an operational problem, like a payment that was charged but never confirmed, as a workflow. A request moves through fixed states with optimistic locking. Every change goes to Kafka through a transactional outbox and is marked as sent only once the broker confirms it; the consumer handles each event once and moves unreadable messages to a dead-letter topic. Runbook search runs on pgvector, rate limiting on Redis, and an AI step recommends an action that a manager has to approve. 41 tests run against real Kafka, PostgreSQL and Redis, and CI starts the whole stack in Docker and tests it from outside.</p>
+            <p>For the team that handles customer problems, like a payment that was charged but never confirmed. It tracks each problem through fixed steps, works out what probably happened, suggests a fix, and waits for a manager to approve it. Underneath: a request moves through fixed states with optimistic locking. Every change goes to Kafka through a transactional outbox and is marked as sent only once the broker confirms it; the consumer handles each event once and moves unreadable messages to a dead-letter topic. Runbook search runs on pgvector, rate limiting on Redis, and an AI step recommends an action that a manager has to approve. 42 tests run against real Kafka, PostgreSQL and Redis, and CI starts the whole stack in Docker and tests it from outside.</p>
             <p class="tags"><span>Java 17</span><span>Spring Boot 3.3</span><span>Kafka</span><span>PostgreSQL + pgvector</span><span>Redis</span><span>Flyway</span><span>Testcontainers</span><span>Docker Compose</span><span>React + TypeScript</span></p>
             <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/opsflow-ai?quickstart=1" target="_blank" rel="noopener">Run the whole stack ↗</a> <a href="https://iamsrkg.github.io/opsflow-ai/" target="_blank" rel="noopener">Dashboard preview ↗</a> <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">Code ↗</a></p>
             <p class="run-note">Starts the dashboard, backend, PostgreSQL, Kafka and Redis in your own GitHub account (free; the first start takes a few minutes). The preview is the dashboard alone, on sample data.</p>
@@ -785,6 +792,7 @@ $report | <span class="c-p">Export-Csv</span> ownerless-teams.csv -NoTypeInforma
           <div class="prose">
             <p>I'm Sudheer. I started at Accenture in 2021 writing Spring Boot services for a platform that grew to 10,000+ people online at once. That's where I learned most of what's on this page: Kafka for the slow work, Redis and indexes for the slow queries, Docker and Kubernetes for shipping it.</p>
             <p>Since 2024 I've been automating an enterprise Microsoft 365 environment of 40,000+ users through the Graph API, and mentoring the juniors on my team. On the side, from late 2025, I built an internal client management platform for a CA firm on my own, in NestJS and TypeScript. Being the only engineer taught me a lot: I owned everything from the database to the deploy.</p>
+            <p>In October 2026 I built <a href="#proj-opsflow">OpsFlow AI</a> in the open, to put the pieces on this page into one system anyone can read and run: a workflow with a state machine, events through a transactional outbox to Kafka, PostgreSQL with pgvector, Redis, and an AI step that can only recommend. It has 42 tests against the real services.</p>
             <p>The parts I enjoy most are the ones users never see: why a query is slow, who's allowed to see which row, what happens when two people save the same thing at once. I pick up new stacks quickly, and I use Claude Code every day, but I read and test everything before it ships.</p>
             <p>I'm looking for a Java backend role, or a backend or full-stack one: in Thailand first, then remote, then India. I live in Bengaluru and I'm ready to relocate to Bangkok. I'm a Thai citizen and also authorized to work in India, so I don't need visa sponsorship in either country. I speak English fluently, conversational Thai, and Hindi natively.</p>
             <p>Outside work, I'm relearning Thai properly. I can hold a conversation, but after years away I'm working on reading and writing it again, a little every day.</p>
@@ -842,6 +850,7 @@ X-Response-Time: 18ms
   <span class="c-k">"experience"</span>: <span class="c-s">"almost 5 years"</span>,
   <span class="c-k">"stack"</span>: [<span class="c-s">"Java"</span>, <span class="c-s">"Spring Boot"</span>, <span class="c-s">"Node.js"</span>, <span class="c-s">"NestJS"</span>, <span class="c-s">"PostgreSQL"</span>, <span class="c-s">"MySQL"</span>, <span class="c-s">"Redis"</span>, <span class="c-s">"Kafka"</span>, <span class="c-s">"AWS"</span>, <span class="c-s">"Kubernetes"</span>],
   <span class="c-k">"openTo"</span>: [<span class="c-s">"Backend Engineer"</span>, <span class="c-s">"Software Engineer (Backend)"</span>, <span class="c-s">"Full-Stack Engineer (Node/TS)"</span>, <span class="c-s">"Platform Engineer"</span>],
+  <span class="c-k">"latestProject"</span>: <a class="c-s" href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">"OpsFlow AI: Spring Boot, Kafka, PostgreSQL, Redis ↗"</a>,
   <span class="c-k">"workAuthorization"</span>: { <span class="c-k">"thailand"</span>: <span class="c-s">"citizen"</span>, <span class="c-k">"india"</span>: <span class="c-s">"authorized"</span>, <span class="c-k">"sponsorshipNeeded"</span>: <span class="c-ok">false</span> },
   <span class="c-k">"basedIn"</span>: <span class="c-s">"Bengaluru, India"</span>,
   <span class="c-k">"relocation"</span>: <span class="c-s">"ready to move to Bangkok"</span>,
