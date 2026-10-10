@@ -185,3 +185,19 @@
   window.addEventListener('load', () => setTimeout(clean, 400));
   window.addEventListener('hashchange', clean);
 })();
+
+// "copy" buttons next to the run commands
+(() => {
+  'use strict';
+  document.addEventListener('click', async (e) => {
+    const button = e.target.closest('[data-copy]');
+    if (!button) return;
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy);
+      button.textContent = 'copied';
+    } catch (err) {
+      button.textContent = 'select and copy';   // clipboard not allowed here: the command is still on screen to select
+    }
+    setTimeout(() => { button.textContent = 'copy'; }, 1800);
+  });
+})();
