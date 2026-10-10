@@ -17,7 +17,8 @@
     hello.innerHTML = '<b lang="th">สวัสดีครับ</b> Hello to Thailand. '
       + "I'm a Thai citizen with family in Thailand. I built my career in India, and now I'm moving to Bangkok to settle down for the long term. "
       + "I need no visa, work permit or sponsorship, and I'm ready to relocate. "
-      + "Until then I'm only 1.5 hours behind you, so interviews in your working day are easy.";
+      + "Until then I'm only 1.5 hours behind you, so interviews in your working day are easy. "
+      + "If your team is hiring Java backend engineers in Thailand, I'd be glad to talk.";
     lede.after(hello);
   }
   const country = document.querySelector('#resume-form select[name="country"]');
