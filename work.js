@@ -148,6 +148,7 @@
     $('.notice[data-until]')?.remove();
     const json = $('#avail-json');
     if (json) json.textContent = '"immediately"';
+    document.querySelectorAll('[data-avail]').forEach((el) => { el.textContent = 'Can join immediately'; });
   }
 })();
 
