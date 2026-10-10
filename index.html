@@ -474,6 +474,14 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
         </div>
         <p class="section-lede">Things I've built or rebuilt, all public. Each one builds, passes its tests and runs, so open the live version first, then read the code.</p>
         <div class="cards">
+          <article class="card" id="proj-opsflow">
+            <p class="card-kicker mono">Backend · Java 17 · Spring Boot 3.3 · Kafka · my latest</p>
+            <h3><a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">OpsFlow AI</a></h3>
+            <p>A backend that treats an operational problem, like a payment that was charged but never confirmed, as a workflow. A request moves through fixed states with optimistic locking. Every change goes to Kafka through a transactional outbox and is marked as sent only once the broker confirms it; the consumer handles each event once and moves unreadable messages to a dead-letter topic. Runbook search runs on pgvector, rate limiting on Redis, and an AI step recommends an action that a manager has to approve. 40 tests run against real Kafka, PostgreSQL and Redis, and CI starts the whole stack in Docker and tests it from outside.</p>
+            <p class="tags"><span>Java 17</span><span>Spring Boot 3.3</span><span>Kafka</span><span>PostgreSQL + pgvector</span><span>Redis</span><span>Flyway</span><span>Testcontainers</span><span>Docker Compose</span><span>React + TypeScript</span></p>
+            <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/opsflow-ai?quickstart=1" target="_blank" rel="noopener">Run the whole stack ↗</a> <a href="https://iamsrkg.github.io/opsflow-ai/" target="_blank" rel="noopener">Dashboard preview ↗</a> <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">Code ↗</a></p>
+            <p class="run-note">Starts the dashboard, backend, PostgreSQL, Kafka and Redis in your own GitHub account (free; the first start takes a few minutes). The preview is the dashboard alone, on sample data.</p>
+          </article>
           <article class="card" id="proj-task-api">
             <p class="card-kicker mono">Backend · Java 21 · Spring Boot 4</p>
             <h3><a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">task-management-api</a></h3>
@@ -481,14 +489,6 @@ users: alice / alice123 · bob / bob123 · admin / admin123</pre>
             <p class="tags"><span>Java 21</span><span>Spring Boot 4</span><span>Spring Security 7</span><span>Spring Data JPA</span><span>PostgreSQL</span><span>JUnit 5 + MockMvc</span><span>Maven</span><span>Docker</span></p>
             <p class="card-links"><a class="live" href="https://codespaces.new/iamsrkg/task-management-api?quickstart=1" target="_blank" rel="noopener">Run the real API ↗</a> <a href="#lab">Browser demo ↑</a> <a href="https://github.com/iamsrkg/task-management-api" target="_blank" rel="noopener">Code ↗</a></p>
             <p class="run-note">Starts Spring Boot + PostgreSQL in your own GitHub account (free, about 2–3 minutes), then opens Swagger UI.</p>
-          </article>
-          <article class="card" id="proj-opsflow">
-            <p class="card-kicker mono">Backend · Java 17 · Spring Boot 3.3 · in progress</p>
-            <h3><a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">OpsFlow AI</a></h3>
-            <p>A backend that treats an operational problem, like a payment that was charged but never confirmed, as a workflow. A request can only move through fixed states, concurrent edits are caught with optimistic locking, and every change writes its event to a transactional outbox for Kafka. An AI step investigates and recommends, but a manager has to approve before anything runs. I'm still building it: the Kafka consumers, Redis and vector search are designed but not written yet, and the README lists exactly what works today.</p>
-            <p class="tags"><span>Java 17</span><span>Spring Boot 3.3</span><span>Spring Security</span><span>Spring Data JPA</span><span>Kafka outbox</span><span>React</span><span>TypeScript</span></p>
-            <p class="card-links"><a class="live" href="https://iamsrkg.github.io/opsflow-ai/" target="_blank" rel="noopener">Open the dashboard ↗</a> <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">Code ↗</a></p>
-            <p class="run-note">The dashboard runs on built-in sample data; no backend is connected to it.</p>
           </article>
           <article class="card" id="proj-video">
             <p class="card-kicker mono">Full stack · OpenCV · runs in the browser</p>
