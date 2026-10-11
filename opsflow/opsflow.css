@@ -1,0 +1,41 @@
+/* The OpsFlow AI project page. Builds on notes/note.css; colours follow the portfolio's theme tokens. */
+.project-page { max-width: 860px; }
+.project-page .fine { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+.project-page code { font: 0.9em var(--mono); color: var(--text); background: var(--bg-2); padding: 1px 5px; border-radius: 5px; }
+
+.project-page .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 6px; }
+.project-page .actions a { font: 14px var(--mono); color: var(--accent); text-decoration: none; padding: 8px 14px; border-radius: 9px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.project-page .actions a:hover { border-color: var(--accent); }
+.project-page .actions a.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+.project-page .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 30px 0 8px; }
+.project-page .stats div { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 14px 12px; }
+.project-page .stats b { display: block; font: 600 24px var(--mono); color: var(--text); letter-spacing: -0.02em; }
+.project-page .stats span { display: block; margin-top: 4px; font-size: 13px; line-height: 1.4; color: var(--text-2); }
+
+.project-page .table-wrap { overflow-x: auto; margin: 14px 0 8px; border: 1px solid var(--border); border-radius: 12px; }
+.project-page table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 560px; }
+.project-page th, .project-page td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); }
+.project-page thead th { font: 12.5px var(--mono); color: var(--text); background: var(--bg-2); }
+.project-page tbody th { color: var(--text); font-weight: 600; width: 24%; }
+.project-page tbody tr:last-child th, .project-page tbody tr:last-child td { border-bottom: 0; }
+
+.project-page .steps { padding-left: 22px; }
+.project-page .steps li { margin-bottom: 9px; }
+.project-page .steps b { color: var(--text); font-weight: 600; }
+.project-page .state { display: inline-block; margin-left: 4px; font: 11.5px var(--mono); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+
+.project-page .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 8px; counter-reset: step; }
+.project-page .flow .node { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 10px 9px; font-weight: 600; font-size: 13.5px; color: var(--text); }
+.project-page .flow.numbered .node::before { counter-increment: step; content: counter(step); display: inline-block; margin-right: 7px; font: 11.5px var(--mono); color: var(--accent); }
+.project-page .flow .node small { display: block; margin-top: 4px; font: 400 11.5px/1.35 var(--mono); color: var(--text-2); }
+.project-page .flow .node.hot { border-color: var(--accent); }
+.project-page .flow.side .node { border-style: dashed; }
+
+.project-page .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.project-page .tags span { font: 12.5px var(--mono); color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+
+@media (max-width: 720px) {
+  .project-page .stats { grid-template-columns: repeat(2, 1fr); }
+  .project-page .flow { grid-template-columns: 1fr; }
+}

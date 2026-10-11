@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpsFlow AI: what it does and how it is built · Sudheer Kumar Gupta</title>
+  <meta name="description" content="OpsFlow AI is a system for the team that handles customer problems: fixed workflow steps, events that are never lost, and an AI recommendation a manager must approve. What it does, how it works, and what was measured.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="OpsFlow AI: what it does and how it is built">
+  <meta property="og:description" content="A workflow that can't be bypassed, events that are never lost or handled twice, and RAG on pgvector with a human approval step. Java 17, Spring Boot, Kafka, PostgreSQL, Redis.">
+  <meta property="og:image" content="https://iamsrkg.github.io/portfolio/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://iamsrkg.github.io/portfolio/opsflow/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../notes/note.css">
+  <link rel="stylesheet" href="opsflow.css">
+  <script>try { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+  <main class="note-page project-page">
+    <a class="note-back" href="../#proj-opsflow">← back to the portfolio</a>
+    <p class="note-meta">Project · October 2026 · Java 17 · Spring Boot 3.3 · Kafka · PostgreSQL · Redis · 6 min read</p>
+    <h1>OpsFlow AI</h1>
+    <p class="lead">A system for the team that handles customer problems, such as <strong>"I was charged but my order still says pending"</strong>. It tracks each problem through fixed steps, works out what probably happened, suggests a fix, and waits for a manager to approve it.</p>
+
+    <p class="actions">
+      <a class="primary" href="https://codespaces.new/iamsrkg/opsflow-ai?quickstart=1" target="_blank" rel="noopener">Run the whole stack ↗</a>
+      <a href="https://iamsrkg.github.io/opsflow-ai/" target="_blank" rel="noopener">Dashboard preview ↗</a>
+      <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">Code on GitHub ↗</a>
+    </p>
+    <p class="fine">"Run the whole stack" starts the dashboard, backend, PostgreSQL, Kafka and Redis in your own GitHub account (free, a few minutes the first time). The preview is the dashboard alone, on sample data.</p>
+
+    <div class="stats">
+      <div><b>590</b><span>requests a second at a p95 of 188 ms, one 4-CPU machine</span></div>
+      <div><b>23,622</b><span>events published and consumed under load: none lost, none twice</span></div>
+      <div><b>30 of 30</b><span>test questions find the right runbook in the top three</span></div>
+      <div><b>50</b><span>automated tests against real Kafka, PostgreSQL and Redis</span></div>
+    </div>
+
+    <h2>Why I built it</h2>
+    <p>Most of what I have built at work is private. I built OpsFlow AI in the open to put the backend patterns I use into one system anyone can read, run and try to break. It is a demonstration project, not a product with users.</p>
+    <p>I chose operations support as the subject because it needs every guarantee at once. A skipped step, a lost event or an unapproved refund each has a real cost.</p>
+
+    <h2>The problem it solves</h2>
+    <p>Most teams already handle these problems, with a ticket in a general tool, an engineer searching logs and a fix agreed in chat. That works until something goes wrong and nobody can say who decided what.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>The usual way, by hand</th><th>With OpsFlow</th></tr></thead>
+        <tbody>
+          <tr><th>Tracking</th><td>A ticket anyone can set to any status</td><td>A request that only moves through allowed steps; a skipped step is refused</td></tr>
+          <tr><th>Two people on one case</th><td>The last save wins and the other change is lost silently</td><td>The second save gets <code>409 Conflict</code> and has to reload</td></tr>
+          <tr><th>Finding out what happened</th><td>Searching logs in several systems and looking for the right wiki page</td><td>One button collects the history, whether the events were delivered, and the closest runbook</td></tr>
+          <tr><th>Choosing the fix</th><td>Depends on who is on shift</td><td>A recommendation from a fixed list of actions, with its evidence</td></tr>
+          <tr><th>Approving a risky fix</th><td>"OK, go ahead" in a chat message</td><td>A manager approves in the system; an agent who tries gets <code>403</code></td></tr>
+          <tr><th>Telling other systems</th><td>A direct call that is lost if the other side is down</td><td>An event saved with the change and delivered when Kafka is reachable, handled once</td></tr>
+          <tr><th>"Who did this, and when?"</th><td>Pieced together afterwards</td><td>An audit trail of every step under one correlation id</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>One case, start to finish</h2>
+    <ol class="steps">
+      <li><b>An agent creates the request.</b> The change and its event are saved in one database transaction. <span class="state">CREATED</span></li>
+      <li><b>The system classifies it</b> as a payment problem, high priority. <span class="state">CLASSIFIED</span></li>
+      <li><b>The agent presses Investigate.</b> The system collects the request's history and events and finds the closest runbook. <span class="state">INVESTIGATING</span></li>
+      <li><b>It recommends</b> replaying the payment event. The policy says that action needs approval. <span class="state">PENDING_APPROVAL</span></li>
+      <li><b>The agent tries to approve it</b> and is refused with <code>403</code>.</li>
+      <li><b>A manager reads the evidence and approves.</b> <span class="state">RESOLVED</span></li>
+      <li><b>Every step is in the audit trail</b>, and each change went to Kafka as an event.</li>
+    </ol>
+    <p class="fine">One honest limit: approving records the decision and resolves the request. No payment system is connected, so nothing is replayed for real.</p>
+
+    <h2>How it is built</h2>
+    <p>A request travels through the numbered boxes in order. The dashed boxes sit beside that path.</p>
+    <div class="flow numbered" role="img" aria-label="The dashboard calls the REST API. The API saves the request and its event in PostgreSQL in one transaction. A publisher sends the event to Kafka. A consumer handles each event once. Redis limits request rates. The AI step reads runbooks from pgvector.">
+      <div class="node">React dashboard</div>
+      <div class="node hot">Spring Boot API<small>state machine · JWT · five roles</small></div>
+      <div class="node">PostgreSQL<small>request + outbox row, one transaction</small></div>
+      <div class="node">Outbox publisher<small>marks sent only on broker ack</small></div>
+      <div class="node">Kafka<small>3 topics, dead-letter topics</small></div>
+      <div class="node">Consumer<small>each event handled once</small></div>
+    </div>
+    <div class="flow side" role="img" aria-label="Redis sits in front of the API for rate limiting. The AI step uses pgvector and a language model.">
+      <div class="node">Redis<small>rate limit, before authentication</small></div>
+      <div class="node">pgvector<small>runbook search, HNSW index</small></div>
+      <div class="node">Language model<small>recommends; never acts</small></div>
+    </div>
+
+    <h2>The guarantees, and how each is proven</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Guarantee</th><th>How</th><th>Proven by</th></tr></thead>
+        <tbody>
+          <tr><th>The workflow can't be bypassed</th><td>A state machine holds the allowed transitions; anything else is refused</td><td>Unit and API tests</td></tr>
+          <tr><th>Two people can't overwrite each other</th><td>Optimistic locking: a version column plus the version the client last saw</td><td>A test with two edits from the same stale copy</td></tr>
+          <tr><th>An event is never lost</th><td>Transactional outbox: the event is saved with the change and published afterwards, marked sent only when Kafka confirms</td><td>CI stops Kafka mid-run, checks the backlog grows, restarts it and checks it drains</td></tr>
+          <tr><th>An event is never handled twice</th><td>A unique constraint on event id and consumer group, written in the consumer's transaction</td><td>A test that delivers the same event twice; 23,622 of 23,622 under load</td></tr>
+          <tr><th>The AI can't act on its own</th><td>It reads through a tool registry, names one action from a fixed list checked in code, and a manager approves</td><td>A test of the whole flow, including the agent's <code>403</code></td></tr>
+          <tr><th>It survives a pod dying</th><td>Kubernetes manifests with probes; PostgreSQL and Kafka as StatefulSets with volumes</td><td>CI kills the backend pod and the database pod and checks the data is still there</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>The AI step: retrieval, then a recommendation</h2>
+    <p>The request text is turned into a vector by an embedding model, and pgvector returns the closest runbooks. Their text goes into the prompt with the request and the evidence, and a language model recommends one action. This is retrieval-augmented generation (RAG). Both models run locally, so there is no API key and nothing leaves the machine.</p>
+    <p>I measured it on a labelled set: 30 questions with the runbook that should come back, and 16 requests with the action that should be recommended, written the way a customer writes.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>No model (word hashing, keyword rules)</th><th>Embedding model and language model</th></tr></thead>
+        <tbody>
+          <tr><th>Right runbook ranked first</th><td>23 of 30 (76.7%)</td><td>26 of 30 (86.7%)</td></tr>
+          <tr><th>Right runbook in the top three</th><td>28 of 30 (93.3%)</td><td>30 of 30 (100%)</td></tr>
+          <tr><th>Right action recommended</th><td>10 of 16 (62.5%)</td><td>12 of 16 (75%)</td></tr>
+          <tr><th>Time for one recommendation</th><td>37 ms</td><td>12.6 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">Measured on a 4-CPU machine with no GPU, with <code>all-minilm</code> and <code>qwen2.5:1.5b</code> in Ollama. It is a small set and a small model. The model is still wrong one time in four, which is exactly why it only recommends and a manager approves.</p>
+
+    <h2>What measuring it taught me</h2>
+    <ul>
+      <li><strong>The load test found a bug my tests had missed.</strong> The request list failed on PostgreSQL when no search text was given. The in-memory test database had accepted the query.</li>
+      <li><strong>It found two bottlenecks in my own design.</strong> The outbox published 25 events a second and took 653 seconds to clear its backlog. After two measured changes it clears in 18 seconds.</li>
+      <li><strong>The AI evaluation found a readiness bug.</strong> The service reported healthy before its search index was built, so early searches returned nothing.</li>
+      <li><strong>Kubernetes found a naming clash.</strong> The cluster injected a <code>REDIS_PORT</code> variable that the application read as its port setting, and the first deployment would not start.</li>
+    </ul>
+
+    <h2>Built with</h2>
+    <p class="tags"><span>Java 17</span><span>Spring Boot 3.3</span><span>Spring Security · JWT</span><span>PostgreSQL 16</span><span>pgvector</span><span>Flyway</span><span>Apache Kafka</span><span>Redis</span><span>RAG · Ollama</span><span>React · TypeScript</span><span>Docker Compose</span><span>Kubernetes</span><span>GitHub Actions</span><span>Testcontainers</span><span>k6</span></p>
+
+    <h2>What it is not</h2>
+    <ul>
+      <li><strong>Not a product.</strong> It has no users, and approved actions are recorded, not executed.</li>
+      <li><strong>Not an AI agent.</strong> The backend decides what evidence to collect; the model is asked once and only recommends.</li>
+      <li><strong>Not scaled out.</strong> The outbox publisher runs as one instance. Running several needs row claiming first.</li>
+      <li><strong>Not production Kubernetes.</strong> The manifests are tested on a throwaway cluster in CI; there is no Ingress or autoscaler.</li>
+    </ul>
+    <p>The repository lists these limits too, with what I would do next about each.</p>
+
+    <div class="end">
+      <a href="../#proj-opsflow">← back to the portfolio</a>
+      <a href="https://github.com/iamsrkg/opsflow-ai" target="_blank" rel="noopener">opsflow-ai on GitHub ↗</a>
+      <a href="https://codespaces.new/iamsrkg/opsflow-ai?quickstart=1" target="_blank" rel="noopener">Run it ↗</a>
+      <a href="mailto:sudheerkgupta@outlook.com">sudheerkgupta@outlook.com</a>
+    </div>
+  </main>
+  <script data-goatcounter="https://iamsrkg.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
