@@ -14,10 +14,13 @@
   if (lede) {
     const hello = document.createElement('p');
     hello.className = 'thai-hello';
+    const inBangkok = new Date() >= new Date('2026-12-01T00:00:00+07:00');
     hello.innerHTML = '<b lang="th">สวัสดีครับ</b> Hello to Thailand. '
-      + "I'm a Thai citizen with family in Thailand. I built my career in India, and now I'm moving to Bangkok to settle down for the long term. "
-      + "I need no visa, work permit or sponsorship, and I'm ready to relocate. "
-      + "Until then I'm only 1.5 hours behind you, so interviews in your working day are easy. "
+      + "I'm a Thai citizen with family in Thailand, and I'm in Bangkok from December 2026, for the long term. "
+      + "I need no visa, work permit or sponsorship. "
+      + (inBangkok
+        ? "I can meet in person in Bangkok, and I can start right away. "
+        : "Until then I'm only 1.5 hours behind you, so interviews in your working day are easy. ")
       + "If your team is hiring Java backend engineers in Thailand, I'd be glad to talk.";
     lede.after(hello);
   }

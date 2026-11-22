@@ -388,6 +388,8 @@ code { font-family: var(--mono); font-size: .86em; padding: 1px 6px; border-radi
 .case .example { min-width: 0; display: grid; gap: 12px; align-content: start; }
 .case .terminal pre { font-size: 12px; }
 .case .note { margin: 0; font-size: 13px; color: var(--text-2); }
+.case.case-solo { grid-template-columns: 1fr; }
+.case.case-solo .note { margin-top: 16px; }
 .case .note a, .card-links a { color: var(--accent); }
 .card-links { display: flex; flex-wrap: wrap; gap: 16px; margin: 0; font-size: 14px; font-weight: 600; }
 .card-links a { text-decoration: none; }

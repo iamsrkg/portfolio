@@ -144,11 +144,11 @@
   // ---------- availability: from the start date on, say "can join immediately" ----------
   const avail = $('.avail[data-from]');
   if (avail && new Date() >= new Date(avail.dataset.from + 'T00:00:00')) {
-    avail.querySelector('.avail-text').textContent = 'Open to work · can join immediately';
+    avail.querySelector('.avail-text').textContent = 'Open to work · in Bangkok · can join immediately';
     $('.notice[data-until]')?.remove();
     const json = $('#avail-json');
-    if (json) json.textContent = '"immediately"';
-    document.querySelectorAll('[data-avail]').forEach((el) => { el.textContent = 'Can join immediately'; });
+    if (json) json.textContent = '"immediately, in Bangkok"';
+    document.querySelectorAll('[data-avail]').forEach((el) => { el.textContent = 'Can join immediately, in Bangkok'; });
   }
 })();
 
